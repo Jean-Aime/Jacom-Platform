@@ -5,7 +5,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-2 gap-12 mb-12">
           <div>
             <h3 className="text-xl mb-4">
-              Stay ahead in a rapidly changing world. Subscribe to Bain Insights, our monthly look at the critical issues facing global businesses.
+              Stay ahead in a rapidly changing world. Subscribe to Templete Insights, our monthly look at the critical issues facing global businesses.
             </h3>
           </div>
           
@@ -22,14 +22,14 @@ export default function Footer() {
             </div>
             <label className="flex items-start gap-2 text-xs text-gray-400">
               <input type="checkbox" className="mt-1" />
-              <span>I have read and accept Bain's Privacy Policy</span>
+              <span>I have read and accept Templete's Privacy Policy</span>
             </label>
           </div>
         </div>
 
         <div className="flex items-center gap-2 mb-8">
           <div className="w-3 h-3 bg-primary rounded-full"></div>
-          <span className="text-sm font-semibold tracking-wider">BAIN & COMPANY</span>
+          <span className="text-sm font-semibold tracking-wider">TEMPLETE</span>
         </div>
 
         <div className="flex gap-4 mb-8">
@@ -52,7 +52,7 @@ export default function Footer() {
           <a href="#" className="hover:text-white">Log In</a>
         </div>
 
-        <p className="text-xs text-gray-500">© 2025 Bain & Company, Inc.</p>
+        <p className="text-xs text-gray-500">© 2025 Templete, Inc.</p>
       </div>
     </footer>
   );
