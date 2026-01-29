@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import MultiSelect from "@/components/Admin/MultiSelect";
 
 interface Service {
   id: string;
@@ -11,8 +12,26 @@ interface Service {
   createdAt: string;
 }
 
+interface Industry {
+  id: string;
+  name: string;
+}
+
+interface Expert {
+  id: string;
+  name: string;
+}
+
+interface Insight {
+  id: string;
+  title: string;
+}
+
 export default function ServicesAdminPage() {
   const [services, setServices] = useState<Service[]>([]);
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [experts, setExperts] = useState<Expert[]>([]);
+  const [insights, setInsights] = useState<Insight[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -23,20 +42,30 @@ export default function ServicesAdminPage() {
     overview: "",
     methodologies: "",
     tools: "",
-    featured: false
+    featured: false,
+    industryIds: [] as string[],
+    expertIds: [] as string[],
+    insightIds: [] as string[]
   });
 
   useEffect(() => {
-    fetchServices();
+    fetchData();
   }, []);
 
-  const fetchServices = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch("/api/services");
-      const data = await res.json();
-      setServices(data);
+      const [servicesRes, industriesRes, expertsRes, insightsRes] = await Promise.all([
+        fetch("/api/services").then(r => r.json()),
+        fetch("/api/industries").then(r => r.json()),
+        fetch("/api/experts").then(r => r.json()),
+        fetch("/api/insights").then(r => r.json())
+      ]);
+      setServices(servicesRes);
+      setIndustries(industriesRes);
+      setExperts(expertsRes);
+      setInsights(insightsRes);
     } catch (error) {
-      console.error("Error fetching services:", error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +91,7 @@ export default function ServicesAdminPage() {
       });
 
       if (res.ok) {
-        fetchServices();
+        fetchData();
         resetForm();
       }
     } catch (error) {
@@ -79,7 +108,10 @@ export default function ServicesAdminPage() {
       overview: service.overview,
       methodologies: JSON.parse(service.methodologies || "[]").join("\n"),
       tools: JSON.parse(service.tools || "[]").join("\n"),
-      featured: service.featured
+      featured: service.featured,
+      industryIds: service.industries?.map((i: any) => i.id) || [],
+      expertIds: service.experts?.map((e: any) => e.id) || [],
+      insightIds: service.insights?.map((i: any) => i.id) || []
     });
     setShowForm(true);
   };
@@ -89,7 +121,7 @@ export default function ServicesAdminPage() {
     
     try {
       await fetch(`/api/services?id=${id}`, { method: "DELETE" });
-      fetchServices();
+      fetchData();
     } catch (error) {
       console.error("Error deleting service:", error);
     }
@@ -103,7 +135,10 @@ export default function ServicesAdminPage() {
       overview: "",
       methodologies: "",
       tools: "",
-      featured: false
+      featured: false,
+      industryIds: [],
+      expertIds: [],
+      insightIds: []
     });
     setEditingId(null);
     setShowForm(false);
@@ -211,6 +246,30 @@ export default function ServicesAdminPage() {
                   className="w-4 h-4"
                 />
                 <label htmlFor="featured" className="text-sm font-medium">Featured Service</label>
+              </div>
+
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-3">Cross-Linking</h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <MultiSelect
+                    label="Related Industries"
+                    options={industries}
+                    selected={formData.industryIds}
+                    onChange={(ids) => setFormData({...formData, industryIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Experts"
+                    options={experts}
+                    selected={formData.expertIds}
+                    onChange={(ids) => setFormData({...formData, expertIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Insights"
+                    options={insights}
+                    selected={formData.insightIds}
+                    onChange={(ids) => setFormData({...formData, insightIds: ids})}
+                  />
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4 border-t">

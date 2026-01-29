@@ -1,9 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import MultiSelect from "@/components/Admin/MultiSelect";
 
 export default function ExpertsAdminPage() {
   const [experts, setExperts] = useState<any[]>([]);
+  const [industries, setIndustries] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -16,17 +19,25 @@ export default function ExpertsAdminPage() {
     locations: "",
     email: "",
     linkedin: "",
-    featured: false
+    featured: false,
+    industryIds: [] as string[],
+    serviceIds: [] as string[]
   });
 
   useEffect(() => {
-    fetchExperts();
+    fetchData();
   }, []);
 
-  const fetchExperts = async () => {
+  const fetchData = async () => {
     try {
-      const res = await fetch("/api/experts");
-      setExperts(await res.json());
+      const [expertsRes, industriesRes, servicesRes] = await Promise.all([
+        fetch("/api/experts").then(r => r.json()),
+        fetch("/api/industries").then(r => r.json()),
+        fetch("/api/services").then(r => r.json())
+      ]);
+      setExperts(expertsRes);
+      setIndustries(industriesRes);
+      setServices(servicesRes);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -53,7 +64,7 @@ export default function ExpertsAdminPage() {
         body: JSON.stringify(payload)
       });
 
-      fetchExperts();
+      fetchData();
       resetForm();
     } catch (error) {
       console.error("Error:", error);
@@ -71,7 +82,9 @@ export default function ExpertsAdminPage() {
       locations: JSON.parse(expert.locations || "[]").join(", "),
       email: expert.email || "",
       linkedin: expert.linkedin || "",
-      featured: expert.featured
+      featured: expert.featured,
+      industryIds: expert.industries?.map((i: any) => i.id) || [],
+      serviceIds: expert.services?.map((s: any) => s.id) || []
     });
     setShowForm(true);
   };
@@ -79,7 +92,7 @@ export default function ExpertsAdminPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this expert?")) return;
     await fetch(`/api/experts?id=${id}`, { method: "DELETE" });
-    fetchExperts();
+    fetchData();
   };
 
   const resetForm = () => {
@@ -92,7 +105,9 @@ export default function ExpertsAdminPage() {
       locations: "",
       email: "",
       linkedin: "",
-      featured: false
+      featured: false,
+      industryIds: [],
+      serviceIds: []
     });
     setEditingId(null);
     setShowForm(false);
@@ -161,6 +176,23 @@ export default function ExpertsAdminPage() {
                 <input type="checkbox" checked={formData.featured} onChange={(e) => setFormData({...formData, featured: e.target.checked})} className="w-4 h-4" />
                 <span className="text-sm font-medium">Featured Expert</span>
               </label>
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-3">Cross-Linking</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <MultiSelect
+                    label="Related Industries"
+                    options={industries}
+                    selected={formData.industryIds}
+                    onChange={(ids) => setFormData({...formData, industryIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Services"
+                    options={services}
+                    selected={formData.serviceIds}
+                    onChange={(ids) => setFormData({...formData, serviceIds: ids})}
+                  />
+                </div>
+              </div>
               <div className="flex gap-3 pt-4 border-t">
                 <button type="submit" className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90">{editingId ? "Update" : "Create"}</button>
                 <button type="button" onClick={resetForm} className="border px-6 py-2 rounded hover:bg-gray-50">Cancel</button>

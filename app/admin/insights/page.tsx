@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import MultiSelect from "@/components/Admin/MultiSelect";
+import StatusBadge from "@/components/Admin/StatusBadge";
+import WorkflowActions from "@/components/Admin/WorkflowActions";
 
 interface Insight {
   id: string;
@@ -16,6 +19,8 @@ interface Insight {
 export default function InsightsAdminPage() {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [experts, setExperts] = useState<any[]>([]);
+  const [industries, setIndustries] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -32,7 +37,11 @@ export default function InsightsAdminPage() {
     gated: false,
     downloadUrl: "",
     topics: "",
-    regions: ""
+    regions: "",
+    industryIds: [] as string[],
+    serviceIds: [] as string[],
+    status: "draft" as string,
+    scheduledAt: "" as string
   });
 
   useEffect(() => {
@@ -41,12 +50,16 @@ export default function InsightsAdminPage() {
 
   const fetchData = async () => {
     try {
-      const [insightsRes, expertsRes] = await Promise.all([
+      const [insightsRes, expertsRes, industriesRes, servicesRes] = await Promise.all([
         fetch("/api/insights"),
-        fetch("/api/experts")
+        fetch("/api/experts"),
+        fetch("/api/industries"),
+        fetch("/api/services")
       ]);
       setInsights(await insightsRes.json());
       setExperts(await expertsRes.json());
+      setIndustries(await industriesRes.json());
+      setServices(await servicesRes.json());
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -98,7 +111,11 @@ export default function InsightsAdminPage() {
       gated: insight.gated,
       downloadUrl: insight.downloadUrl || "",
       topics: JSON.parse(insight.topics || "[]").join(", "),
-      regions: JSON.parse(insight.regions || "[]").join(", ")
+      regions: JSON.parse(insight.regions || "[]").join(", "),
+      industryIds: insight.industries?.map((i: any) => i.id) || [],
+      serviceIds: insight.services?.map((s: any) => s.id) || [],
+      status: insight.status || "draft",
+      scheduledAt: insight.scheduledAt ? new Date(insight.scheduledAt).toISOString().slice(0, 16) : ""
     });
     setShowForm(true);
   };
@@ -128,7 +145,11 @@ export default function InsightsAdminPage() {
       gated: false,
       downloadUrl: "",
       topics: "",
-      regions: ""
+      regions: "",
+      industryIds: [],
+      serviceIds: [],
+      status: "draft",
+      scheduledAt: ""
     });
     setEditingId(null);
     setShowForm(false);
@@ -307,6 +328,55 @@ export default function InsightsAdminPage() {
                 </label>
               </div>
 
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-3">Cross-Linking</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <MultiSelect
+                    label="Related Industries"
+                    options={industries}
+                    selected={formData.industryIds}
+                    onChange={(ids) => setFormData({...formData, industryIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Services"
+                    options={services}
+                    selected={formData.serviceIds}
+                    onChange={(ids) => setFormData({...formData, serviceIds: ids})}
+                  />
+                </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-3">Publishing Workflow</h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Status</label>
+                    <select
+                      value={formData.status}
+                      onChange={(e) => setFormData({...formData, status: e.target.value})}
+                      className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="review">Review</option>
+                      <option value="scheduled">Scheduled</option>
+                      <option value="published">Published</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
+                  {formData.status === 'scheduled' && (
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Schedule Date & Time</label>
+                      <input
+                        type="datetime-local"
+                        value={formData.scheduledAt}
+                        onChange={(e) => setFormData({...formData, scheduledAt: e.target.value})}
+                        className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
               <div className="flex gap-3 pt-4 border-t">
                 <button
                   type="submit"
@@ -357,6 +427,7 @@ export default function InsightsAdminPage() {
                       <td className="p-4 text-sm">{insight.type}</td>
                       <td className="p-4">
                         <div className="flex gap-1">
+                          <StatusBadge status={insight.status || 'published'} />
                           {insight.featured && (
                             <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">Featured</span>
                           )}

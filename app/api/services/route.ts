@@ -30,7 +30,10 @@ export async function POST(request: NextRequest) {
         methodologies: data.methodologies || [],
         tools: data.tools || [],
         featured: data.featured || false,
-        image: data.image
+        image: data.image,
+        industries: data.industryIds ? { connect: data.industryIds.map((id: string) => ({ id })) } : undefined,
+        experts: data.expertIds ? { connect: data.expertIds.map((id: string) => ({ id })) } : undefined,
+        insights: data.insightIds ? { connect: data.insightIds.map((id: string) => ({ id })) } : undefined
       }
     });
     return NextResponse.json(service);
@@ -52,7 +55,10 @@ export async function PUT(request: NextRequest) {
         methodologies: data.methodologies,
         tools: data.tools,
         featured: data.featured,
-        image: data.image
+        image: data.image,
+        industries: data.industryIds ? { set: data.industryIds.map((id: string) => ({ id })) } : undefined,
+        experts: data.expertIds ? { set: data.expertIds.map((id: string) => ({ id })) } : undefined,
+        insights: data.insightIds ? { set: data.insightIds.map((id: string) => ({ id })) } : undefined
       }
     });
     return NextResponse.json(service);

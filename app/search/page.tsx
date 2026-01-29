@@ -1,27 +1,46 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
+import SearchFilters from "@/components/Search/SearchFilters";
+import SearchResult from "@/components/Search/SearchResult";
 
 export default function SearchPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const [results, setResults] = useState<any>({ industries: [], services: [], insights: [], experts: [] });
+  const [filters, setFilters] = useState<any>({ types: {}, industries: [], services: [], contentTypes: {}, regions: [] });
+  const [selectedFilters, setSelectedFilters] = useState<any>({
+    type: searchParams.get('type') || undefined,
+    industry: searchParams.get('industry') || undefined,
+    service: searchParams.get('service') || undefined,
+    region: searchParams.get('region') || undefined,
+    contentType: searchParams.get('contentType') || undefined
+  });
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (query.length >= 2) {
       performSearch();
     }
-  }, [query]);
+  }, [query, selectedFilters]);
 
   const performSearch = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+      const params = new URLSearchParams({ q: query });
+      if (selectedFilters.type) params.append('type', selectedFilters.type);
+      if (selectedFilters.industry) params.append('industry', selectedFilters.industry);
+      if (selectedFilters.service) params.append('service', selectedFilters.service);
+      if (selectedFilters.region) params.append('region', selectedFilters.region);
+      if (selectedFilters.contentType) params.append('contentType', selectedFilters.contentType);
+
+      const response = await fetch(`/api/search?${params.toString()}`);
       const data = await response.json();
-      setResults(data);
+      setResults(data.results || { industries: [], services: [], insights: [], experts: [] });
+      setFilters(data.filters || { types: {}, industries: [], services: [], contentTypes: {}, regions: [] });
     } catch (error) {
       console.error('Search failed:', error);
     } finally {
@@ -29,7 +48,28 @@ export default function SearchPage() {
     }
   };
 
-  const totalResults = results.industries.length + results.services.length + results.insights.length + results.experts.length;
+  const handleFilterChange = (newFilters: any) => {
+    setSelectedFilters(newFilters);
+    const params = new URLSearchParams({ q: query });
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value) params.append(key, value as string);
+    });
+    router.push(`/search?${params.toString()}`, { scroll: false });
+  };
+
+  const clearFilters = () => {
+    setSelectedFilters({ type: undefined, industry: undefined, service: undefined, region: undefined, contentType: undefined });
+    router.push(`/search?q=${query}`, { scroll: false });
+  };
+
+  const allResults = [
+    ...results.industries,
+    ...results.services,
+    ...results.insights,
+    ...results.experts
+  ];
+
+  const totalResults = allResults.length;
 
   return (
     <div className="min-h-screen">
@@ -52,80 +92,33 @@ export default function SearchPage() {
           {loading && <div className="text-center py-8">Searching...</div>}
 
           {!loading && query.length >= 2 && (
-            <div>
-              <div className="mb-6 text-gray-600">
-                Found {totalResults} results for "{query}"
+            <div className="grid lg:grid-cols-4 gap-8">
+              <div className="lg:col-span-1">
+                <SearchFilters
+                  filters={filters}
+                  selected={selectedFilters}
+                  onChange={handleFilterChange}
+                  onClear={clearFilters}
+                />
               </div>
 
-              {results.industries.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">Industries</h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {results.industries.map((item: any) => (
-                      <a key={item.id} href={`/industries/${item.slug}`} className="bg-white border rounded-lg p-4 hover:shadow-md transition-all">
-                        <h3 className="font-semibold mb-2">{item.name}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
-                      </a>
+              <div className="lg:col-span-3">
+                <div className="mb-6 text-gray-600">
+                  Found {totalResults} results for "{query}"
+                </div>
+
+                {totalResults > 0 ? (
+                  <div className="space-y-4">
+                    {allResults.map((item: any) => (
+                      <SearchResult key={`${item.type}-${item.id}`} item={item} query={query} />
                     ))}
                   </div>
-                </div>
-              )}
-
-              {results.services.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">Services</h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {results.services.map((item: any) => (
-                      <a key={item.id} href={`/services/${item.slug}`} className="bg-white border rounded-lg p-4 hover:shadow-md transition-all">
-                        <h3 className="font-semibold mb-2">{item.name}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{item.description}</p>
-                      </a>
-                    ))}
+                ) : (
+                  <div className="text-center py-12 text-gray-600">
+                    No results found for "{query}". Try different keywords or adjust filters.
                   </div>
-                </div>
-              )}
-
-              {results.insights.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">Insights</h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {results.insights.map((item: any) => (
-                      <a key={item.id} href={`/insights/${item.slug}`} className="bg-white border rounded-lg p-4 hover:shadow-md transition-all">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded uppercase">{item.type}</span>
-                        </div>
-                        <h3 className="font-semibold mb-2">{item.title}</h3>
-                        <p className="text-sm text-gray-600 line-clamp-2">{item.excerpt}</p>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {results.experts.length > 0 && (
-                <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-4">Experts</h2>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    {results.experts.map((item: any) => (
-                      <a key={item.id} href={`/experts/${item.slug}`} className="bg-white border rounded-lg p-4 hover:shadow-md transition-all text-center">
-                        {item.image ? (
-                          <img src={item.image} alt={item.name} className="w-20 h-20 rounded-full mx-auto mb-3" />
-                        ) : (
-                          <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-red-100 rounded-full mx-auto mb-3"></div>
-                        )}
-                        <h3 className="font-semibold">{item.name}</h3>
-                        <p className="text-sm text-gray-600">{item.role}</p>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {totalResults === 0 && (
-                <div className="text-center py-12 text-gray-600">
-                  No results found for "{query}". Try different keywords.
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
         </div>

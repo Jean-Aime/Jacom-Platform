@@ -11,8 +11,14 @@ interface InsightPageProps {
 
 export default async function InsightPage({ params }: InsightPageProps) {
   const { slug } = await params;
-  const insight = await prisma.insight.findUnique({
-    where: { slug },
+  const insight = await prisma.insight.findFirst({
+    where: { 
+      slug,
+      OR: [
+        { status: 'published' },
+        { status: 'scheduled', scheduledAt: { lte: new Date() } }
+      ]
+    },
     include: {
       author: true,
       industries: true,

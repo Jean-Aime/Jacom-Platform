@@ -10,6 +10,8 @@ interface Lead {
   phone: string | null;
   message: string | null;
   source: string;
+  score: number;
+  jobTitle: string | null;
   createdAt: string;
 }
 
@@ -17,6 +19,7 @@ export default function LeadsAdminPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [scoreFilter, setScoreFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
   const itemsPerPage = 50;
@@ -42,7 +45,11 @@ export default function LeadsAdminPage() {
                          lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          (lead.company && lead.company.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesFilter = filter === "all" || lead.source === filter;
-    return matchesSearch && matchesFilter;
+    const matchesScore = scoreFilter === "all" || 
+      (scoreFilter === "hot" && lead.score >= 70) ||
+      (scoreFilter === "warm" && lead.score >= 40 && lead.score < 70) ||
+      (scoreFilter === "cold" && lead.score < 40);
+    return matchesSearch && matchesFilter && matchesScore;
   });
 
   const paginatedLeads = filteredLeads.slice((page - 1) * itemsPerPage, page * itemsPerPage);
@@ -76,7 +83,10 @@ export default function LeadsAdminPage() {
     total: leads.length,
     contact_form: leads.filter(l => l.source === "contact_form").length,
     newsletter: leads.filter(l => l.source === "newsletter").length,
-    gated_content: leads.filter(l => l.source === "gated_content").length
+    gated_content: leads.filter(l => l.source === "gated_content").length,
+    hot: leads.filter(l => l.score >= 70).length,
+    warm: leads.filter(l => l.score >= 40 && l.score < 70).length,
+    cold: leads.filter(l => l.score < 40).length
   };
 
   return (
@@ -102,21 +112,24 @@ export default function LeadsAdminPage() {
             <div className="text-3xl font-bold">{sourceStats.total}</div>
           </div>
           <div className="bg-white rounded border p-6">
-            <div className="text-sm text-gray-600 mb-1">Contact Forms</div>
-            <div className="text-3xl font-bold text-primary">{sourceStats.contact_form}</div>
+            <div className="text-sm text-gray-600 mb-1">🔥 Hot Leads</div>
+            <div className="text-3xl font-bold text-red-600">{sourceStats.hot}</div>
+            <div className="text-xs text-gray-500 mt-1">Score ≥ 70</div>
           </div>
           <div className="bg-white rounded border p-6">
-            <div className="text-sm text-gray-600 mb-1">Newsletter</div>
-            <div className="text-3xl font-bold text-primary">{sourceStats.newsletter}</div>
+            <div className="text-sm text-gray-600 mb-1">⚡ Warm Leads</div>
+            <div className="text-3xl font-bold text-orange-600">{sourceStats.warm}</div>
+            <div className="text-xs text-gray-500 mt-1">Score 40-69</div>
           </div>
           <div className="bg-white rounded border p-6">
-            <div className="text-sm text-gray-600 mb-1">Gated Content</div>
-            <div className="text-3xl font-bold text-primary">{sourceStats.gated_content}</div>
+            <div className="text-sm text-gray-600 mb-1">❄️ Cold Leads</div>
+            <div className="text-3xl font-bold text-blue-600">{sourceStats.cold}</div>
+            <div className="text-xs text-gray-500 mt-1">Score &lt; 40</div>
           </div>
         </div>
 
         <div className="bg-white rounded border mb-6 p-6">
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Search</label>
               <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Search by name, email, or company..." className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
@@ -128,6 +141,15 @@ export default function LeadsAdminPage() {
                 <option value="contact_form">Contact Form</option>
                 <option value="newsletter">Newsletter</option>
                 <option value="gated_content">Gated Content</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">Filter by Score</label>
+              <select value={scoreFilter} onChange={(e) => setScoreFilter(e.target.value)} className="w-full p-3 border rounded focus:border-primary focus:outline-none">
+                <option value="all">All Scores</option>
+                <option value="hot">🔥 Hot (≥70)</option>
+                <option value="warm">⚡ Warm (40-69)</option>
+                <option value="cold">❄️ Cold (&lt;40)</option>
               </select>
             </div>
           </div>
@@ -146,32 +168,43 @@ export default function LeadsAdminPage() {
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="text-left p-4 text-sm font-semibold">Contact</th>
-                    <th className="text-left p-4 text-sm font-semibold">Company</th>
+                    <th className="text-left p-4 text-sm font-semibold">Company / Title</th>
+                    <th className="text-left p-4 text-sm font-semibold">Score</th>
                     <th className="text-left p-4 text-sm font-semibold">Source</th>
-                    <th className="text-left p-4 text-sm font-semibold">Message</th>
                     <th className="text-left p-4 text-sm font-semibold">Date</th>
                     <th className="text-right p-4 text-sm font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedLeads.map((lead) => (
+                  {paginatedLeads.map((lead) => {
+                    const scoreColor = lead.score >= 70 ? 'text-red-600' : lead.score >= 40 ? 'text-orange-600' : 'text-blue-600';
+                    const scoreBg = lead.score >= 70 ? 'bg-red-50' : lead.score >= 40 ? 'bg-orange-50' : 'bg-blue-50';
+                    return (
                     <tr key={lead.id} className="border-b hover:bg-gray-50">
                       <td className="p-4">
                         <div className="font-medium">{lead.name}</div>
                         <div className="text-sm text-gray-600">{lead.email}</div>
                         {lead.phone && <div className="text-sm text-gray-600">{lead.phone}</div>}
                       </td>
-                      <td className="p-4 text-sm">{lead.company || "-"}</td>
+                      <td className="p-4 text-sm">
+                        <div>{lead.company || "-"}</div>
+                        {lead.jobTitle && <div className="text-xs text-gray-500">{lead.jobTitle}</div>}
+                      </td>
+                      <td className="p-4">
+                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${scoreBg}`}>
+                          <span className={`text-lg font-bold ${scoreColor}`}>{lead.score}</span>
+                          <span className="text-xs text-gray-600">/100</span>
+                        </div>
+                      </td>
                       <td className="p-4">
                         <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">{lead.source.replace("_", " ")}</span>
                       </td>
-                      <td className="p-4 text-sm text-gray-600 max-w-xs truncate">{lead.message || "-"}</td>
                       <td className="p-4 text-sm text-gray-600">{new Date(lead.createdAt).toLocaleDateString()}</td>
                       <td className="p-4 text-right">
                         <a href={`mailto:${lead.email}`} className="text-primary hover:underline text-sm">Email</a>
                       </td>
                     </tr>
-                  ))}
+                  )})}
                 </tbody>
               </table>
             </div>

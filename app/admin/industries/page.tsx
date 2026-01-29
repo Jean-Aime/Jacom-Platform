@@ -1,10 +1,39 @@
 "use client";
 import { useState, useEffect } from "react";
-import { DataService } from "@/lib/data";
-import { Industry } from "@/lib/types";
+import MultiSelect from "@/components/Admin/MultiSelect";
+
+interface Industry {
+  id: string;
+  name: string;
+  slug: string;
+  description: string;
+  overview: string;
+  challenges: string;
+  trends: string;
+  featured: boolean;
+  image?: string;
+}
+
+interface Service {
+  id: string;
+  name: string;
+}
+
+interface Expert {
+  id: string;
+  name: string;
+}
+
+interface Insight {
+  id: string;
+  title: string;
+}
 
 export default function AdminIndustriesPage() {
   const [industries, setIndustries] = useState<Industry[]>([]);
+  const [services, setServices] = useState<Service[]>([]);
+  const [experts, setExperts] = useState<Expert[]>([]);
+  const [insights, setInsights] = useState<Insight[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -12,55 +41,104 @@ export default function AdminIndustriesPage() {
     slug: "",
     description: "",
     overview: "",
-    featured: false
+    challenges: "[]",
+    trends: "[]",
+    featured: false,
+    image: "",
+    serviceIds: [] as string[],
+    expertIds: [] as string[],
+    insightIds: [] as string[]
   });
 
   useEffect(() => {
-    loadIndustries();
+    loadData();
   }, []);
 
-  const loadIndustries = async () => {
-    const data = await DataService.getIndustries();
-    setIndustries(data);
+  const loadData = async () => {
+    const [industriesRes, servicesRes, expertsRes, insightsRes] = await Promise.all([
+      fetch('/api/industries').then(r => r.json()),
+      fetch('/api/services').then(r => r.json()),
+      fetch('/api/experts').then(r => r.json()),
+      fetch('/api/insights').then(r => r.json())
+    ]);
+    setIndustries(industriesRes);
+    setServices(servicesRes);
+    setExperts(expertsRes);
+    setInsights(insightsRes);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (editingId) {
-      console.log("Update industry:", editingId, formData);
-      alert("Industry updated successfully!");
-    } else {
-      console.log("Create industry:", formData);
-      alert("Industry created successfully!");
+    const payload = {
+      ...formData,
+      challenges: formData.challenges,
+      trends: formData.trends
+    };
+
+    try {
+      if (editingId) {
+        await fetch('/api/industries', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, id: editingId })
+        });
+        alert("Industry updated successfully!");
+      } else {
+        await fetch('/api/industries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        alert("Industry created successfully!");
+      }
+      resetForm();
+      loadData();
+    } catch (error) {
+      alert("Error saving industry");
     }
-    
-    resetForm();
-    loadIndustries();
   };
 
-  const handleEdit = (industry: Industry) => {
+  const handleEdit = (industry: any) => {
     setFormData({
       name: industry.name,
       slug: industry.slug,
       description: industry.description,
       overview: industry.overview,
-      featured: industry.featured
+      challenges: industry.challenges || "[]",
+      trends: industry.trends || "[]",
+      featured: industry.featured,
+      image: industry.image || "",
+      serviceIds: industry.services?.map((s: any) => s.id) || [],
+      expertIds: industry.experts?.map((e: any) => e.id) || [],
+      insightIds: industry.insights?.map((i: any) => i.id) || []
     });
     setEditingId(industry.id);
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this industry?")) {
-      console.log("Delete industry:", id);
+      await fetch(`/api/industries?id=${id}`, { method: 'DELETE' });
       alert("Industry deleted successfully!");
-      loadIndustries();
+      loadData();
     }
   };
 
   const resetForm = () => {
-    setFormData({ name: "", slug: "", description: "", overview: "", featured: false });
+    setFormData({ 
+      name: "", 
+      slug: "", 
+      description: "", 
+      overview: "", 
+      challenges: "[]",
+      trends: "[]",
+      featured: false,
+      image: "",
+      serviceIds: [],
+      expertIds: [],
+      insightIds: []
+    });
     setEditingId(null);
     setShowForm(false);
   };
@@ -134,6 +212,31 @@ export default function AdminIndustriesPage() {
                 />
                 <label className="text-sm font-medium">Featured Industry</label>
               </div>
+
+              <div className="border-t pt-4">
+                <h3 className="font-semibold mb-3">Cross-Linking</h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  <MultiSelect
+                    label="Related Services"
+                    options={services}
+                    selected={formData.serviceIds}
+                    onChange={(ids) => setFormData({...formData, serviceIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Experts"
+                    options={experts}
+                    selected={formData.expertIds}
+                    onChange={(ids) => setFormData({...formData, expertIds: ids})}
+                  />
+                  <MultiSelect
+                    label="Related Insights"
+                    options={insights}
+                    selected={formData.insightIds}
+                    onChange={(ids) => setFormData({...formData, insightIds: ids})}
+                  />
+                </div>
+              </div>
+
               <div className="flex gap-2">
                 <button type="submit" className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90">
                   {editingId ? "Update" : "Create"}

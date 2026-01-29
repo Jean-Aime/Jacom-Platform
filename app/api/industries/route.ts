@@ -29,7 +29,10 @@ export async function POST(request: NextRequest) {
         challenges: data.challenges || [],
         trends: data.trends || [],
         featured: data.featured || false,
-        image: data.image
+        image: data.image,
+        services: data.serviceIds ? { connect: data.serviceIds.map((id: string) => ({ id })) } : undefined,
+        experts: data.expertIds ? { connect: data.expertIds.map((id: string) => ({ id })) } : undefined,
+        insights: data.insightIds ? { connect: data.insightIds.map((id: string) => ({ id })) } : undefined
       }
     });
     return NextResponse.json(industry);
@@ -51,7 +54,10 @@ export async function PUT(request: NextRequest) {
         challenges: data.challenges,
         trends: data.trends,
         featured: data.featured,
-        image: data.image
+        image: data.image,
+        services: data.serviceIds ? { set: data.serviceIds.map((id: string) => ({ id })) } : undefined,
+        experts: data.expertIds ? { set: data.expertIds.map((id: string) => ({ id })) } : undefined,
+        insights: data.insightIds ? { set: data.insightIds.map((id: string) => ({ id })) } : undefined
       }
     });
     return NextResponse.json(industry);

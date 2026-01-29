@@ -32,8 +32,8 @@ export default function GatedContent({ insightTitle, downloadUrl }: GatedContent
         body: JSON.stringify({
           ...formData,
           source: 'gated_content',
-          type: 'download',
-          message: `Downloaded: ${insightTitle}`
+          message: `Downloaded: ${insightTitle}`,
+          downloadedContent: 1
         })
       });
 
