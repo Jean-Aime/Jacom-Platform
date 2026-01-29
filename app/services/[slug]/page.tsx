@@ -4,12 +4,13 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 interface ServicePageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function ServicePage({ params }: ServicePageProps) {
+  const { slug } = await params;
   const service = await prisma.service.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       subServices: true,
       industries: true,

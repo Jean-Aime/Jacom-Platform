@@ -41,12 +41,13 @@ export default function LatestInsights() {
               {...hoverScale}
             >
               <div className="relative h-64 overflow-hidden">
-                <Image
-                  src={insight.image}
-                  alt={insight.title}
-                  fill
-                  className="object-cover group-hover:scale-110 transition-transform duration-500"
-                />
+            <Image
+              src={insight.image}
+              alt={insight.title}
+              fill
+              loading="lazy"
+              className="object-cover group-hover:scale-110 transition-transform duration-500"
+            />
                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-all duration-500"></div>
               </div>
               <div className="p-6">

@@ -15,18 +15,13 @@ export default function Hero() {
     "AI Executive Guide"
   ];
 
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
 
   return (
     <section className="relative h-screen bg-gradient-to-br from-purple-900 via-red-900 to-black pt-20 overflow-hidden">
-      <motion.div 
+      <div 
         className="absolute inset-0 opacity-40 bg-[url('/images/hero-bg.jpg')] bg-cover bg-center"
-        style={{ y: scrollY * 0.5 }}
-      ></motion.div>
+      ></div>
       
       <div className="relative h-full flex flex-col justify-between">
         <motion.div 

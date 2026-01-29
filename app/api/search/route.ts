@@ -50,10 +50,10 @@ export async function GET(request: NextRequest) {
     ]);
 
     const results = {
-      industries: industries.map(i => ({ type: 'industry', ...i })),
-      services: services.map(s => ({ type: 'service', ...s })),
-      insights: insights.map(i => ({ type: 'insight', ...i })),
-      experts: experts.map(e => ({ type: 'expert', ...e }))
+      industries: industries.map(i => ({ ...i, type: 'industry' })),
+      services: services.map(s => ({ ...s, type: 'service' })),
+      insights: insights.map(i => ({ ...i, type: 'insight' })),
+      experts: experts.map(e => ({ ...e, type: 'expert' }))
     };
 
     return NextResponse.json(results);

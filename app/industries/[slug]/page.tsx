@@ -4,12 +4,13 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 interface IndustryPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function IndustryPage({ params }: IndustryPageProps) {
+  const { slug } = await params;
   const industry = await prisma.industry.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       services: true,
       insights: { take: 3 }

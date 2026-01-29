@@ -29,6 +29,7 @@ export default function IndustrySelector() {
             src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
             alt="Business team collaboration"
             fill
+            priority
             className="object-cover"
           />
         </motion.div>

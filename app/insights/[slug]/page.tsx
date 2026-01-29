@@ -6,12 +6,13 @@ import SocialShare from "@/components/SocialShare/SocialShare";
 import GatedContent from "@/components/GatedContent/GatedContent";
 
 interface InsightPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function InsightPage({ params }: InsightPageProps) {
+  const { slug } = await params;
   const insight = await prisma.insight.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       author: true,
       industries: true,

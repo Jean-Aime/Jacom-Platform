@@ -5,12 +5,13 @@ import Footer from "@/components/Footer/Footer";
 import ApplicationForm from "@/components/FileUpload/ApplicationForm";
 
 interface CareerPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function CareerPage({ params }: CareerPageProps) {
+  const { slug } = await params;
   const career = await prisma.career.findUnique({
-    where: { slug: params.slug }
+    where: { slug }
   });
 
   if (!career) {

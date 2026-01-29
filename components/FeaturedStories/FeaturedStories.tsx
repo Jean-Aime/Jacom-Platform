@@ -10,18 +10,7 @@ export default function FeaturedStories() {
   const [count1, setCount1] = useState(0);
   const [count2, setCount2] = useState(0);
 
-  useEffect(() => {
-    const timer1 = setInterval(() => {
-      setCount1(prev => prev < 500 ? prev + 10 : 500);
-    }, 20);
-    const timer2 = setInterval(() => {
-      setCount2(prev => prev < 7 ? prev + 1 : 7);
-    }, 100);
-    return () => {
-      clearInterval(timer1);
-      clearInterval(timer2);
-    };
-  }, []);
+
 
   return (
     <section className="py-20 px-6 md:px-20 bg-gray-50">
@@ -48,7 +37,7 @@ export default function FeaturedStories() {
                 variants={fadeUp}
                 {...hoverScale}
               >
-                <div className="text-4xl font-light mb-2 text-primary">{count1}+</div>
+                <div className="text-4xl font-light mb-2 text-primary">500+</div>
                 <p className="text-sm text-gray-600">internal employees using the tool</p>
               </motion.div>
               <motion.div 
@@ -56,7 +45,7 @@ export default function FeaturedStories() {
                 variants={fadeUp}
                 {...hoverScale}
               >
-                <div className="text-4xl font-light mb-2 text-primary">{count2}</div>
+                <div className="text-4xl font-light mb-2 text-primary">7</div>
                 <p className="text-sm text-gray-600">months from ideation to launch</p>
               </motion.div>
             </motion.div>
@@ -80,6 +69,7 @@ export default function FeaturedStories() {
               src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
               alt="Banca Investis"
               fill
+              loading="lazy"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-500"></div>

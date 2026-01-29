@@ -5,12 +5,13 @@ import Footer from "@/components/Footer/Footer";
 import OfficeMap from "@/components/Map/OfficeMap";
 
 interface OfficePageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function OfficePage({ params }: OfficePageProps) {
+  const { slug } = await params;
   const office = await prisma.office.findUnique({
-    where: { slug: params.slug }
+    where: { slug }
   });
 
   if (!office) {

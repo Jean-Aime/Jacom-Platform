@@ -85,8 +85,8 @@ export default async function MediaPage() {
               </article>
             ))}
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-6 text-center">

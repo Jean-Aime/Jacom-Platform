@@ -1,6 +1,6 @@
 export const fadeUp = {
-  hidden: { opacity: 0, y: 12 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } }
+  hidden: { opacity: 0, y: 8 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
 };
 
 export const fadeIn = {
@@ -26,8 +26,8 @@ export const slideInRight = {
 export const stagger = {
   visible: {
     transition: {
-      staggerChildren: 0.08,
-      delayChildren: 0.1
+      staggerChildren: 0.05,
+      delayChildren: 0
     }
   }
 };

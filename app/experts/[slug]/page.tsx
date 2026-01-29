@@ -4,12 +4,13 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 interface ExpertPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function ExpertPage({ params }: ExpertPageProps) {
+  const { slug } = await params;
   const expert = await prisma.expert.findUnique({
-    where: { slug: params.slug },
+    where: { slug },
     include: {
       industries: true,
       services: true,
