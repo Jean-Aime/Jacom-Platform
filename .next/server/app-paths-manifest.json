@@ -1,3 +1,6 @@
 {
-  "/industries/page": "app/industries/page.js"
+  "/contact/page": "app/contact/page.js",
+  "/industries/page": "app/industries/page.js",
+  "/search/page": "app/search/page.js",
+  "/services/[slug]/page": "app/services/[slug]/page.js"
 }
