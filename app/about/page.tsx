@@ -10,17 +10,20 @@ import ResultsPartnerships from "@/components/About/ResultsPartnerships";
 import BoldTransformation from "@/components/About/BoldTransformation";
 import ClimateChange from "@/components/About/ClimateChange";
 import Footer from "@/components/Footer/Footer";
+import { getContent } from "@/lib/content";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const content = await getContent('about');
+  
   return (
     <>
       <Header />
-      <AboutHero />
-      <AboutContent />
+      <AboutHero content={content} />
+      <AboutContent content={content} />
       <VideoMaze />
-      <FirmInfo />
+      <FirmInfo content={content} />
       <GlassdoorBanner />
-      <OurPeople />
+      <OurPeople content={content} />
       <TeamImage />
       <ResultsPartnerships />
       <BoldTransformation />

@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Roboto } from "next/font/google";
-import GoogleAnalytics from "@/components/Analytics/GoogleAnalytics";
-import CookieConsent from "@/components/CookieConsent/CookieConsent";
-import PerformanceMonitor from "@/components/PerformanceMonitor";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -32,10 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={roboto.className}>
-        <PerformanceMonitor />
-        <GoogleAnalytics />
         {children}
-        <CookieConsent />
       </body>
     </html>
   );

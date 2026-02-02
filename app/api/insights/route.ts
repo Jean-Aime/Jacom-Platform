@@ -4,12 +4,6 @@ import { prisma } from '@/lib/prisma';
 export async function GET() {
   try {
     const insights = await prisma.insight.findMany({
-      where: {
-        OR: [
-          { status: 'published' },
-          { status: 'scheduled', scheduledAt: { lte: new Date() } }
-        ]
-      },
       include: {
         author: true,
         industries: true,
@@ -56,6 +50,10 @@ export async function POST(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
+
     const data = await request.json();
     const updateData: any = {
       title: data.title,
@@ -71,27 +69,22 @@ export async function PUT(request: NextRequest) {
       downloadUrl: data.downloadUrl,
       image: data.image,
       readTime: data.readTime,
+      status: data.status || 'draft',
       industries: data.industryIds ? { set: data.industryIds.map((id: string) => ({ id })) } : undefined,
       services: data.serviceIds ? { set: data.serviceIds.map((id: string) => ({ id })) } : undefined
     };
-
-    if (data.status) {
-      updateData.status = data.status;
-      if (data.status === 'published' && data.publishNow) {
-        updateData.publishedAt = new Date();
-      }
-    }
 
     if (data.scheduledAt) {
       updateData.scheduledAt = new Date(data.scheduledAt);
     }
 
     const insight = await prisma.insight.update({
-      where: { id: data.id },
+      where: { id },
       data: updateData
     });
     return NextResponse.json(insight);
   } catch (error) {
+    console.error('Update error:', error);
     return NextResponse.json({ error: 'Failed to update insight' }, { status: 500 });
   }
 }

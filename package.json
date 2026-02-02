@@ -8,20 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "db:seed": "tsx prisma/seed.ts",
-    "db:seed-admin": "node prisma/seed-admin.js"
+    "db:seed-admin": "node prisma/seed-admin.js",
+    "db:seed-content": "tsx prisma/seed-content.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
-    "framer-motion": "^10.18.0",
+    "critters": "^0.0.23",
     "next": "^15",
     "next-auth": "^4.24.13",
     "next-cloudinary": "^6.17.5",
     "prisma": "^5.22.0",
     "react": "^18",
     "react-dom": "^18",
-    "recharts": "^3.7.0",
     "resend": "^6.9.1"
   },
   "devDependencies": {

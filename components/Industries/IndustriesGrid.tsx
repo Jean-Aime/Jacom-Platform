@@ -1,8 +1,5 @@
 "use client";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { fadeUp, stagger } from "@/motion/presets";
-import { viewportConfig } from "@/motion/viewport";
 
 export default function IndustriesGrid() {
   const industries = [
@@ -16,22 +13,12 @@ export default function IndustriesGrid() {
 
   return (
     <section className="py-20 px-6 md:px-20 bg-white">
-      <motion.div 
-        className="max-w-7xl mx-auto"
-        initial="hidden"
-        whileInView="visible"
-        variants={stagger}
-        viewport={viewportConfig}
-      >
-        <motion.h2 className="text-3xl font-light mb-12" variants={fadeUp}>Explore Our Expertise</motion.h2>
+      <div className="max-w-7xl mx-auto animate-fade-in">
+        <h2 className="text-3xl font-light mb-12">Explore Our Expertise</h2>
         
-        <motion.div className="grid md:grid-cols-3 gap-8" variants={stagger}>
+        <div className="grid md:grid-cols-3 gap-8">
           {industries.map((industry, i) => (
-            <motion.div 
-              key={i} 
-              className="group cursor-pointer border-b hover:bg-gray-50 transition-all duration-300 pb-6"
-              variants={fadeUp}
-            >
+            <div key={i} className="group cursor-pointer border-b hover:bg-gray-50 transition-all duration-300 pb-6">
               <div className="relative h-40 rounded-lg mb-4 overflow-hidden">
                 <Image
                   src={industry.image}
@@ -47,10 +34,10 @@ export default function IndustriesGrid() {
                 </svg>
               </h3>
               <p className="text-sm text-gray-600 leading-relaxed">{industry.desc}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

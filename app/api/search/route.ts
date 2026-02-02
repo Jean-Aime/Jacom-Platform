@@ -21,9 +21,9 @@ export async function GET(request: NextRequest) {
           AND: [
             {
               OR: [
-                { name: { contains: query, mode: 'insensitive' as const } },
-                { description: { contains: query, mode: 'insensitive' as const } },
-                { overview: { contains: query, mode: 'insensitive' as const } }
+                { name: { contains: query } },
+                { description: { contains: query } },
+                { overview: { contains: query } }
               ]
             },
             ...(industry ? [{ id: industry }] : [])
@@ -36,9 +36,9 @@ export async function GET(request: NextRequest) {
           AND: [
             {
               OR: [
-                { name: { contains: query, mode: 'insensitive' as const } },
-                { description: { contains: query, mode: 'insensitive' as const } },
-                { overview: { contains: query, mode: 'insensitive' as const } }
+                { name: { contains: query } },
+                { description: { contains: query } },
+                { overview: { contains: query } }
               ]
             },
             ...(service ? [{ id: service }] : []),
@@ -52,9 +52,9 @@ export async function GET(request: NextRequest) {
           AND: [
             {
               OR: [
-                { title: { contains: query, mode: 'insensitive' as const } },
-                { excerpt: { contains: query, mode: 'insensitive' as const } },
-                { content: { contains: query, mode: 'insensitive' as const } }
+                { title: { contains: query } },
+                { excerpt: { contains: query } },
+                { content: { contains: query } }
               ]
             },
             ...(contentType ? [{ type: contentType }] : []),
@@ -70,9 +70,9 @@ export async function GET(request: NextRequest) {
           AND: [
             {
               OR: [
-                { name: { contains: query, mode: 'insensitive' as const } },
-                { role: { contains: query, mode: 'insensitive' as const } },
-                { bio: { contains: query, mode: 'insensitive' as const } }
+                { name: { contains: query } },
+                { role: { contains: query } },
+                { bio: { contains: query } }
               ]
             },
             ...(industry ? [{ industries: { some: { id: industry } } }] : []),

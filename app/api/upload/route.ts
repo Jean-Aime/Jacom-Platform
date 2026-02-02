@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
-        { folder: 'resumes', resource_type: 'auto' },
+        { folder: 'content', resource_type: 'auto' },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

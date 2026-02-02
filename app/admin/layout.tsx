@@ -45,6 +45,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const navigation = [
     { name: "Dashboard", href: "/admin", icon: "📊", active: pathname === "/admin" },
     { name: "Analytics", href: "/admin/analytics", icon: "📈", active: pathname === "/admin/analytics" },
+    { name: "Homepage", href: "/admin/homepage", icon: "🏠", active: pathname === "/admin/homepage" },
+    { name: "Content", href: "/admin/content", icon: "📝", active: pathname === "/admin/content" },
     { name: "Industries", href: "/admin/industries", icon: "🏭", active: pathname === "/admin/industries" },
     { name: "Services", href: "/admin/services", icon: "⚙️", active: pathname === "/admin/services" },
     { name: "Insights", href: "/admin/insights", icon: "💡", active: pathname === "/admin/insights" },
@@ -112,7 +114,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </button>
               </li>
               <li>
-                <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors">
+                <button 
+                  onClick={async () => {
+                    await fetch('/api/auth/logout', { method: 'POST' });
+                    window.location.href = '/admin/login';
+                  }}
+                  className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                >
                   <span className="text-lg">🚪</span>
                   <span className="font-medium">Logout</span>
                 </button>

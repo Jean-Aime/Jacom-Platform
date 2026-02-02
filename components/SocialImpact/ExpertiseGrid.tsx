@@ -1,8 +1,5 @@
 "use client";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { fadeUp, stagger, hoverScale } from "@/motion/presets";
-import { viewportConfig } from "@/motion/viewport";
 
 export default function ExpertiseGrid() {
   const expertise = [
@@ -35,22 +32,16 @@ export default function ExpertiseGrid() {
 
   return (
     <section className="py-20 px-6 md:px-20 bg-white">
-      <motion.div 
-        className="max-w-7xl mx-auto"
-        initial="hidden"
-        whileInView="visible"
-        variants={stagger}
-        viewport={viewportConfig}
-      >
-        <motion.h2 className="text-3xl font-light mb-6 text-center" variants={fadeUp}>Social Impact Expertise</motion.h2>
-        <motion.p className="text-center text-gray-600 mb-12" variants={fadeUp}>
+      <div className="max-w-7xl mx-auto animate-fade-in">
+        <h2 className="text-3xl font-light mb-6 text-center">Social Impact Expertise</h2>
+        <p className="text-center text-gray-600 mb-12">
           We're proud to partner with organizations across the social sector, working hand-in-hand to help address the world's most urgent social issues.
-        </motion.p>
+        </p>
         
-        <motion.div className="grid md:grid-cols-3 gap-8" variants={stagger}>
+        <div className="grid md:grid-cols-3 gap-8">
           {expertise.map((item, i) => (
-            <motion.div key={i} className="group cursor-pointer" variants={fadeUp}>
-              <div className="relative h-48 rounded-lg mb-4 overflow-hidden" {...hoverScale}>
+            <div key={i} className="group cursor-pointer">
+              <div className="relative h-48 rounded-lg mb-4 overflow-hidden hover-scale">
                 <Image
                   src={item.image}
                   alt={item.title}
@@ -60,10 +51,10 @@ export default function ExpertiseGrid() {
               </div>
               <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">{item.title}</h3>
               <p className="text-sm text-gray-600">{item.desc}</p>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

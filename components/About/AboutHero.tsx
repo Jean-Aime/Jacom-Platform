@@ -1,4 +1,7 @@
-export default function AboutHero() {
+export default function AboutHero({ content }: { content: any }) {
+  const title = content?.about_hero_title || 'About Us';
+  const subtitle = content?.about_hero_subtitle || 'This is where inspiration, candor, bold collaboration and responsible stewardship to outcomes, for clients and the world, combine to produce the extraordinary.';
+
   return (
     <section className="relative min-h-screen bg-black flex items-center justify-center overflow-hidden pt-32">
       <div className="absolute inset-0">
@@ -20,10 +23,8 @@ export default function AboutHero() {
       </div>
 
       <div className="relative z-10 max-w-md bg-white p-8 shadow-2xl animate-fade-in">
-        <h1 className="text-2xl font-light mb-4">About Us</h1>
-        <p className="text-sm text-gray-700 leading-relaxed">
-          This is where inspiration, candor, bold collaboration and responsible stewardship to outcomes, for clients and the world, combine to produce the extraordinary.
-        </p>
+        <h1 className="text-2xl font-light mb-4">{title}</h1>
+        <p className="text-sm text-gray-700 leading-relaxed">{subtitle}</p>
       </div>
     </section>
   );

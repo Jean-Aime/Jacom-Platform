@@ -1,80 +1,50 @@
 "use client";
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
-import { fadeUp, stagger, hoverScale, buttonTap } from "@/motion/presets";
-import { viewportConfig } from "@/motion/viewport";
+import { useState } from "react";
 
-export default function Hero() {
-  const [activeTab, setActiveTab] = useState("Healthcare Private Equity Report");
-  const [scrollY, setScrollY] = useState(0);
-  
-  const tabs = [
-    "Paper & Packaging",
-    "Healthcare Private Equity Report",
-    "M&A Healthcare",
-    "AI Executive Guide"
-  ];
+export default function Hero({ content }: { content: any }) {
+  const title = content?.home_hero_title || 'Global Healthcare Private Equity Report 2026';
+  const tabs = content?.home_hero_tabs || ['Paper & Packaging', 'Healthcare Private Equity Report', 'M&A Healthcare', 'AI Executive Guide'];
+  const bgImage = content?.home_hero_bg || '/images/hero-bg.jpg';
+  const [activeTab, setActiveTab] = useState(tabs[1]);
 
-
+  const titleLines = title.split(' ');
 
   return (
     <section className="relative h-screen bg-gradient-to-br from-purple-900 via-red-900 to-black pt-20 overflow-hidden">
       <div 
-        className="absolute inset-0 opacity-40 bg-[url('/images/hero-bg.jpg')] bg-cover bg-center"
+        className="absolute inset-0 opacity-40 bg-cover bg-center"
+        style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
       
       <div className="relative h-full flex flex-col justify-between">
-        <motion.div 
-          className="flex-1 flex items-center px-6 md:px-20"
-          initial="hidden"
-          animate="visible"
-          variants={stagger}
-          viewport={viewportConfig}
-        >
+        <div className="flex-1 flex items-center px-6 md:px-20 animate-fade-in">
           <div className="max-w-2xl">
-            <motion.h1 
-              className="text-4xl md:text-6xl font-light text-white leading-tight mb-4"
-              variants={fadeUp}
-            >
-              <motion.span className="inline-block" variants={fadeUp}>Global</motion.span><br />
-              <motion.span className="inline-block" variants={fadeUp}>Healthcare</motion.span><br />
-              <motion.span className="inline-block" variants={fadeUp}>Private Equity</motion.span><br />
-              <motion.span className="inline-block" variants={fadeUp}>Report 2026</motion.span>
-            </motion.h1>
-            <motion.button 
-              className="mt-8 text-white text-sm flex items-center gap-2 group hover:gap-4 transition-all duration-300"
-              variants={fadeUp}
-              {...buttonTap}
-            >
+            <h1 className="text-4xl md:text-6xl font-light text-white leading-tight mb-4">
+              {titleLines.map((line, i) => (
+                <span key={i} className="inline-block animate-slide-in-left" style={{animationDelay: `${i * 0.1}s`}}>{line}<br /></span>
+              ))}
+            </h1>
+            <button className="mt-8 text-white text-sm flex items-center gap-2 group hover:gap-4 transition-all duration-300">
               EXPLORE <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </motion.button>
+            </button>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div 
-          className="glass-effect"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-        >
+        <div className="glass-effect animate-slide-in-up">
           <div className="flex overflow-x-auto px-6 md:px-20">
-            {tabs.map((tab) => (
-              <motion.button
+            {tabs.map((tab: string) => (
+              <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-6 py-4 text-sm whitespace-nowrap transition-all duration-300 ${
-                  activeTab === tab
-                    ? "text-white border-b-2 border-primary"
-                    : "text-gray-400 hover:text-gray-200"
+                className={`px-6 py-4 text-sm whitespace-nowrap transition-all duration-300 hover:scale-105 ${
+                  activeTab === tab ? "text-white border-b-2 border-primary" : "text-gray-400 hover:text-gray-200"
                 }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
               >
                 {tab}
-              </motion.button>
+              </button>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
