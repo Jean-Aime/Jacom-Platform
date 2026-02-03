@@ -49,6 +49,31 @@ export default function AdminIndustriesPage() {
     expertIds: [] as string[],
     insightIds: [] as string[]
   });
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      console.log('Upload response:', data);
+      if (data.url) {
+        setFormData(prev => ({...prev, image: data.url}));
+        console.log('Image URL set:', data.url);
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      alert('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
     loadData();
@@ -75,6 +100,8 @@ export default function AdminIndustriesPage() {
       challenges: formData.challenges,
       trends: formData.trends
     };
+
+    console.log('Submitting industry with image:', payload.image);
 
     try {
       if (editingId) {
@@ -203,6 +230,23 @@ export default function AdminIndustriesPage() {
                   className="w-full p-2 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Industry Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={uploading}
+                  className="w-full p-2 border rounded focus:border-primary focus:outline-none"
+                />
+                {uploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
+                {formData.image && (
+                  <div className="mt-2">
+                    <img src={formData.image} alt="Preview" className="h-32 w-auto rounded border" />
+                    <p className="text-sm text-green-600 mt-1">✓ Uploaded</p>
+                  </div>
+                )}
+              </div>
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -253,6 +297,7 @@ export default function AdminIndustriesPage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
+                <th className="text-left p-4 font-semibold">Image</th>
                 <th className="text-left p-4 font-semibold">Name</th>
                 <th className="text-left p-4 font-semibold">Slug</th>
                 <th className="text-left p-4 font-semibold">Featured</th>
@@ -262,6 +307,13 @@ export default function AdminIndustriesPage() {
             <tbody>
               {industries.map((industry) => (
                 <tr key={industry.id} className="border-b hover:bg-gray-50">
+                  <td className="p-4">
+                    {industry.image ? (
+                      <img src={industry.image} alt={industry.name} className="h-12 w-20 object-cover rounded" />
+                    ) : (
+                      <div className="h-12 w-20 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-400">No image</div>
+                    )}
+                  </td>
                   <td className="p-4">{industry.name}</td>
                   <td className="p-4 text-gray-600">{industry.slug}</td>
                   <td className="p-4">

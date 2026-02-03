@@ -15,6 +15,7 @@ export default function ExpertsAdminPage() {
     slug: "",
     role: "",
     bio: "",
+    image: "",
     expertise: "",
     locations: "",
     email: "",
@@ -23,6 +24,24 @@ export default function ExpertsAdminPage() {
     industryIds: [] as string[],
     serviceIds: [] as string[]
   });
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    const fd = new FormData();
+    fd.append('file', file);
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) setFormData(prev => ({...prev, image: data.url}));
+    } catch (error) {
+      alert('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -78,6 +97,7 @@ export default function ExpertsAdminPage() {
       slug: expert.slug,
       role: expert.role,
       bio: expert.bio,
+      image: expert.image || "",
       expertise: JSON.parse(expert.expertise || "[]").join(", "),
       locations: JSON.parse(expert.locations || "[]").join(", "),
       email: expert.email || "",
@@ -101,6 +121,7 @@ export default function ExpertsAdminPage() {
       slug: "",
       role: "",
       bio: "",
+      image: "",
       expertise: "",
       locations: "",
       email: "",
@@ -151,6 +172,17 @@ export default function ExpertsAdminPage() {
               <div>
                 <label className="block text-sm font-medium mb-2">Bio *</label>
                 <textarea required rows={4} value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-2">Profile Image</label>
+                <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} className="w-full p-2 border rounded focus:border-primary focus:outline-none" />
+                {uploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
+                {formData.image && (
+                  <div className="mt-2">
+                    <img src={formData.image} alt="Preview" className="h-32 w-32 rounded-full object-cover border" />
+                    <p className="text-sm text-green-600 mt-1">✓ Uploaded</p>
+                  </div>
+                )}
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
@@ -212,6 +244,7 @@ export default function ExpertsAdminPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
+                    <th className="text-left p-4 text-sm font-semibold">Image</th>
                     <th className="text-left p-4 text-sm font-semibold">Name</th>
                     <th className="text-left p-4 text-sm font-semibold">Role</th>
                     <th className="text-left p-4 text-sm font-semibold">Status</th>
@@ -221,6 +254,13 @@ export default function ExpertsAdminPage() {
                 <tbody>
                   {experts.map((expert) => (
                     <tr key={expert.id} className="border-b hover:bg-gray-50">
+                      <td className="p-4">
+                        {expert.image ? (
+                          <img src={expert.image} alt={expert.name} className="h-12 w-12 rounded-full object-cover" />
+                        ) : (
+                          <div className="h-12 w-12 bg-gray-200 rounded-full flex items-center justify-center text-xs text-gray-400">No img</div>
+                        )}
+                      </td>
                       <td className="p-4">
                         <div className="font-medium">{expert.name}</div>
                         <div className="text-sm text-gray-600">{expert.slug}</div>

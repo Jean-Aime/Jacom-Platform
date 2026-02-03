@@ -30,6 +30,7 @@ export default function InsightsAdminPage() {
     type: "Article",
     content: "",
     excerpt: "",
+    image: "",
     authorId: "",
     readTime: 5,
     featured: false,
@@ -43,6 +44,26 @@ export default function InsightsAdminPage() {
     status: "draft" as string,
     scheduledAt: "" as string
   });
+  const [uploading, setUploading] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+      const res = await fetch('/api/upload', { method: 'POST', body: formData });
+      const data = await res.json();
+      if (data.url) setFormData(prev => ({...prev, image: data.url}));
+    } catch (error) {
+      alert('Upload failed');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -104,6 +125,7 @@ export default function InsightsAdminPage() {
       type: insight.type,
       content: insight.content,
       excerpt: insight.excerpt,
+      image: insight.image || "",
       authorId: insight.authorId,
       readTime: insight.readTime,
       featured: insight.featured,
@@ -138,6 +160,7 @@ export default function InsightsAdminPage() {
       type: "Article",
       content: "",
       excerpt: "",
+      image: "",
       authorId: "",
       readTime: 5,
       featured: false,
@@ -288,14 +311,33 @@ export default function InsightsAdminPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Download URL (if gated)</label>
-                <input
-                  type="text"
-                  value={formData.downloadUrl}
-                  onChange={(e) => setFormData({...formData, downloadUrl: e.target.value})}
-                  className="w-full p-3 border rounded focus:border-primary focus:outline-none"
-                />
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Thumbnail Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    disabled={uploading}
+                    className="w-full p-2 border rounded focus:border-primary focus:outline-none"
+                  />
+                  {uploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
+                  {formData.image && (
+                    <div className="mt-2">
+                      <img src={formData.image} alt="Preview" className="h-32 w-auto rounded border" />
+                      <p className="text-sm text-green-600 mt-1">✓ Uploaded</p>
+                    </div>
+                  )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Download URL (if gated)</label>
+                  <input
+                    type="text"
+                    value={formData.downloadUrl}
+                    onChange={(e) => setFormData({...formData, downloadUrl: e.target.value})}
+                    className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+                  />
+                </div>
               </div>
 
               <div className="flex gap-6">
@@ -410,6 +452,7 @@ export default function InsightsAdminPage() {
               <table className="w-full">
                 <thead className="bg-gray-50 border-b">
                   <tr>
+                    <th className="text-left p-4 text-sm font-semibold">Image</th>
                     <th className="text-left p-4 text-sm font-semibold">Title</th>
                     <th className="text-left p-4 text-sm font-semibold">Type</th>
                     <th className="text-left p-4 text-sm font-semibold">Status</th>
@@ -418,8 +461,15 @@ export default function InsightsAdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {insights.map((insight) => (
+                  {insights.map((insight: any) => (
                     <tr key={insight.id} className="border-b hover:bg-gray-50">
+                      <td className="p-4">
+                        {insight.image ? (
+                          <img src={insight.image} alt={insight.title} className="h-12 w-20 object-cover rounded" />
+                        ) : (
+                          <div className="h-12 w-20 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-400">No image</div>
+                        )}
+                      </td>
                       <td className="p-4">
                         <div className="font-medium">{insight.title}</div>
                         <div className="text-sm text-gray-600">{insight.slug}</div>
