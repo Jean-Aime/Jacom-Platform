@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Modal from "@/components/Admin/Modal";
 
 interface Application {
   id: string;
@@ -21,6 +22,7 @@ export default function ApplicationsPage() {
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -164,7 +166,10 @@ export default function ApplicationsPage() {
                     </select>
                   </td>
                   <td className="p-4">
-                    <button className="text-primary hover:underline text-sm">
+                    <button 
+                      onClick={() => setSelectedApp(app)}
+                      className="text-primary hover:underline text-sm"
+                    >
                       View Details
                     </button>
                   </td>
@@ -174,6 +179,82 @@ export default function ApplicationsPage() {
           </table>
         </div>
       </div>
+
+      <Modal isOpen={!!selectedApp} onClose={() => setSelectedApp(null)} title="Application Details">
+        {selectedApp && (
+          <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Candidate Name</label>
+                <div className="text-lg font-semibold">{selectedApp.name}</div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Position</label>
+                <div className="text-lg font-semibold">{selectedApp.career.title}</div>
+              </div>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                <a href={`mailto:${selectedApp.email}`} className="text-primary hover:underline">{selectedApp.email}</a>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+                <div>{selectedApp.phone || 'N/A'}</div>
+              </div>
+            </div>
+
+            {selectedApp.linkedin && (
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">LinkedIn</label>
+                <a href={selectedApp.linkedin} target="_blank" className="text-primary hover:underline">{selectedApp.linkedin}</a>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Department</label>
+              <div>{selectedApp.career.department}</div>
+            </div>
+
+            {selectedApp.coverLetter && (
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Cover Letter</label>
+                <div className="bg-gray-50 p-4 rounded border whitespace-pre-wrap">{selectedApp.coverLetter}</div>
+              </div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Resume</label>
+              <a href={selectedApp.resumeUrl} target="_blank" className="inline-block bg-primary text-white px-4 py-2 rounded hover:bg-primary/90">
+                Download Resume →
+              </a>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-1">Applied On</label>
+              <div>{new Date(selectedApp.createdAt).toLocaleString()}</div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-600 mb-2">Update Status</label>
+              <select
+                value={selectedApp.status}
+                onChange={(e) => {
+                  updateStatus(selectedApp.id, e.target.value);
+                  setSelectedApp(null);
+                }}
+                className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+              >
+                <option value="pending">Pending</option>
+                <option value="reviewing">Reviewing</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 }

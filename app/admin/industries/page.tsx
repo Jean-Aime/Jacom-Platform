@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MultiSelect from "@/components/Admin/MultiSelect";
+import Modal from "@/components/Admin/Modal";
 
 interface Industry {
   id: string;
@@ -183,12 +184,8 @@ export default function AdminIndustriesPage() {
           </button>
         </div>
 
-        {showForm && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingId ? "Edit Industry" : "Create New Industry"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <Modal isOpen={showForm} onClose={resetForm} title={editingId ? "Edit Industry" : "Create New Industry"}>
+          <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">Name *</label>
@@ -197,6 +194,7 @@ export default function AdminIndustriesPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value, slug: e.target.value.toLowerCase().replace(/ /g, '-')})}
+                    placeholder="e.g., Financial Services"
                     className="w-full p-2 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -207,6 +205,7 @@ export default function AdminIndustriesPage() {
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                    placeholder="e.g., financial-services"
                     className="w-full p-2 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -218,6 +217,7 @@ export default function AdminIndustriesPage() {
                   required
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  placeholder="e.g., Transforming financial institutions through digital innovation"
                   className="w-full p-2 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -227,6 +227,7 @@ export default function AdminIndustriesPage() {
                   rows={4}
                   value={formData.overview}
                   onChange={(e) => setFormData({...formData, overview: e.target.value})}
+                  placeholder="e.g., We help financial services organizations navigate digital transformation, regulatory compliance, and customer experience enhancement..."
                   className="w-full p-2 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -290,8 +291,7 @@ export default function AdminIndustriesPage() {
                 </button>
               </div>
             </form>
-          </div>
-        )}
+        </Modal>
 
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           <table className="w-full">

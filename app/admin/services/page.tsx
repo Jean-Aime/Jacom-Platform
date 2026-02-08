@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import MultiSelect from "@/components/Admin/MultiSelect";
+import Modal from "@/components/Admin/Modal";
 
 interface Service {
   id: string;
@@ -165,12 +166,8 @@ export default function ServicesAdminPage() {
 
       <div className="p-8">
         {/* Form - Bain Style */}
-        {showForm && (
-          <div className="bg-white rounded border mb-8 p-6">
-            <h2 className="text-xl font-semibold mb-6">
-              {editingId ? "Edit Service" : "New Service"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <Modal isOpen={showForm} onClose={resetForm} title={editingId ? "Edit Service" : "New Service"}>
+          <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Service Name *</label>
@@ -179,6 +176,7 @@ export default function ServicesAdminPage() {
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
+                    placeholder="e.g., Digital Transformation"
                     className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -189,6 +187,7 @@ export default function ServicesAdminPage() {
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                    placeholder="e.g., digital-transformation"
                     className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -201,6 +200,7 @@ export default function ServicesAdminPage() {
                   required
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  placeholder="e.g., Accelerating digital innovation and business transformation"
                   className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -212,6 +212,7 @@ export default function ServicesAdminPage() {
                   rows={4}
                   value={formData.overview}
                   onChange={(e) => setFormData({...formData, overview: e.target.value})}
+                  placeholder="e.g., We help organizations leverage technology to transform operations, enhance customer experiences, and drive sustainable growth..."
                   className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -288,8 +289,7 @@ export default function ServicesAdminPage() {
                 </button>
               </div>
             </form>
-          </div>
-        )}
+        </Modal>
 
         {/* Table - Bain Style */}
         <div className="bg-white rounded border">

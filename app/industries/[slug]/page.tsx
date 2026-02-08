@@ -29,8 +29,13 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
     <div className="min-h-screen">
       <MegaMenuHeader />
       
-      <section className="bg-gradient-to-br from-primary/10 to-red-50 py-20 pt-32">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="relative bg-gradient-to-br from-primary/10 to-red-50 py-20 pt-32">
+        {industry.image && (
+          <div className="absolute inset-0 opacity-20">
+            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover" />
+          </div>
+        )}
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
           <h1 className="text-5xl font-bold mb-6">{industry.name}</h1>
           <p className="text-xl text-gray-600">{industry.description}</p>
         </div>

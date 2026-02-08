@@ -116,7 +116,9 @@ export default function InsightsClient({ insights }: InsightsClientProps) {
                     href={`/insights/${insight.slug}`}
                     className="group bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-all"
                   >
-                    {insight.image && (
+                    {insight.image ? (
+                      <img src={insight.image} alt={insight.title} className="w-full aspect-video object-cover" />
+                    ) : (
                       <div className="aspect-video bg-gradient-to-br from-primary/20 to-red-100"></div>
                     )}
                     <div className="p-6">
@@ -157,7 +159,11 @@ export default function InsightsClient({ insights }: InsightsClientProps) {
                     className="group bg-white border rounded-lg p-6 hover:shadow-md transition-all"
                   >
                     <div className="flex items-start gap-4">
-                      <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-red-100 rounded flex-shrink-0"></div>
+                      {insight.image ? (
+                        <img src={insight.image} alt={insight.title} className="w-20 h-20 rounded object-cover flex-shrink-0" />
+                      ) : (
+                        <div className="w-20 h-20 bg-gradient-to-br from-primary/20 to-red-100 rounded flex-shrink-0"></div>
+                      )}
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="px-2 py-1 bg-red-100 text-red-600 text-xs rounded uppercase font-medium">
@@ -200,7 +206,11 @@ export default function InsightsClient({ insights }: InsightsClientProps) {
                   className="group bg-white border rounded-lg p-6 hover:shadow-md transition-all"
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-red-100 rounded flex-shrink-0"></div>
+                    {insight.image ? (
+                      <img src={insight.image} alt={insight.title} className="w-16 h-16 rounded object-cover flex-shrink-0" />
+                    ) : (
+                      <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-red-100 rounded flex-shrink-0"></div>
+                    )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-2">
                         <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded uppercase font-medium">

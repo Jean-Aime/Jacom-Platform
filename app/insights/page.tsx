@@ -20,6 +20,7 @@ export default async function InsightsPage() {
       publishedAt: true,
       topics: true,
       regions: true,
+      image: true,
       author: {
         select: {
           id: true,

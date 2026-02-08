@@ -4,6 +4,7 @@ import Link from "next/link";
 import MultiSelect from "@/components/Admin/MultiSelect";
 import StatusBadge from "@/components/Admin/StatusBadge";
 import WorkflowActions from "@/components/Admin/WorkflowActions";
+import Modal from "@/components/Admin/Modal";
 
 interface Insight {
   id: string;
@@ -198,12 +199,8 @@ export default function InsightsAdminPage() {
       </header>
 
       <div className="p-8">
-        {showForm && (
-          <div className="bg-white rounded border mb-8 p-6">
-            <h2 className="text-xl font-semibold mb-6">
-              {editingId ? "Edit Insight" : "New Insight"}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <Modal isOpen={showForm} onClose={resetForm} title={editingId ? "Edit Insight" : "New Insight"}>
+          <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Title *</label>
@@ -212,6 +209,7 @@ export default function InsightsAdminPage() {
                     required
                     value={formData.title}
                     onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    placeholder="e.g., The Future of Banking: AI-Powered Customer Experience"
                     className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -222,6 +220,7 @@ export default function InsightsAdminPage() {
                     required
                     value={formData.slug}
                     onChange={(e) => setFormData({...formData, slug: e.target.value})}
+                    placeholder="e.g., future-of-banking-ai-customer-experience"
                     className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -273,6 +272,7 @@ export default function InsightsAdminPage() {
                   rows={2}
                   value={formData.excerpt}
                   onChange={(e) => setFormData({...formData, excerpt: e.target.value})}
+                  placeholder="e.g., Discover how artificial intelligence is revolutionizing customer service in the banking sector..."
                   className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -284,6 +284,7 @@ export default function InsightsAdminPage() {
                   rows={8}
                   value={formData.content}
                   onChange={(e) => setFormData({...formData, content: e.target.value})}
+                  placeholder="e.g., The banking industry is undergoing a profound transformation driven by artificial intelligence...\n\nKey trends include:\n- Personalized customer experiences\n- Automated fraud detection\n- Predictive analytics"
                   className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                 />
               </div>
@@ -335,6 +336,7 @@ export default function InsightsAdminPage() {
                     type="text"
                     value={formData.downloadUrl}
                     onChange={(e) => setFormData({...formData, downloadUrl: e.target.value})}
+                    placeholder="e.g., https://example.com/whitepaper.pdf"
                     className="w-full p-3 border rounded focus:border-primary focus:outline-none"
                   />
                 </div>
@@ -435,8 +437,7 @@ export default function InsightsAdminPage() {
                 </button>
               </div>
             </form>
-          </div>
-        )}
+        </Modal>
 
         <div className="bg-white rounded border">
           <div className="p-6 border-b">

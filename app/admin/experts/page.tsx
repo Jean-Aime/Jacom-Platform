@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import MultiSelect from "@/components/Admin/MultiSelect";
+import Modal from "@/components/Admin/Modal";
 
 export default function ExpertsAdminPage() {
   const [experts, setExperts] = useState<any[]>([]);
@@ -151,27 +152,25 @@ export default function ExpertsAdminPage() {
       </header>
 
       <div className="p-8">
-        {showForm && (
-          <div className="bg-white rounded border mb-8 p-6">
-            <h2 className="text-xl font-semibold mb-6">{editingId ? "Edit Expert" : "New Expert"}</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+        <Modal isOpen={showForm} onClose={resetForm} title={editingId ? "Edit Expert" : "New Expert"}>
+          <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Name *</label>
-                  <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                  <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="e.g., Sarah Chen" className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">Slug *</label>
-                  <input type="text" required value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                  <input type="text" required value={formData.slug} onChange={(e) => setFormData({...formData, slug: e.target.value})} placeholder="e.g., sarah-chen" className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Role *</label>
-                <input type="text" required value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                <input type="text" required value={formData.role} onChange={(e) => setFormData({...formData, role: e.target.value})} placeholder="e.g., Senior Partner, Digital Transformation" className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Bio *</label>
-                <textarea required rows={4} value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                <textarea required rows={4} value={formData.bio} onChange={(e) => setFormData({...formData, bio: e.target.value})} placeholder="e.g., Sarah is a seasoned consultant with over 15 years of experience in digital transformation..." className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Profile Image</label>
@@ -197,11 +196,11 @@ export default function ExpertsAdminPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium mb-2">Email</label>
-                  <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                  <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="e.g., sarah.chen@jas.com" className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">LinkedIn URL</label>
-                  <input type="url" value={formData.linkedin} onChange={(e) => setFormData({...formData, linkedin: e.target.value})} className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
+                  <input type="url" value={formData.linkedin} onChange={(e) => setFormData({...formData, linkedin: e.target.value})} placeholder="e.g., https://linkedin.com/in/sarahchen" className="w-full p-3 border rounded focus:border-primary focus:outline-none" />
                 </div>
               </div>
               <label className="flex items-center gap-2">
@@ -230,8 +229,7 @@ export default function ExpertsAdminPage() {
                 <button type="button" onClick={resetForm} className="border px-6 py-2 rounded hover:bg-gray-50">Cancel</button>
               </div>
             </form>
-          </div>
-        )}
+        </Modal>
 
         <div className="bg-white rounded border">
           <div className="p-6 border-b">

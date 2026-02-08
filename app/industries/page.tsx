@@ -12,7 +12,8 @@ export default async function IndustriesPage() {
       slug: true,
       description: true,
       featured: true,
-      trends: true
+      trends: true,
+      image: true
     },
     orderBy: { featured: 'desc' },
     take: 50
@@ -49,7 +50,10 @@ export default async function IndustriesPage() {
                   className="group bg-white rounded-lg shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
                   <div className="aspect-video bg-gradient-to-br from-primary/20 to-red-100 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    {industry.image && (
+                      <img src={industry.image} alt={industry.name} className="w-full h-full object-cover" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <div className="absolute bottom-4 left-4 text-white">
                       <h3 className="text-xl font-bold">{industry.name}</h3>
                     </div>
