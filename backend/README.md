@@ -53,8 +53,8 @@ define('ALLOWED_ORIGINS', ['http://localhost:3000']);
 ## Testing
 ```bash
 # Test API
-curl http://localhost/webtest-backup/backend
+curl http://localhost/Jacom-Platform/backend
 
 # Test industries
-curl http://localhost/webtest-backup/backend/industries
+curl http://localhost/Jacom-Platform/backend/industries
 ```

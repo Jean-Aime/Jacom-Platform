@@ -1,9 +1,9 @@
-# Professional SaaS Platform
+# Jacom Platform
 
 ## Project Structure
 
 ```
-webtest-backup/
+Jacom-Platform/
 ├── frontend/          # Next.js 15 + TypeScript
 ├── backend/           # PHP REST API
 └── docs/             # Documentation
@@ -15,7 +15,7 @@ webtest-backup/
 1. Ensure XAMPP Apache is running
 2. Import database: `backend/jas_consulting.sql`
 3. Configure: `backend/config/config.php`
-4. Test: http://localhost/webtest-backup/backend
+4. Test: http://localhost/Jacom-Platform/backend
 
 ### Frontend (Next.js)
 1. Navigate to frontend:
@@ -83,7 +83,7 @@ npm run dev
 ### Backend
 Runs on XAMPP Apache at:
 ```
-http://localhost/webtest-backup/backend
+http://localhost/Jacom-Platform/backend
 ```
 
 ## Production Deployment
