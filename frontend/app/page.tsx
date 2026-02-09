@@ -3,6 +3,7 @@ import Hero from "@/components/Hero/Hero";
 import IndustrySelector from "@/components/IndustrySelector/IndustrySelector";
 import FeaturedStories from "@/components/FeaturedStories/FeaturedStories";
 import VideoSection from "@/components/VideoSection/VideoSection";
+import ImageBanner from "@/components/ImageBanner/ImageBanner";
 import LatestInsights from "@/components/LatestInsights/LatestInsights";
 import CTASection from "@/components/CTASection/CTASection";
 import Footer from "@/components/Footer/Footer";
@@ -14,6 +15,7 @@ export default async function Home() {
   const industry = await getContent('home', 'industry');
   const stories = await getContent('home', 'stories');
   const video = await getContent('home', 'video');
+  const banner = await getContent('home', 'banner');
   const cta = await getContent('home', 'cta');
   
   const insights = await prisma.insight.findMany({
@@ -50,6 +52,7 @@ export default async function Home() {
         <Hero content={hero} />
         <IndustrySelector content={industry} />
         <FeaturedStories content={stories} />
+        <ImageBanner content={banner} />
         <VideoSection content={video} />
         <LatestInsights insights={insights} />
         <CTASection content={cta} />

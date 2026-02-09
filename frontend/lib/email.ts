@@ -9,23 +9,8 @@ export async function sendLeadNotification(lead: {
   message?: string;
   source: string;
 }) {
-  try {
-    await resend.emails.send({
-      from: 'JAS.COM <noreply@jas.com>',
-      to: 'admin@jas.com',
-      subject: `New Lead: ${lead.name} from ${lead.source}`,
-      html: `
-        <h2>New Lead Received</h2>
-        <p><strong>Name:</strong> ${lead.name}</p>
-        <p><strong>Email:</strong> ${lead.email}</p>
-        ${lead.company ? `<p><strong>Company:</strong> ${lead.company}</p>` : ''}
-        ${lead.message ? `<p><strong>Message:</strong> ${lead.message}</p>` : ''}
-        <p><strong>Source:</strong> ${lead.source}</p>
-      `
-    });
-  } catch (error) {
-    console.error('Email send failed:', error);
-  }
+  // Email disabled - configure RESEND_API_KEY to enable
+  console.log('Lead notification:', lead.email);
 }
 
 export async function sendApplicationNotification(application: {

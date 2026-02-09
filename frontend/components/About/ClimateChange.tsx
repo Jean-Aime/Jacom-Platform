@@ -4,10 +4,10 @@ export default function ClimateChange() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div>
           <h2 className="text-3xl font-light mb-6">
-            Bold Steps for Climate Change
+            Sustainable Technology Solutions
           </h2>
           <p className="text-gray-700 mb-8">
-            Climate change is the defining challenge of our time. We're committed to helping our clients reduce their carbon footprint by 1.5°C in line with our commitment to the Science-Based Targets initiative.
+            JACOM is committed to renewable energy systems and sustainable technology. We design and develop solar power, wind power, and energy management systems that contribute to environmental protection and efficient resource utilization.
           </p>
           <button className="bg-primary text-white px-8 py-3 font-semibold hover:bg-red-700 transition-all hover:scale-105 hover:shadow-lg">
             LEARN MORE

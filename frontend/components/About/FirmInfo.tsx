@@ -1,11 +1,11 @@
 export default function FirmInfo({ content }: { content: any }) {
   const firmInfo = content?.about_firm_info || [
-    { title: "What We Believe", desc: "We believe those who challenge themselves to be exceptional should always find a way to make a difference." },
-    { title: "What We Do", desc: "Global leaders come to us to solve industry-defining challenges. Our unique approach to change management delivers results." },
-    { title: "Worldwide Offices", desc: "Templete is located in 40 countries. We work as one global firm to deliver the best results for our clients." },
-    { title: "Media Center", desc: "Our experts are available for media interviews and thought leadership on the global challenges our clients face." }
+    { title: "Our Mission", desc: "Create a convenient society by designing an environment using smart technology and turning all devices into social infrastructure." },
+    { title: "What We Do", desc: "IoT platform solutions, system integration, embedded systems development, smart factory automation, and renewable energy systems." },
+    { title: "Global Presence", desc: "JACOM operates across Asia, Africa, Europe, and America, supporting digitalization and industrialization worldwide." },
+    { title: "Innovation Hub", desc: "Research and development in AI, IoT, robotics, and digital transformation to solve complex technical challenges." }
   ];
-  const awards = content?.about_awards || "We're proud to be consistently recognized as one of the world's best places to work, best consulting firms, and best companies for diversity and inclusion.";
+  const awards = content?.about_awards || "JACOM specializes in industrial standardization of IoT communication protocols, providing low-cost system integration solutions and comprehensive engineering consulting services for consumers and smart device manufacturers.";
 
   return (
     <section className="py-20 px-6 md:px-20 bg-white">
@@ -24,7 +24,7 @@ export default function FirmInfo({ content }: { content: any }) {
         
         <div className="mt-12 p-8 bg-gray-50 rounded-lg">
           <h3 className="text-lg font-semibold mb-3 flex items-center justify-between cursor-pointer hover:text-primary transition-colors">
-            Awards & Recognition
+            Expertise & Certifications
             <span className="text-primary">→</span>
           </h3>
           <p className="text-sm text-gray-600">{awards}</p>

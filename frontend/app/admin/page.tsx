@@ -10,36 +10,38 @@ export default function AdminDashboard() {
     experts: 0,
     offices: 0,
     careers: 0,
-    media: 0,
     leads: 0
   });
 
   useEffect(() => {
-    fetchStats();
+    const timer = setTimeout(() => fetchStats(), 100);
+    return () => clearTimeout(timer);
   }, []);
 
   const fetchStats = async () => {
     try {
-      const [industries, services, insights, experts, offices, careers, media, leads] = await Promise.all([
-        fetch("/api/industries").then(r => r.json()),
-        fetch("/api/services").then(r => r.json()),
-        fetch("/api/insights").then(r => r.json()),
-        fetch("/api/experts").then(r => r.json()),
-        fetch("/api/offices").then(r => r.json()),
-        fetch("/api/careers").then(r => r.json()),
-        fetch("/api/media").then(r => r.json()),
-        fetch("/api/leads").then(r => r.json())
+      const results = await Promise.allSettled([
+        fetch("/api/industries").then(r => r.ok ? r.json() : []),
+        fetch("/api/services").then(r => r.ok ? r.json() : []),
+        fetch("/api/insights").then(r => r.ok ? r.json() : []),
+        fetch("/api/experts").then(r => r.ok ? r.json() : []),
+        fetch("/api/offices").then(r => r.ok ? r.json() : []),
+        fetch("/api/careers").then(r => r.ok ? r.json() : []),
+        fetch("/api/leads").then(r => r.ok ? r.json() : [])
       ]);
 
+      const [industries, services, insights, experts, offices, careers, leads] = results.map(
+        r => r.status === 'fulfilled' ? r.value : []
+      );
+
       setStats({
-        industries: industries.length,
-        services: services.length,
-        insights: insights.length,
-        experts: experts.length,
-        offices: offices.length,
-        careers: careers.length,
-        media: media.length,
-        leads: leads.length
+        industries: Array.isArray(industries) ? industries.length : 0,
+        services: Array.isArray(services) ? services.length : 0,
+        insights: Array.isArray(insights) ? insights.length : 0,
+        experts: Array.isArray(experts) ? experts.length : 0,
+        offices: Array.isArray(offices) ? offices.length : 0,
+        careers: Array.isArray(careers) ? careers.length : 0,
+        leads: Array.isArray(leads) ? leads.length : 0
       });
     } catch (error) {
       console.error("Error fetching stats:", error);
@@ -53,7 +55,6 @@ export default function AdminDashboard() {
     { label: "Experts", value: stats.experts, icon: "👥", color: "bg-orange-500", href: "/admin/experts" },
     { label: "Offices", value: stats.offices, icon: "🏢", color: "bg-red-500", href: "/admin/offices" },
     { label: "Careers", value: stats.careers, icon: "💼", color: "bg-indigo-500", href: "/admin/careers" },
-    { label: "Media", value: stats.media, icon: "📰", color: "bg-pink-500", href: "/admin/media" },
     { label: "Leads", value: stats.leads, icon: "📧", color: "bg-yellow-500", href: "/admin/leads" }
   ];
 
@@ -74,7 +75,7 @@ export default function AdminDashboard() {
             <Link
               key={stat.label}
               href={stat.href}
-              className="bg-white rounded-lg border p-6 hover:shadow-lg transition-all group"
+              className="bg-white rounded-lg border p-6 hover:shadow-lg transition-all group animate-fade-in"
             >
               <div className="flex items-center justify-between mb-4">
                 <div className={`w-12 h-12 ${stat.color} rounded-lg flex items-center justify-center text-2xl`}>
@@ -204,8 +205,8 @@ export default function AdminDashboard() {
           <div className="p-6">
             <div className="grid md:grid-cols-3 gap-6">
               <div className="text-center p-6 bg-gray-50 rounded-lg">
-                <div className="text-4xl font-bold text-primary mb-2">{stats.insights + stats.media}</div>
-                <div className="text-sm text-gray-600">Total Content Pieces</div>
+                <div className="text-4xl font-bold text-primary mb-2">{stats.insights}</div>
+                <div className="text-sm text-gray-600">Total Content</div>
               </div>
               <div className="text-center p-6 bg-gray-50 rounded-lg">
                 <div className="text-4xl font-bold text-primary mb-2">{stats.experts}</div>

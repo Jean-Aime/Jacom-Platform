@@ -44,8 +44,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const navigation = [
     { name: "Dashboard", href: "/admin", icon: "📊", active: pathname === "/admin" },
-    { name: "Analytics", href: "/admin/analytics", icon: "📈", active: pathname === "/admin/analytics" },
-    { name: "Homepage", href: "/admin/homepage", icon: "🏠", active: pathname === "/admin/homepage" },
     { name: "Content", href: "/admin/content", icon: "📝", active: pathname === "/admin/content" },
     { name: "Industries", href: "/admin/industries", icon: "🏭", active: pathname === "/admin/industries" },
     { name: "Services", href: "/admin/services", icon: "⚙️", active: pathname === "/admin/services" },
@@ -53,9 +51,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: "Experts", href: "/admin/experts", icon: "👥", active: pathname === "/admin/experts" },
     { name: "Offices", href: "/admin/offices", icon: "🏢", active: pathname === "/admin/offices" },
     { name: "Careers", href: "/admin/careers", icon: "💼", active: pathname === "/admin/careers" },
-    { name: "Media", href: "/admin/media", icon: "📰", active: pathname === "/admin/media" },
-    { name: "Leads", href: "/admin/leads", icon: "📧", active: pathname === "/admin/leads" },
-    { name: "Applications", href: "/admin/applications", icon: "📋", active: pathname === "/admin/applications" }
+    { name: "Leads", href: "/admin/leads", icon: "📧", active: pathname === "/admin/leads" }
   ];
 
   return (

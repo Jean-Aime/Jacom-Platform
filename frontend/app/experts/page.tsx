@@ -15,7 +15,7 @@ async function ExpertsContent() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {experts.map((expert) => {
-            const expertise = JSON.parse(expert.expertise || '[]');
+            const expertise = typeof expert.expertise === 'string' ? expert.expertise.split(',').map(e => e.trim()).filter(Boolean) : [];
             return (
               <a
                 key={expert.id}

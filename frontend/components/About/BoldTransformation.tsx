@@ -18,16 +18,16 @@ export default function BoldTransformation() {
           </div>
           
           <div className="relative z-10">
-            <p className="text-white text-sm mb-4">Where your ambition?</p>
+            <p className="text-white text-sm mb-4">Ready to innovate?</p>
             <h2 className="text-4xl font-light text-white mb-8">
-              Behold the Bold: Stories of bold digital transformation
+              Digital Transformation: IoT solutions that drive real results
             </h2>
           </div>
         </div>
         
         <div className="text-center mt-12">
           <p className="text-gray-600 mb-8">
-            Get in touch and see how our team can help you achieve it.
+            Get in touch and see how JACOM can transform your business with smart technology.
           </p>
         </div>
       </div>

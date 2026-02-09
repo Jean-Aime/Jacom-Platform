@@ -101,15 +101,9 @@ async function syncToSalesforce(lead: LeadData) {
 
 // Main sync function
 export async function syncLeadToCRM(lead: LeadData) {
-  const provider = process.env.CRM_PROVIDER || 'hubspot';
-
-  console.log(`Syncing lead to ${provider}:`, { email: lead.email, source: lead.source });
-
-  if (provider === 'salesforce') {
-    return await syncToSalesforce(lead);
-  } else {
-    return await syncToHubSpot(lead);
-  }
+  // CRM disabled - configure CRM_PROVIDER to enable
+  console.log('CRM sync skipped:', lead.email);
+  return { success: true, provider: 'none' };
 }
 
 // Batch sync for multiple leads

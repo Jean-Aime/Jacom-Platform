@@ -1,14 +1,14 @@
 export default function OurPeople({ content }: { content: any }) {
   const items = content?.about_people || [
-    { title: "Culture of Collaboration", desc: "We help each other and our clients achieve the extraordinary through teamwork and a commitment to excellence." },
-    { title: "Sustainability", desc: "We believe in building companies, our careers in a way that creates lasting value and makes a positive impact on the world." },
-    { title: "Social Impact", desc: "We're dedicated to using our skills to address the world's most pressing challenges through pro bono work and strategic partnerships." }
+    { title: "Technical Excellence", desc: "Our team combines expertise in sensors, actuators, IoT, robotics, communications, electronics, and computer architecture to deliver innovative solutions." },
+    { title: "Innovation Driven", desc: "We focus on research and development of embedded information systems, AI integration, and digital transformation technologies." },
+    { title: "Global Impact", desc: "Supporting digitalization across Asia, Africa, and beyond with solutions for smart factories, renewable energy, and sustainable technology." }
   ];
 
   return (
     <section className="py-20 px-6 md:px-20 bg-white">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Our People</h2>
+        <h2 className="text-3xl md:text-4xl font-light mb-12 text-center">Our Expertise</h2>
         
         <div className="grid md:grid-cols-3 gap-8">
           {items.map((item: any, i: number) => (
