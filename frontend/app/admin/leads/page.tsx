@@ -31,10 +31,16 @@ export default function LeadsAdminPage() {
   const fetchLeads = async () => {
     try {
       const res = await fetch("/api/leads");
+      if (!res.ok) {
+        console.error('Failed to fetch leads:', res.status);
+        setLeads([]);
+        return;
+      }
       const data = await res.json();
-      setLeads(data);
+      setLeads(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching leads:", error);
+      setLeads([]);
     } finally {
       setLoading(false);
     }
@@ -204,7 +210,7 @@ export default function LeadsAdminPage() {
                         <a href={`mailto:${lead.email}`} className="text-primary hover:underline text-sm">Email</a>
                       </td>
                     </tr>
-                  ))}}
+                  ))}
                 </tbody>
               </table>
             </div>
