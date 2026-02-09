@@ -1,4 +1,5 @@
 "use client";
+import { useState, useEffect } from "react";
 
 interface SocialShareProps {
   url: string;
@@ -6,7 +7,12 @@ interface SocialShareProps {
 }
 
 export default function SocialShare({ url, title }: SocialShareProps) {
-  const shareUrl = typeof window !== 'undefined' ? window.location.origin + url : url;
+  const [shareUrl, setShareUrl] = useState(url);
+
+  useEffect(() => {
+    setShareUrl(window.location.origin + url);
+  }, [url]);
+
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(title);
 

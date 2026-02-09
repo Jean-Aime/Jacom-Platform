@@ -12,9 +12,9 @@ model Industry {
   name        String
   slug        String   @unique
   description String
-  overview    String
-  challenges  String
-  trends      String
+  overview    String   @db.LongText
+  challenges  String   @db.Text
+  trends      String   @db.Text
   featured    Boolean  @default(false)
   image       String?
   createdAt   DateTime @default(now())
@@ -58,8 +58,8 @@ model Insight {
   title       String
   slug        String   @unique
   type        String
-  content     String
-  excerpt     String
+  content     String   @db.LongText
+  excerpt     String   @db.Text
   featured    Boolean  @default(false)
   trending    Boolean  @default(false)
   gated       Boolean  @default(false)

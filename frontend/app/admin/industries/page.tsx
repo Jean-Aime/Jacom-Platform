@@ -42,8 +42,8 @@ export default function AdminIndustriesPage() {
     slug: "",
     description: "",
     overview: "",
-    challenges: "[]",
-    trends: "[]",
+    challenges: "",
+    trends: "",
     featured: false,
     image: "",
     serviceIds: [] as string[],
@@ -81,16 +81,30 @@ export default function AdminIndustriesPage() {
   }, []);
 
   const loadData = async () => {
-    const [industriesRes, servicesRes, expertsRes, insightsRes] = await Promise.all([
-      fetch('/api/industries').then(r => r.json()),
-      fetch('/api/services').then(r => r.json()),
-      fetch('/api/experts').then(r => r.json()),
-      fetch('/api/insights').then(r => r.json())
-    ]);
-    setIndustries(industriesRes);
-    setServices(servicesRes);
-    setExperts(expertsRes);
-    setInsights(insightsRes);
+    try {
+      const [industriesRes, servicesRes, expertsRes, insightsRes] = await Promise.all([
+        fetch('/api/industries'),
+        fetch('/api/services'),
+        fetch('/api/experts'),
+        fetch('/api/insights')
+      ]);
+      
+      const industries = await industriesRes.json().catch(() => []);
+      const services = await servicesRes.json().catch(() => []);
+      const experts = await expertsRes.json().catch(() => []);
+      const insights = await insightsRes.json().catch(() => []);
+      
+      setIndustries(Array.isArray(industries) ? industries : []);
+      setServices(Array.isArray(services) ? services : []);
+      setExperts(Array.isArray(experts) ? experts : []);
+      setInsights(Array.isArray(insights) ? insights : []);
+    } catch (error) {
+      console.error('Error loading data:', error);
+      setIndustries([]);
+      setServices([]);
+      setExperts([]);
+      setInsights([]);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,9 +146,9 @@ export default function AdminIndustriesPage() {
       name: industry.name,
       slug: industry.slug,
       description: industry.description,
-      overview: industry.overview,
-      challenges: industry.challenges || "[]",
-      trends: industry.trends || "[]",
+      overview: industry.overview || "",
+      challenges: industry.challenges || "",
+      trends: industry.trends || "",
       featured: industry.featured,
       image: industry.image || "",
       serviceIds: industry.services?.map((s: any) => s.id) || [],
@@ -159,8 +173,8 @@ export default function AdminIndustriesPage() {
       slug: "", 
       description: "", 
       overview: "", 
-      challenges: "[]",
-      trends: "[]",
+      challenges: "",
+      trends: "",
       featured: false,
       image: "",
       serviceIds: [],
@@ -222,14 +236,17 @@ export default function AdminIndustriesPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Overview</label>
+                <label className="block text-sm font-medium mb-2">Overview *</label>
                 <textarea
-                  rows={4}
+                  required
+                  rows={15}
                   value={formData.overview}
                   onChange={(e) => setFormData({...formData, overview: e.target.value})}
                   placeholder="e.g., We help financial services organizations navigate digital transformation, regulatory compliance, and customer experience enhancement..."
-                  className="w-full p-2 border rounded focus:border-primary focus:outline-none"
+                  className="w-full p-3 border-2 rounded focus:border-primary focus:outline-none font-mono text-sm leading-relaxed resize-y min-h-[400px]"
+                  style={{ minHeight: '400px' }}
                 />
+                <p className="text-xs text-gray-500 mt-2">✓ No character limit | ✓ Supports multiple paragraphs | ✓ Drag corner to resize</p>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-2">Industry Image</label>

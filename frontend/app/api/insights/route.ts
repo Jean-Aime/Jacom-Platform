@@ -58,6 +58,8 @@ export async function PUT(request: NextRequest) {
     if (!id) return NextResponse.json({ error: 'ID required' }, { status: 400 });
 
     const data = await request.json();
+    console.log('Updating insight:', id, 'Content length:', data.content?.length);
+    
     const updateData: any = {
       title: data.title,
       slug: data.slug,
@@ -86,9 +88,9 @@ export async function PUT(request: NextRequest) {
       data: updateData
     });
     return NextResponse.json(insight);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Update error:', error);
-    return NextResponse.json({ error: 'Failed to update insight' }, { status: 500 });
+    return NextResponse.json({ error: 'Failed to update insight', details: error.message }, { status: 500 });
   }
 }
 

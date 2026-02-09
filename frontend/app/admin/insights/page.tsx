@@ -92,6 +92,8 @@ export default function InsightsAdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    console.log('Submitting insight...', formData);
+    
     const payload = {
       ...formData,
       topics: JSON.stringify(formData.topics.split(",").map(t => t.trim()).filter(Boolean)),
@@ -103,18 +105,28 @@ export default function InsightsAdminPage() {
       const url = editingId ? `/api/insights?id=${editingId}` : "/api/insights";
       const method = editingId ? "PUT" : "POST";
       
+      console.log('Sending request:', method, url, payload);
+      
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
+      console.log('Response status:', res.status);
+      const data = await res.json();
+      console.log('Response data:', data);
+
       if (res.ok) {
+        alert('Insight saved successfully!');
         fetchData();
         resetForm();
+      } else {
+        alert('Error: ' + (data.error || 'Failed to save'));
       }
     } catch (error) {
       console.error("Error saving insight:", error);
+      alert('Error saving insight: ' + error);
     }
   };
 
@@ -278,15 +290,17 @@ export default function InsightsAdminPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2">Content *</label>
+                <label className="block text-sm font-medium mb-2">Content * (Full Article)</label>
                 <textarea
                   required
-                  rows={8}
+                  rows={30}
                   value={formData.content}
                   onChange={(e) => setFormData({...formData, content: e.target.value})}
-                  placeholder="e.g., The banking industry is undergoing a profound transformation driven by artificial intelligence...\n\nKey trends include:\n- Personalized customer experiences\n- Automated fraud detection\n- Predictive analytics"
-                  className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+                  placeholder="Write your full article content here. Add as many paragraphs as needed.\n\nYou can format with:\n\nParagraph 1...\n\nParagraph 2...\n\nBullet points:\n• Point 1\n• Point 2\n• Point 3\n\nAdd sections, quotes, and more. No limit!"
+                  className="w-full p-4 border-2 rounded focus:border-primary focus:outline-none font-mono text-sm leading-relaxed resize-y min-h-[500px]"
+                  style={{ minHeight: '500px' }}
                 />
+                <p className="text-xs text-gray-500 mt-2">✓ No character limit | ✓ Supports multiple paragraphs | ✓ Drag corner to resize</p>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
@@ -424,9 +438,10 @@ export default function InsightsAdminPage() {
               <div className="flex gap-3 pt-4 border-t">
                 <button
                   type="submit"
-                  className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition-colors"
+                  disabled={uploading}
+                  className="bg-primary text-white px-6 py-2 rounded hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {editingId ? "Update Insight" : "Create Insight"}
+                  {uploading ? 'Uploading...' : editingId ? "Update Insight" : "Create Insight"}
                 </button>
                 <button
                   type="button"

@@ -27,8 +27,20 @@ export default async function ServicePage({ params }: ServicePageProps) {
     notFound();
   }
 
-  const methodologies = JSON.parse(service.methodologies || '[]');
-  const tools = JSON.parse(service.tools || '[]');
+  let methodologies: string[] = [];
+  let tools: string[] = [];
+  
+  try {
+    methodologies = JSON.parse(service.methodologies || '[]');
+  } catch {
+    methodologies = service.methodologies ? service.methodologies.split('\n').filter(m => m.trim()).map(m => m.replace(/^[•\-]\s*/, '').trim()) : [];
+  }
+  
+  try {
+    tools = JSON.parse(service.tools || '[]');
+  } catch {
+    tools = service.tools ? service.tools.split('\n').filter(t => t.trim()).map(t => t.replace(/^[•\-]\s*/, '').trim()) : [];
+  }
 
   return (
     <div className="min-h-screen">

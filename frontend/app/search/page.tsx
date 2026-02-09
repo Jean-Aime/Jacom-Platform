@@ -75,11 +75,20 @@ export default function SearchPage() {
     <div className="min-h-screen">
       <MegaMenuHeader />
       
-      <section className="py-20 pt-32">
-        <div className="max-w-7xl mx-auto px-6">
-          <h1 className="text-4xl font-bold mb-8">Search</h1>
+      {/* Blue Hero Section */}
+      <section className="bg-gradient-to-br from-blue-900 via-blue-700 to-blue-900 py-20 pt-32 relative overflow-hidden">
+        {/* Decorative Circles */}
+        <div className="absolute top-10 right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
+        <div className="absolute top-20 left-1/4 w-32 h-32 border-2 border-white/10 rounded-full"></div>
+        <div className="absolute bottom-20 right-1/4 w-24 h-24 border-2 border-white/10 rounded-full"></div>
+        <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-white/5 rounded-full"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <h1 className="text-4xl font-bold mb-8 text-white">Search</h1>
           
-          <div className="mb-8">
+          <div className="mb-4">
             <input
               type="text"
               value={query}
@@ -88,6 +97,17 @@ export default function SearchPage() {
               className="w-full p-4 border rounded-lg text-lg focus:border-primary focus:outline-none"
             />
           </div>
+          
+          {!loading && query.length >= 2 && (
+            <div className="text-white text-sm">
+              Found {totalResults} results for "{query}"
+            </div>
+          )}
+        </div>
+      </section>
+
+      <section className="py-12 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
 
           {loading && <div className="text-center py-8">Searching...</div>}
 
@@ -103,10 +123,6 @@ export default function SearchPage() {
               </div>
 
               <div className="lg:col-span-3">
-                <div className="mb-6 text-gray-600">
-                  Found {totalResults} results for "{query}"
-                </div>
-
                 {totalResults > 0 ? (
                   <div className="space-y-4">
                     {allResults.map((item: any) => (

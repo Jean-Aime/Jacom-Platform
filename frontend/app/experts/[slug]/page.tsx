@@ -25,8 +25,21 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
     notFound();
   }
 
-  const expertise = JSON.parse(expert.expertise || '[]');
-  const locations = JSON.parse(expert.locations || '[]');
+  const expertise = (() => {
+    try {
+      return JSON.parse(expert.expertise || '[]');
+    } catch {
+      return expert.expertise ? [expert.expertise] : [];
+    }
+  })();
+  
+  const locations = (() => {
+    try {
+      return JSON.parse(expert.locations || '[]');
+    } catch {
+      return expert.locations ? [expert.locations] : [];
+    }
+  })();
 
   return (
     <div className="min-h-screen">
@@ -47,8 +60,8 @@ export default async function ExpertPage({ params }: ExpertPageProps) {
                   <div>
                     <h3 className="font-semibold mb-3">Expertise</h3>
                     <div className="flex flex-wrap gap-2">
-                      {expertise.map((skill: string) => (
-                        <span key={skill} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
+                      {expertise.map((skill: string, index: number) => (
+                        <span key={`${skill}-${index}`} className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm">
                           {skill}
                         </span>
                       ))}

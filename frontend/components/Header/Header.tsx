@@ -67,7 +67,7 @@ export default function Header() {
           <div className="flex items-center gap-8">
             <button 
               onClick={() => setMenuOpen(!menuOpen)} 
-              className="text-2xl hover:text-primary transition-all hover:rotate-90 duration-300"
+              className="lg:hidden text-2xl hover:text-primary transition-all hover:rotate-90 duration-300"
             >
               {menuOpen ? "✕" : "☰"}
             </button>
@@ -84,79 +84,171 @@ export default function Header() {
               </span>
             </div>
             
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-6">
-              <div
-                onMouseEnter={() => setActiveDropdown("industries")}
-                onMouseLeave={() => setActiveDropdown(null)}
-                className="relative"
-              >
-                <a href="/industries" className="text-sm font-semibold hover:text-primary transition-all hover:scale-105 flex items-center gap-1">
-                  Industries ▲
-                </a>
-                {activeDropdown === "industries" && (
-                  <div className="absolute top-full left-0 mt-4 bg-white shadow-2xl border rounded-lg w-screen max-w-5xl p-8 grid grid-cols-4 gap-8 animate-fade-in">
-                    {industries.map((col, i) => (
-                      <div key={i} className="space-y-3">
-                        {col.map((item) => (
-                          <a 
-                            key={item} 
-                            href={item === "Social Impact" ? "/social-impact" : "/industries"} 
-                            className="block text-sm text-gray-700 hover:text-primary hover:translate-x-2 transition-all duration-300"
-                          >
-                            → {item}
-                          </a>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <button className="text-sm hover:text-primary transition-all hover:scale-105">Consulting Services ▼</button>
-              <a href="#" className="text-sm hover:text-primary transition-all hover:scale-105">Digital</a>
-              <button className="text-sm hover:text-primary transition-all hover:scale-105">Insights ▼</button>
-              <a href="/about" className="text-sm hover:text-primary transition-all hover:scale-105">About</a>
-              <a href="#" className="text-sm hover:text-primary transition-all hover:scale-105">Careers</a>
-            </nav>
+
           </div>
           
           <div className="hidden lg:flex items-center gap-6">
             <button className="text-sm hover:text-primary transition-all hover:scale-105 flex items-center gap-1">
               <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/></svg>
-              Explore
+              Search
             </button>
-            <button className="text-xl hover:text-primary transition-all hover:scale-125 hover:rotate-12">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/></svg>
-            </button>
-            <button className="text-xl hover:text-primary transition-all hover:scale-125">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z"/></svg>
+            <button 
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="text-sm hover:text-primary transition-all hover:scale-105 flex items-center gap-2"
+            >
+              {menuOpen ? (
+                <>
+                  Close
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </>
+              ) : (
+                <>
+                  Menu
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu */}
-      <div className={`fixed inset-0 bg-gradient-to-br from-white to-gray-50 z-40 overflow-y-auto pt-20 transition-all duration-500 ${
-        menuOpen ? "translate-x-0 opacity-100" : "-translate-x-full opacity-0"
+      {/* Full Screen Overlay Menu */}
+      <div className={`fixed inset-0 bg-gradient-to-br from-[#c89b7e] to-[#b88968] z-[100] overflow-y-auto transition-all duration-500 ${
+        menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
       }`}>
-        <nav className="px-6 py-8">
-          <ul className="space-y-6">
-            {["Industries", "Consulting Services ▼", "Digital", "Insights ▼", "About", "Careers"].map((item, i) => (
-              <li 
-                key={item}
-                className="text-sm font-semibold hover:text-primary transition-all hover:translate-x-4 duration-300 cursor-pointer animate-slide-in-left"
-                style={{ animationDelay: `${i * 0.1}s` }}
-                onClick={() => {
-                  if (item === "About") window.location.href = "/about";
-                  if (item === "Industries") window.location.href = "/industries";
-                }}
-              >
-                → {item}
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="min-h-screen px-12 py-16 flex items-center">
+          <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-16">
+            {/* Left Column - Main Navigation */}
+            <div className="space-y-8">
+              <nav className="space-y-6">
+                {[
+                  { title: "Our Collection", href: "/industries" },
+                  { title: "Villa Collection", href: "/services" },
+                  { title: "Conservation", href: "/social-impact" },
+                  { title: "Wildlife", href: "/insights" },
+                  { title: "About Singita", href: "/about" }
+                ].map((item, i) => (
+                  <a
+                    key={item.title}
+                    href={item.href}
+                    className="block text-4xl lg:text-5xl font-light text-white hover:translate-x-4 transition-all duration-300"
+                    style={{ 
+                      animation: menuOpen ? `slideInLeft 0.5s ease-out ${i * 0.1}s both` : 'none'
+                    }}
+                  >
+                    {item.title}
+                  </a>
+                ))}
+              </nav>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-6 pt-12">
+                {['instagram', 'facebook', 'twitter', 'linkedin', 'youtube', 'spotify', 'podcast'].map((social) => (
+                  <a
+                    key={social}
+                    href="#"
+                    className="text-white hover:scale-125 transition-all duration-300"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="10" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Right Column - Secondary Menu & Contact */}
+            <div className="grid grid-cols-2 gap-8">
+              {/* Column 1 */}
+              <div className="space-y-4">
+                {[
+                  { title: "Photos & Videos", icon: "📷" },
+                  { title: "Blog", icon: "" },
+                  { title: "Africa Is...", icon: "" },
+                  { title: "Magazine", icon: "" },
+                  { title: "Rates", icon: "" },
+                  { title: "Exclusive Offers", icon: "" },
+                  { title: "Press Room", icon: "" },
+                  { title: "Careers", icon: "" }
+                ].map((item, i) => (
+                  <a
+                    key={item.title}
+                    href="#"
+                    className="block text-white text-sm hover:translate-x-2 transition-all duration-300"
+                    style={{ 
+                      animation: menuOpen ? `slideInRight 0.5s ease-out ${i * 0.1}s both` : 'none'
+                    }}
+                  >
+                    {item.icon && <span className="mr-2">{item.icon}</span>}
+                    {item.title}
+                  </a>
+                ))}
+              </div>
+
+              {/* Column 2 */}
+              <div className="space-y-4">
+                {[
+                  { title: "Singita Resource Library", icon: "📷" },
+                  { title: "Trade Login & Rates Request", icon: "🔑" },
+                  { title: "Suppliers", icon: "🎁" }
+                ].map((item, i) => (
+                  <a
+                    key={item.title}
+                    href="#"
+                    className="block text-white text-sm hover:translate-x-2 transition-all duration-300"
+                    style={{ 
+                      animation: menuOpen ? `slideInRight 0.5s ease-out ${(i + 8) * 0.1}s both` : 'none'
+                    }}
+                  >
+                    {item.icon && <span className="mr-2">{item.icon}</span>}
+                    {item.title}
+                  </a>
+                ))}
+
+                {/* Contact Info */}
+                <div className="pt-8 space-y-3">
+                  <a href="mailto:enquiries@singita.com" className="block text-white text-sm hover:translate-x-2 transition-all">
+                    E. enquiries@singita.com
+                  </a>
+                  <a href="tel:+27216833424" className="block text-white text-sm hover:translate-x-2 transition-all">
+                    T. +27 (0) 21 683 3424
+                  </a>
+                  <a href="#" className="block text-white text-sm hover:translate-x-2 transition-all pt-2">
+                    View all contact information →
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
+
+      <style jsx>{`
+        @keyframes slideInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+        @keyframes slideInRight {
+          from {
+            opacity: 0;
+            transform: translateX(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </>
   );
 }

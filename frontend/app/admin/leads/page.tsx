@@ -168,33 +168,33 @@ export default function LeadsAdminPage() {
                 <thead className="bg-gray-50 border-b">
                   <tr>
                     <th className="text-left p-4 text-sm font-semibold">Contact</th>
-                    <th className="text-left p-4 text-sm font-semibold">Company / Title</th>
-                    <th className="text-left p-4 text-sm font-semibold">Score</th>
+                    <th className="text-left p-4 text-sm font-semibold">Message</th>
+                    <th className="text-left p-4 text-sm font-semibold">Company</th>
                     <th className="text-left p-4 text-sm font-semibold">Source</th>
                     <th className="text-left p-4 text-sm font-semibold">Date</th>
                     <th className="text-right p-4 text-sm font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {paginatedLeads.map((lead) => {
-                    const scoreColor = lead.score >= 70 ? 'text-red-600' : lead.score >= 40 ? 'text-orange-600' : 'text-blue-600';
-                    const scoreBg = lead.score >= 70 ? 'bg-red-50' : lead.score >= 40 ? 'bg-orange-50' : 'bg-blue-50';
-                    return (
+                  {paginatedLeads.map((lead) => (
                     <tr key={lead.id} className="border-b hover:bg-gray-50">
                       <td className="p-4">
                         <div className="font-medium">{lead.name}</div>
                         <div className="text-sm text-gray-600">{lead.email}</div>
                         {lead.phone && <div className="text-sm text-gray-600">{lead.phone}</div>}
                       </td>
+                      <td className="p-4">
+                        <div className="text-sm text-gray-700 max-w-md">
+                          {lead.message ? (
+                            <div className="line-clamp-2" title={lead.message}>{lead.message}</div>
+                          ) : (
+                            <span className="text-gray-400">No message</span>
+                          )}
+                        </div>
+                      </td>
                       <td className="p-4 text-sm">
                         <div>{lead.company || "-"}</div>
                         {lead.jobTitle && <div className="text-xs text-gray-500">{lead.jobTitle}</div>}
-                      </td>
-                      <td className="p-4">
-                        <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full ${scoreBg}`}>
-                          <span className={`text-lg font-bold ${scoreColor}`}>{lead.score}</span>
-                          <span className="text-xs text-gray-600">/100</span>
-                        </div>
                       </td>
                       <td className="p-4">
                         <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">{lead.source.replace("_", " ")}</span>
@@ -204,7 +204,7 @@ export default function LeadsAdminPage() {
                         <a href={`mailto:${lead.email}`} className="text-primary hover:underline text-sm">Email</a>
                       </td>
                     </tr>
-                  )})}
+                  ))}}
                 </tbody>
               </table>
             </div>

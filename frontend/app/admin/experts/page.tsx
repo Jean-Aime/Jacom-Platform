@@ -67,13 +67,8 @@ export default function ExpertsAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     
-    const payload = {
-      ...formData,
-      expertise: JSON.stringify(formData.expertise.split(",").map(e => e.trim()).filter(Boolean)),
-      locations: JSON.stringify(formData.locations.split(",").map(l => l.trim()).filter(Boolean))
-    };
-
     try {
       const url = editingId ? `/api/experts?id=${editingId}` : "/api/experts";
       const method = editingId ? "PUT" : "POST";
@@ -81,13 +76,15 @@ export default function ExpertsAdminPage() {
       await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(formData)
       });
 
-      fetchData();
+      await fetchData();
       resetForm();
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,8 +96,8 @@ export default function ExpertsAdminPage() {
       role: expert.role,
       bio: expert.bio,
       image: expert.image || "",
-      expertise: JSON.parse(expert.expertise || "[]").join(", "),
-      locations: JSON.parse(expert.locations || "[]").join(", "),
+      expertise: expert.expertise || "",
+      locations: expert.locations || "",
       email: expert.email || "",
       linkedin: expert.linkedin || "",
       featured: expert.featured,

@@ -14,9 +14,10 @@ export async function GET() {
       },
       orderBy: { createdAt: 'desc' }
     });
-    return NextResponse.json(industries);
+    return NextResponse.json(industries || []);
   } catch (error) {
-    return NextResponse.json({ error: 'Failed to fetch industries' }, { status: 500 });
+    console.error('Error fetching industries:', error);
+    return NextResponse.json([], { status: 200 });
   }
 }
 
@@ -28,18 +29,19 @@ export async function POST(request: NextRequest) {
         name: data.name,
         slug: data.slug,
         description: data.description,
-        overview: data.overview,
-        challenges: data.challenges || [],
-        trends: data.trends || [],
+        overview: data.overview || '',
+        challenges: data.challenges || '',
+        trends: data.trends || '',
         featured: data.featured || false,
-        image: data.image,
-        services: data.serviceIds ? { connect: data.serviceIds.map((id: string) => ({ id })) } : undefined,
-        experts: data.expertIds ? { connect: data.expertIds.map((id: string) => ({ id })) } : undefined,
-        insights: data.insightIds ? { connect: data.insightIds.map((id: string) => ({ id })) } : undefined
+        image: data.image || null,
+        services: data.serviceIds?.length ? { connect: data.serviceIds.map((id: string) => ({ id })) } : undefined,
+        experts: data.expertIds?.length ? { connect: data.expertIds.map((id: string) => ({ id })) } : undefined,
+        insights: data.insightIds?.length ? { connect: data.insightIds.map((id: string) => ({ id })) } : undefined
       }
     });
     return NextResponse.json(industry);
   } catch (error) {
+    console.error('Error creating industry:', error);
     return NextResponse.json({ error: 'Failed to create industry' }, { status: 500 });
   }
 }
@@ -53,18 +55,19 @@ export async function PUT(request: NextRequest) {
         name: data.name,
         slug: data.slug,
         description: data.description,
-        overview: data.overview,
-        challenges: data.challenges,
-        trends: data.trends,
+        overview: data.overview || '',
+        challenges: data.challenges || '',
+        trends: data.trends || '',
         featured: data.featured,
-        image: data.image,
-        services: data.serviceIds ? { set: data.serviceIds.map((id: string) => ({ id })) } : undefined,
-        experts: data.expertIds ? { set: data.expertIds.map((id: string) => ({ id })) } : undefined,
-        insights: data.insightIds ? { set: data.insightIds.map((id: string) => ({ id })) } : undefined
+        image: data.image || null,
+        services: data.serviceIds?.length ? { set: data.serviceIds.map((id: string) => ({ id })) } : { set: [] },
+        experts: data.expertIds?.length ? { set: data.expertIds.map((id: string) => ({ id })) } : { set: [] },
+        insights: data.insightIds?.length ? { set: data.insightIds.map((id: string) => ({ id })) } : { set: [] }
       }
     });
     return NextResponse.json(industry);
   } catch (error) {
+    console.error('Error updating industry:', error);
     return NextResponse.json({ error: 'Failed to update industry' }, { status: 500 });
   }
 }

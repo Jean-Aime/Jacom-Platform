@@ -30,7 +30,12 @@ export default async function InsightPage({ params }: InsightPageProps) {
     notFound();
   }
 
-  const topics = JSON.parse(insight.topics || '[]');
+  let topics: string[] = [];
+  try {
+    topics = JSON.parse(insight.topics || '[]');
+  } catch {
+    topics = insight.topics ? insight.topics.split(',').map(t => t.trim()) : [];
+  }
 
   // Get related insights based on shared industries or services
   const relatedInsights = await prisma.insight.findMany({
@@ -53,42 +58,55 @@ export default async function InsightPage({ params }: InsightPageProps) {
     <div className="min-h-screen">
       <MegaMenuHeader />
       
-      <article className="py-20 pt-32">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="mb-8">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="px-3 py-1 bg-primary/10 text-primary text-sm rounded uppercase font-medium">
-                {insight.type}
-              </span>
-              <span className="text-sm text-gray-500">{insight.readTime} min read</span>
-              <span className="text-sm text-gray-500">
-                {new Date(insight.publishedAt).toLocaleDateString()}
-              </span>
-            </div>
-            
-            <h1 className="text-4xl font-bold mb-4">{insight.title}</h1>
-            <p className="text-xl text-gray-600 mb-6">{insight.excerpt}</p>
-            
-            <div className="flex items-center gap-4 pb-6 border-b">
-              {insight.author.image ? (
-                <img src={insight.author.image} alt={insight.author.name} className="w-12 h-12 rounded-full" />
-              ) : (
-                <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-red-100 rounded-full"></div>
-              )}
-              <div>
-                <a href={`/experts/${insight.author.slug}`} className="font-semibold hover:text-primary">
-                  {insight.author.name}
-                </a>
-                <p className="text-sm text-gray-600">{insight.author.role}</p>
+      {/* Blue Hero Section */}
+      <section className="bg-gradient-to-br from-blue-900 via-blue-700 to-blue-900 py-16 pt-32 relative overflow-hidden">
+        {/* Animated Decorative Circles */}
+        <div className="absolute top-10 right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl animate-bounce" style={{ animationDuration: '3s' }}></div>
+        <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-ping" style={{ animationDuration: '2s' }}></div>
+        <div className="absolute top-20 left-1/4 w-32 h-32 border-2 border-white/10 rounded-full animate-spin" style={{ animationDuration: '10s' }}></div>
+        <div className="absolute bottom-20 right-1/4 w-24 h-24 border-2 border-white/10 rounded-full animate-spin" style={{ animationDuration: '15s', animationDirection: 'reverse' }}></div>
+        
+        <div className="max-w-4xl mx-auto px-6 relative z-10">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="px-3 py-1 bg-white/20 text-white text-sm rounded uppercase font-medium">
+              {insight.type}
+            </span>
+            <span className="text-sm text-white/80">{insight.readTime} min read</span>
+            <span className="text-sm text-white/80">
+              {new Date(insight.publishedAt).toLocaleDateString()}
+            </span>
+          </div>
+          
+          <h1 className="text-4xl font-bold mb-4 text-white">{insight.title}</h1>
+          <p className="text-xl text-white/90 mb-6">{insight.excerpt}</p>
+          
+          <div className="flex items-center gap-4">
+            {insight.author.image ? (
+              <img src={insight.author.image} alt={insight.author.name} className="w-12 h-12 rounded-full border-2 border-white/30 object-cover" />
+            ) : (
+              <div className="w-12 h-12 bg-gradient-to-br from-white/30 to-white/10 rounded-full flex items-center justify-center text-white font-bold text-lg border-2 border-white/30">
+                {insight.author.name.charAt(0)}
               </div>
+            )}
+            <div>
+              <a href={`/experts/${insight.author.slug}`} className="font-semibold text-white hover:text-yellow-400">
+                {insight.author.name}
+              </a>
+              <p className="text-sm text-white/80">{insight.author.role}</p>
             </div>
           </div>
+        </div>
+      </section>
+      
+      <article className="py-12 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
 
-          <div className="prose max-w-none mb-12">
+          <div className="prose prose-lg max-w-none mb-12">
             {insight.image && (
-              <div className="aspect-video bg-gradient-to-br from-primary/20 to-red-100 rounded-lg mb-8"></div>
+              <img src={insight.image} alt={insight.title} className="w-full aspect-video object-cover rounded-lg mb-8" />
             )}
-            <div className="text-gray-700 leading-relaxed whitespace-pre-line">{insight.content}</div>
+            <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">{insight.content}</div>
           </div>
 
           {insight.gated && insight.downloadUrl && (

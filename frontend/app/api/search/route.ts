@@ -106,6 +106,14 @@ export async function GET(request: NextRequest) {
       experts: experts.map(e => ({ ...e, type: 'expert' }))
     };
 
+    // Flat results for autocomplete
+    const flatResults = [
+      ...industries.map(i => ({ title: i.name, excerpt: i.description, type: 'industry', url: `/industries/${i.slug}` })),
+      ...services.map(s => ({ title: s.name, excerpt: s.description, type: 'service', url: `/services/${s.slug}` })),
+      ...insights.map(i => ({ title: i.title, excerpt: i.excerpt, type: i.type, url: `/insights/${i.slug}` })),
+      ...experts.map(e => ({ title: e.name, excerpt: e.role, type: 'expert', url: `/experts/${e.slug}` }))
+    ].slice(0, 10);
+
     const filters = {
       types: {
         industry: industries.length,
@@ -119,7 +127,7 @@ export async function GET(request: NextRequest) {
       regions
     };
 
-    return NextResponse.json({ results, filters });
+    return NextResponse.json({ results, flatResults, filters });
   } catch (error) {
     console.error('Search error:', error);
     return NextResponse.json({ error: 'Search failed' }, { status: 500 });

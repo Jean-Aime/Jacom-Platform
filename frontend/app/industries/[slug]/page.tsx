@@ -23,8 +23,20 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
     notFound();
   }
 
-  const challenges = JSON.parse(industry.challenges || '[]');
-  const trends = JSON.parse(industry.trends || '[]');
+  let challenges: string[] = [];
+  let trends: string[] = [];
+  
+  try {
+    challenges = JSON.parse(industry.challenges || '[]');
+  } catch {
+    challenges = industry.challenges ? industry.challenges.split('\n').filter(c => c.trim()).map(c => c.replace(/^[•\-]\s*/, '').trim()) : [];
+  }
+  
+  try {
+    trends = JSON.parse(industry.trends || '[]');
+  } catch {
+    trends = industry.trends ? industry.trends.split('\n').filter(t => t.trim()).map(t => t.replace(/^[•\-]\s*/, '').trim()) : [];
+  }
 
   return (
     <div className="min-h-screen">
@@ -33,6 +45,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
       <PageHero 
         title={industry.name}
         description={industry.description}
+        backgroundImage={industry.image || undefined}
         illustrationContent={
           <div className="w-full h-full flex items-center justify-center">
             <div className="w-full max-w-md px-6 py-8">
@@ -92,76 +105,139 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
         }
       />
 
-      <section className="py-16">
+      <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold mb-6">Industry Overview</h2>
-              <p className="text-gray-600 leading-relaxed mb-8">{industry.overview}</p>
-              
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Key Challenges</h3>
-                  <ul className="space-y-2">
-                    {challenges.map((challenge: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-primary mt-1">→</span>
-                        <span className="text-gray-600">{challenge}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {/* Hero Image & Overview Section */}
+          <div className="grid lg:grid-cols-2 gap-12 mb-16">
+            {/* Left: Image */}
+            <div className="space-y-6">
+              {industry.image ? (
+                <div className="rounded-2xl overflow-hidden shadow-2xl sticky top-24">
+                  <img 
+                    src={industry.image} 
+                    alt={industry.name}
+                    className="w-full h-[500px] object-cover"
+                  />
                 </div>
-                
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">Emerging Trends</h3>
-                  <ul className="space-y-2">
-                    {trends.map((trend: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-primary mt-1">→</span>
-                        <span className="text-gray-600">{trend}</span>
-                      </li>
-                    ))}
-                  </ul>
+              ) : (
+                <div className="rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-600 to-blue-800 h-[500px] flex items-center justify-center sticky top-24">
+                  <div className="text-center text-white p-8">
+                    <div className="text-6xl font-bold mb-4">{industry.name.charAt(0)}</div>
+                    <div className="text-xl font-semibold">{industry.name}</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right: Overview & Details */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-4xl font-bold mb-6 text-gray-900">Industry Overview</h2>
+                <div className="prose prose-lg text-gray-700 leading-relaxed">
+                  {industry.overview.split('\n\n').map((paragraph, i) => (
+                    <p key={i} className="mb-4">{paragraph}</p>
+                  ))}
+                </div>
+              </div>
+
+              {/* Stats Cards */}
+              <div className="grid grid-cols-3 gap-4">
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                  <div className="text-3xl font-bold text-primary mb-2">{challenges.length}</div>
+                  <div className="text-sm text-gray-600 font-medium">Key Challenges</div>
+                </div>
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                  <div className="text-3xl font-bold text-primary mb-2">{trends.length}</div>
+                  <div className="text-sm text-gray-600 font-medium">Emerging Trends</div>
+                </div>
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                  <div className="text-3xl font-bold text-primary mb-2">{industry.services.length}</div>
+                  <div className="text-sm text-gray-600 font-medium">Solutions</div>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div>
-              {industry.services.length > 0 && (
-                <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                  <h3 className="text-xl font-semibold mb-4">Related Services</h3>
-                  <div className="space-y-3">
-                    {industry.services.map((service) => (
-                      <a 
-                        key={service.id}
-                        href={`/services/${service.slug}`}
-                        className="block p-3 bg-white rounded hover:shadow-md transition-all"
-                      >
-                        <span className="text-sm font-medium">{service.name}</span>
-                      </a>
-                    ))}
-                  </div>
+          {/* Challenges & Trends Section */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-16">
+            {/* Key Challenges */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                  </svg>
                 </div>
-              )}
-
-              {industry.experts.length > 0 && (
-                <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                  <h3 className="text-xl font-semibold mb-4">Our Experts</h3>
-                  <div className="space-y-3">
-                    {industry.experts.slice(0, 3).map((expert) => (
-                      <a 
-                        key={expert.id}
-                        href={`/experts/${expert.slug}`}
-                        className="block p-3 bg-white rounded hover:shadow-md transition-all"
-                      >
-                        <div className="font-medium text-sm">{expert.name}</div>
-                        <div className="text-xs text-gray-600">{expert.role}</div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
+                <h3 className="text-2xl font-bold text-gray-900">Key Challenges</h3>
+              </div>
+              <ul className="space-y-3">
+                {challenges.map((challenge: string, i: number) => (
+                  <li key={i} className="flex items-start gap-3 group">
+                    <span className="text-primary mt-1 text-xl group-hover:scale-125 transition-transform">→</span>
+                    <span className="text-gray-700 leading-relaxed">{challenge}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
+            
+            {/* Emerging Trends */}
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                  <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"/>
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900">Emerging Trends</h3>
+              </div>
+              <ul className="space-y-3">
+                {trends.map((trend: string, i: number) => (
+                  <li key={i} className="flex items-start gap-3 group">
+                    <span className="text-primary mt-1 text-xl group-hover:scale-125 transition-transform">→</span>
+                    <span className="text-gray-700 leading-relaxed">{trend}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Related Services & Experts */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {industry.services.length > 0 && (
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200">
+                <h3 className="text-2xl font-bold mb-6 text-gray-900">Related Services</h3>
+                <div className="space-y-3">
+                  {industry.services.map((service) => (
+                    <a 
+                      key={service.id}
+                      href={`/services/${service.slug}`}
+                      className="block p-4 bg-white rounded-xl hover:shadow-lg transition-all hover:translate-x-2 border border-transparent hover:border-primary"
+                    >
+                      <span className="font-medium text-gray-900">{service.name}</span>
+                      <span className="text-primary ml-2">→</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {industry.experts.length > 0 && (
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 border border-purple-200">
+                <h3 className="text-2xl font-bold mb-6 text-gray-900">Our Experts</h3>
+                <div className="space-y-3">
+                  {industry.experts.slice(0, 3).map((expert) => (
+                    <a 
+                      key={expert.id}
+                      href={`/experts/${expert.slug}`}
+                      className="block p-4 bg-white rounded-xl hover:shadow-lg transition-all hover:translate-x-2 border border-transparent hover:border-primary"
+                    >
+                      <div className="font-medium text-gray-900">{expert.name}</div>
+                      <div className="text-sm text-gray-600">{expert.role}</div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
