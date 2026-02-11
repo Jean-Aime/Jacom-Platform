@@ -7,13 +7,13 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   reactStrictMode: true,
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
   experimental: {
     optimizeCss: true,
   },
+  outputFileTracingRoot: require('path').join(__dirname, '../'),
 };
 
 module.exports = nextConfig;

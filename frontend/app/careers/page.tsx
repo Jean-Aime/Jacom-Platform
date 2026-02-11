@@ -11,8 +11,12 @@ export default async function CareersPage() {
 
   const careersWithParsedData = careers.map(career => ({
     ...career,
-    requirements: JSON.parse(career.requirements || '[]'),
-    benefits: JSON.parse(career.benefits || '[]')
+    requirements: typeof career.requirements === 'string' && career.requirements.startsWith('[') 
+      ? JSON.parse(career.requirements) 
+      : [career.requirements],
+    benefits: typeof career.benefits === 'string' && career.benefits.startsWith('[') 
+      ? JSON.parse(career.benefits) 
+      : [career.benefits]
   }));
 
   return (
