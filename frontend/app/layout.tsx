@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./animations.css";
 import { Roboto } from "next/font/google";
+import CookieConsent from "@/components/CookieConsent/CookieConsent";
+import NewsletterAlert from "@/components/Newsletter/NewsletterAlert";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -38,6 +40,8 @@ export default function RootLayout({
         <div className="page-transition">
           {children}
         </div>
+        <CookieConsent />
+        <NewsletterAlert />
       </body>
     </html>
   );

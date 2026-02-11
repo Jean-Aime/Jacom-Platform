@@ -6,15 +6,17 @@ export default function CookieConsent() {
 
   useEffect(() => {
     const consent = localStorage.getItem('cookie-consent');
-    if (!consent) {
-      setShowBanner(true);
+    const isAdminPanel = window.location.pathname.startsWith('/admin');
+    
+    if (!consent && !isAdminPanel) {
+      // Small delay to ensure smooth animation
+      setTimeout(() => setShowBanner(true), 1000);
     }
   }, []);
 
   const acceptCookies = () => {
     localStorage.setItem('cookie-consent', 'accepted');
     setShowBanner(false);
-    // Enable analytics
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('consent', 'update', {
         analytics_storage: 'granted'
@@ -22,45 +24,43 @@ export default function CookieConsent() {
     }
   };
 
-  const rejectCookies = () => {
-    localStorage.setItem('cookie-consent', 'rejected');
-    setShowBanner(false);
-    // Disable analytics
-    if (typeof window !== 'undefined' && (window as any).gtag) {
-      (window as any).gtag('consent', 'update', {
-        analytics_storage: 'denied'
-      });
-    }
+  const openSettings = () => {
+    // For now, just accept - can be expanded later
+    acceptCookies();
   };
 
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-2xl z-50 animate-slide-up">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex-1">
-            <h3 className="font-semibold mb-2">We value your privacy</h3>
-            <p className="text-sm text-gray-600">
-              We use cookies to enhance your browsing experience, serve personalized content, and analyze our traffic. 
-              By clicking "Accept All", you consent to our use of cookies. 
-              <a href="/privacy" className="text-primary hover:underline ml-1">Learn more</a>
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={rejectCookies}
-              className="px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-            >
-              Reject
-            </button>
-            <button
-              onClick={acceptCookies}
-              className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors"
-            >
-              Accept All
-            </button>
-          </div>
+    <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
+      showBanner ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
+    }`}>
+      <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-6 p-8">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-4">About cookies on this site</h2>
+          <p className="text-gray-600 leading-relaxed mb-4 text-sm">
+            We use cookies to collect and analyse information on site performance and usage, to 
+            provide social media features and to enhance and customise content and 
+            advertisements.
+          </p>
+          <a href="/privacy" className="text-primary hover:text-primary/80 transition-colors text-sm">
+            View full privacy policy
+          </a>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-3">
+          <button
+            onClick={acceptCookies}
+            className="flex-1 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors text-sm"
+          >
+            Allow all cookies
+          </button>
+          <button
+            onClick={openSettings}
+            className="flex-1 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 px-6 py-3 rounded-lg font-medium transition-colors text-sm"
+          >
+            Cookie settings
+          </button>
         </div>
       </div>
     </div>

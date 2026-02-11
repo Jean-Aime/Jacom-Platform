@@ -108,127 +108,196 @@ export default async function ServicePage({ params }: ServicePageProps) {
         }
       />
 
-      <section className="py-16">
+      {/* Service Overview Section */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-3 gap-12">
-            <div className="lg:col-span-2">
-              <h2 className="text-3xl font-bold mb-6">Service Overview</h2>
-              <p className="text-gray-600 leading-relaxed mb-8">{service.overview}</p>
-              
-              {service.subServices.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-2xl font-semibold mb-4">Key Areas</h3>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {service.subServices.map((sub) => (
-                      <div key={sub.id} className="bg-gray-50 p-4 rounded-lg">
-                        <h4 className="font-semibold mb-2">{sub.name}</h4>
-                        <p className="text-sm text-gray-600">{sub.description}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {methodologies.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4">Methodologies</h3>
-                    <ul className="space-y-2">
-                      {methodologies.map((method: string, i: number) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-primary mt-1">→</span>
-                          <span className="text-gray-600">{method}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-                
-                {tools.length > 0 && (
-                  <div>
-                    <h3 className="text-xl font-semibold mb-4">Tools & Accelerators</h3>
-                    <ul className="space-y-2">
-                      {tools.map((tool: string, i: number) => (
-                        <li key={i} className="flex items-start gap-2">
-                          <span className="text-primary mt-1">→</span>
-                          <span className="text-gray-600">{tool}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div>
-              {service.industries.length > 0 && (
-                <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                  <h3 className="text-xl font-semibold mb-4">Related Industries</h3>
-                  <div className="space-y-3">
-                    {service.industries.map((industry) => (
-                      <a 
-                        key={industry.id}
-                        href={`/industries/${industry.slug}`}
-                        className="block p-3 bg-white rounded hover:shadow-md transition-all"
-                      >
-                        <span className="text-sm font-medium">{industry.name}</span>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {service.experts.length > 0 && (
-                <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                  <h3 className="text-xl font-semibold mb-4">Our Experts</h3>
-                  <div className="space-y-3">
-                    {service.experts.slice(0, 3).map((expert) => (
-                      <a 
-                        key={expert.id}
-                        href={`/experts/${expert.slug}`}
-                        className="block p-3 bg-white rounded hover:shadow-md transition-all"
-                      >
-                        <div className="font-medium">{expert.name}</div>
-                        <div className="text-xs text-gray-600">{expert.role}</div>
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-primary text-white p-6 rounded-lg">
-                <h3 className="text-xl font-semibold mb-4">Ready to Get Started?</h3>
-                <p className="mb-4 opacity-90">Let's discuss how this service can transform your business.</p>
-                <a 
-                  href="/contact"
-                  className="bg-white text-primary px-6 py-3 rounded-lg font-semibold hover:shadow-lg transition-all inline-block"
-                >
-                  Contact Us
-                </a>
-              </div>
-            </div>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-6">Service Overview</h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">{service.overview}</p>
           </div>
         </div>
       </section>
 
-      {service.insights.length > 0 && (
-        <section className="py-16 bg-gray-50">
+      {/* Key Areas Section */}
+      {service.subServices.length > 0 && (
+        <section className="py-20 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-2xl font-bold mb-8">Related Insights</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-6">Key Service Areas</h2>
+              <p className="text-xl text-gray-600">Comprehensive solutions across multiple domains</p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {service.subServices.map((sub, i) => (
+                <div key={sub.id} className="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-6">
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-4">{sub.name}</h3>
+                  <p className="text-gray-600 leading-relaxed">{sub.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Methodologies & Tools Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {methodologies.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8">Our Methodologies</h2>
+                <div className="space-y-4">
+                  {methodologies.map((method: string, i: number) => (
+                    <div key={i} className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
+                      <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                        <span className="text-white text-sm font-bold">{i + 1}</span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900 mb-1">{method}</h3>
+                        <p className="text-sm text-gray-600">Proven approach for optimal results</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {tools.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8">Tools & Technologies</h2>
+                <div className="grid grid-cols-1 gap-4">
+                  {tools.map((tool: string, i: number) => (
+                    <div key={i} className="flex items-center gap-4 p-4 bg-green-50 rounded-lg">
+                      <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
+                        </svg>
+                      </div>
+                      <span className="font-semibold text-gray-900">{tool}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* Industries & Experts Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16">
+            {service.industries.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8">Related Industries</h2>
+                <div className="grid gap-4">
+                  {service.industries.map((industry) => (
+                    <a 
+                      key={industry.id}
+                      href={`/industries/${industry.slug}`}
+                      className="block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                          <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg">{industry.name}</h3>
+                          <p className="text-sm text-gray-600">Specialized solutions</p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {service.experts.length > 0 && (
+              <div>
+                <h2 className="text-3xl font-bold mb-8">Our Experts</h2>
+                <div className="space-y-4">
+                  {service.experts.slice(0, 4).map((expert) => (
+                    <a 
+                      key={expert.id}
+                      href={`/experts/${expert.slug}`}
+                      className="block p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center">
+                          <span className="text-white font-bold text-lg">{expert.name.charAt(0)}</span>
+                        </div>
+                        <div>
+                          <h3 className="font-bold">{expert.name}</h3>
+                          <p className="text-sm text-gray-600">{expert.role}</p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-600 to-blue-800">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Business?</h2>
+          <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+            Let's discuss how {service.name.toLowerCase()} can drive innovation and growth for your organization.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="/contact"
+              className="bg-white text-blue-600 px-8 py-4 rounded-lg font-bold hover:shadow-xl transition-all duration-300 inline-block"
+            >
+              Get Started Today
+            </a>
+            <a 
+              href="/insights"
+              className="border-2 border-white text-white px-8 py-4 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition-all duration-300 inline-block"
+            >
+              Learn More
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Related Insights Section */}
+      {service.insights.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-bold mb-6">Related Insights</h2>
+              <p className="text-xl text-gray-600">Stay informed with our latest thinking</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
               {service.insights.map((insight) => (
                 <a
                   key={insight.id}
                   href={`/insights/${insight.slug}`}
-                  className="bg-white border rounded-lg p-6 hover:shadow-md transition-all"
+                  className="group bg-white border border-gray-200 rounded-xl p-8 hover:shadow-xl transition-all duration-300"
                 >
-                  <div className="flex items-center gap-2 mb-3">
-                    <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded uppercase">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-600 text-xs font-bold rounded-full uppercase">
                       {insight.type}
                     </span>
                   </div>
-                  <h3 className="font-semibold mb-2">{insight.title}</h3>
-                  <p className="text-sm text-gray-600">{insight.excerpt}</p>
+                  <h3 className="text-xl font-bold mb-4 group-hover:text-blue-600 transition-colors">{insight.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{insight.excerpt}</p>
+                  <div className="mt-6 flex items-center text-blue-600 font-semibold">
+                    <span>Read More</span>
+                    <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
                 </a>
               ))}
             </div>

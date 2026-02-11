@@ -1,61 +1,127 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+
+interface CaseStudy {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  image: string;
+  readTime: number;
+  author: {
+    name: string;
+  };
+}
 
 export default function FeaturedStories({ content }: { content: any }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const stories = [
+  // Fallback static data
+  const fallbackStories = [
     {
+      id: '1',
+      title: "Banca Investis Transforms Customer Dialogue with AI",
+      slug: "banca-investis-ai-transformation",
+      excerpt: "How Banca Investis revolutionized customer service with AI-powered solutions, achieving 500+ internal employees adoption in just 7 months.",
+      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
+      readTime: 8,
+      author: { name: "JACOM Team" },
       heading: "Bold steps forward.",
       subheading: "Featured client success story",
-      title: "Banca Investis Transforms Customer Dialogue with AI",
       impact: "The impact",
       stat1Value: "500+",
       stat1Text: "internal employees using the tool",
       stat2Value: "7",
       stat2Text: "months from ideation to launch",
-      image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop",
       logo: "M BANCA INVESTIS"
     },
     {
+      id: '2',
+      title: "Social Innovation & Economic Development Across Asia & Africa",
+      slug: "social-innovation-asia-africa",
+      excerpt: "Our global impact across Asia and Africa, delivering 3+ years of research and consultancy across 2 continents.",
+      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop",
+      readTime: 10,
+      author: { name: "JACOM Team" },
       heading: "Transforming communities.",
       subheading: "Global impact showcase",
-      title: "Social Innovation & Economic Development Across Asia & Africa",
       impact: "Our reach",
       stat1Value: "3+",
       stat1Text: "years delivering research & consultancy",
       stat2Value: "2",
       stat2Text: "continents served",
-      image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop",
       logo: "JACOME CONSULTING"
     },
     {
+      id: '3',
+      title: "Digital Transformation Solutions for Smart Technology",
+      slug: "digital-transformation-smart-technology",
+      excerpt: "Innovation at scale: 100+ IoT & AI projects completed across 5 countries with active operations.",
+      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
+      readTime: 12,
+      author: { name: "JACOM Team" },
       heading: "Innovation at scale.",
       subheading: "Technology excellence",
-      title: "Digital Transformation Solutions for Smart Technology",
       impact: "Innovation delivered",
       stat1Value: "100+",
       stat1Text: "IoT & AI projects completed",
       stat2Value: "5",
       stat2Text: "countries with active operations",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop",
       logo: "JACOME IOT"
     },
     {
+      id: '4',
+      title: "Empowering Communities Through Training & Development",
+      slug: "empowering-communities-training-development",
+      excerpt: "Building tomorrow's leaders: 1000+ professionals trained globally through 15+ specialized training programs.",
+      image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop",
+      readTime: 15,
+      author: { name: "JACOM Team" },
       heading: "Building tomorrow's leaders.",
       subheading: "Education & empowerment",
-      title: "Empowering Communities Through Training & Development",
       impact: "Skills transformation",
       stat1Value: "1000+",
       stat1Text: "professionals trained globally",
       stat2Value: "15+",
       stat2Text: "specialized training programs",
-      image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop",
       logo: "JACOME ACADEMY"
     }
   ];
+
+  useEffect(() => {
+    fetchCaseStudies();
+  }, []);
+
+  const fetchCaseStudies = async () => {
+    try {
+      const response = await fetch('/api/insights?type=Case Study&featured=true');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.length > 0) {
+          setCaseStudies(data);
+        } else {
+          setCaseStudies(fallbackStories);
+        }
+      } else {
+        setCaseStudies(fallbackStories);
+      }
+    } catch (error) {
+      console.error('Failed to fetch case studies:', error);
+      setCaseStudies(fallbackStories);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const stories = caseStudies.length > 0 ? caseStudies.map((study, index) => ({
+    ...study,
+    ...fallbackStories[index % fallbackStories.length]
+  })) : fallbackStories;
 
   const currentStory = stories[activeSlide];
 
@@ -104,9 +170,12 @@ export default function FeaturedStories({ content }: { content: any }) {
               </div>
             </div>
 
-            <a href="#" className="text-primary font-semibold text-sm inline-flex items-center gap-2 group">
+            <Link 
+              href={`/insights/${currentStory.slug}`}
+              className="text-primary font-semibold text-sm inline-flex items-center gap-2 group"
+            >
               Read story <span className="group-hover:translate-x-1 transition-transform">→</span>
-            </a>
+            </Link>
           </div>
 
           <div className="relative h-96 rounded-lg shadow-2xl overflow-hidden group hover-scale">
@@ -137,9 +206,12 @@ export default function FeaturedStories({ content }: { content: any }) {
         </div>
 
         <div className="text-center mt-8">
-          <button className="border-2 border-primary text-primary px-8 py-3 text-sm font-semibold hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95">
+          <Link 
+            href="/insights?type=Case Study"
+            className="border-2 border-primary text-primary px-8 py-3 text-sm font-semibold hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 hover:shadow-lg active:scale-95 inline-block"
+          >
             SEE ALL CLIENT RESULTS
-          </button>
+          </Link>
         </div>
       </div>
     </section>

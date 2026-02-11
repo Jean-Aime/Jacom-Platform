@@ -12,7 +12,10 @@
     "db:seed-content": "tsx prisma/seed-content.ts",
     "db:seed-industries": "tsx prisma/seed-industries.ts",
     "cleanup:sessions": "tsx scripts/cleanup-sessions.ts",
-    "security:audit": "npm audit && npm outdated"
+    "security:audit": "npm audit && npm outdated",
+    "kill:node": "taskkill /f /im node.exe /t || true",
+    "prisma:generate": "prisma generate",
+    "dev:reset": "npm run kill:node && npm run prisma:generate && npm run dev"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

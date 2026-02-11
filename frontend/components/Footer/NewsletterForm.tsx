@@ -13,22 +13,19 @@ export default function NewsletterForm() {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/leads', {
+      const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          source: 'newsletter',
-          type: 'newsletter',
-          name: '',
-          message: 'Newsletter subscription'
-        })
+        body: JSON.stringify({ email })
       });
 
+      const data = await response.json();
       if (response.ok) {
         setSuccess(true);
         setEmail("");
         setTimeout(() => setSuccess(false), 3000);
+      } else {
+        alert(data.error || 'Failed to subscribe');
       }
     } catch (error) {
       alert("Failed to subscribe. Please try again.");

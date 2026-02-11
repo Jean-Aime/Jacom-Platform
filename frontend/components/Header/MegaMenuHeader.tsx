@@ -42,14 +42,35 @@ export default function MegaMenuHeader() {
 
   useEffect(() => {
     const loadData = async () => {
-      const [industriesData, servicesData, insightsData] = await Promise.all([
-        DataService.getIndustries(),
-        DataService.getServices(),
-        DataService.getInsights()
-      ]);
-      setIndustries(industriesData);
-      setServices(servicesData);
-      setFeaturedInsights(insightsData.filter(i => i.featured).slice(0, 3));
+      try {
+        const timestamp = Date.now();
+        const [industriesResponse, servicesResponse, insightsResponse] = await Promise.all([
+          fetch(`/api/industries?t=${timestamp}`),
+          fetch(`/api/services?t=${timestamp}`),
+          fetch(`/api/insights?t=${timestamp}`)
+        ]);
+        
+        const [industriesData, servicesData, insightsData] = await Promise.all([
+          industriesResponse.json(),
+          servicesResponse.json(),
+          insightsResponse.json()
+        ]);
+        
+        setIndustries(industriesData || []);
+        setServices(servicesData || []);
+        setFeaturedInsights((insightsData || []).filter((i: any) => i.featured).slice(0, 3));
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        // Fallback to mock data if API fails
+        const [industriesData, servicesData, insightsData] = await Promise.all([
+          DataService.getIndustries(),
+          DataService.getServices(),
+          DataService.getInsights()
+        ]);
+        setIndustries(industriesData);
+        setServices(servicesData);
+        setFeaturedInsights(insightsData.filter(i => i.featured).slice(0, 3));
+      }
     };
     loadData();
   }, []);
@@ -255,18 +276,26 @@ export default function MegaMenuHeader() {
                     </div>
                     {activeDropdown === "industries" && (
                       <div className="pl-6 space-y-2 animate-fade-in">
-                        {industries.slice(0, 8).map((industry) => (
-                          <a 
-                            key={industry.id}
-                            href={`/industries/${industry.slug}`}
-                            className="block text-base text-white/80 hover:text-yellow-400 hover:translate-x-2 transition-all duration-300"
-                          >
-                            → {industry.name}
-                          </a>
-                        ))}
-                        <a href="/industries" className="block text-base text-yellow-400 hover:translate-x-2 transition-all duration-300 pt-2">
-                          View All Industries →
-                        </a>
+                        {industries.length > 0 ? (
+                          <>
+                            {industries.slice(0, 8).map((industry) => (
+                              <a 
+                                key={industry.id}
+                                href={`/industries/${industry.slug}`}
+                                className="block text-base text-white/80 hover:text-yellow-400 hover:translate-x-2 transition-all duration-300"
+                              >
+                                → {industry.name}
+                              </a>
+                            ))}
+                            <a href="/industries" className="block text-base text-yellow-400 hover:translate-x-2 transition-all duration-300 pt-2">
+                              View All Industries →
+                            </a>
+                          </>
+                        ) : (
+                          <div className="text-base text-white/60 italic">
+                            Loading industries...
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -291,18 +320,26 @@ export default function MegaMenuHeader() {
                     </div>
                     {activeDropdown === "services" && (
                       <div className="pl-6 space-y-2 animate-fade-in">
-                        {services.slice(0, 6).map((service) => (
-                          <a 
-                            key={service.id}
-                            href={`/services/${service.slug}`}
-                            className="block text-base text-white/80 hover:text-yellow-400 hover:translate-x-2 transition-all duration-300"
-                          >
-                            → {service.name}
-                          </a>
-                        ))}
-                        <a href="/services" className="block text-base text-yellow-400 hover:translate-x-2 transition-all duration-300 pt-2">
-                          View All Services →
-                        </a>
+                        {services.length > 0 ? (
+                          <>
+                            {services.slice(0, 6).map((service) => (
+                              <a 
+                                key={service.id}
+                                href={`/services/${service.slug}`}
+                                className="block text-base text-white/80 hover:text-yellow-400 hover:translate-x-2 transition-all duration-300"
+                              >
+                                → {service.name}
+                              </a>
+                            ))}
+                            <a href="/services" className="block text-base text-yellow-400 hover:translate-x-2 transition-all duration-300 pt-2">
+                              View All Services →
+                            </a>
+                          </>
+                        ) : (
+                          <div className="text-base text-white/60 italic">
+                            Loading services...
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>

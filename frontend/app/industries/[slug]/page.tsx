@@ -23,6 +23,18 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
     notFound();
   }
 
+  // Fetch testimonials separately for now
+  const testimonials = [];
+  try {
+    const allTestimonials = await prisma.testimonial.findMany({
+      where: { featured: true },
+      take: 3
+    });
+    testimonials.push(...allTestimonials);
+  } catch {
+    // Testimonials table doesn't exist yet
+  }
+
   let challenges: string[] = [];
   let trends: string[] = [];
   
@@ -105,139 +117,180 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
         }
       />
 
-      <section className="py-16 bg-gray-50">
+      {/* Capabilities Section */}
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
-          {/* Hero Image & Overview Section */}
-          <div className="grid lg:grid-cols-2 gap-12 mb-16">
-            {/* Left: Image */}
-            <div className="space-y-6">
-              {industry.image ? (
-                <div className="rounded-2xl overflow-hidden shadow-2xl sticky top-24">
-                  <img 
-                    src={industry.image} 
-                    alt={industry.name}
-                    className="w-full h-[500px] object-cover"
-                  />
+          <div className="text-center mb-16">
+            <p className="text-sm text-primary font-semibold mb-2">OUR CAPABILITIES</p>
+            <h2 className="text-4xl font-bold text-gray-900">Capabilities Designed for Growth</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {industry.services.slice(0, 4).map((service, i) => {
+              const icons = [
+                <svg key="1" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
+                <svg key="2" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/></svg>,
+                <svg key="3" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd"/></svg>,
+                <svg key="4" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd"/></svg>
+              ];
+              return (
+                <div key={service.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                  <div className="mb-4">{icons[i]}</div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">{service.name}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
                 </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Partnership Advantages Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="bg-gray-100 rounded-2xl overflow-hidden">
+              {industry.image ? (
+                <img 
+                  src={industry.image} 
+                  alt={industry.name} 
+                  className="w-full h-96 object-cover"
+                />
               ) : (
-                <div className="rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-blue-600 to-blue-800 h-[500px] flex items-center justify-center sticky top-24">
-                  <div className="text-center text-white p-8">
+                <div className="w-full h-96 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                  <div className="text-center text-white">
                     <div className="text-6xl font-bold mb-4">{industry.name.charAt(0)}</div>
                     <div className="text-xl font-semibold">{industry.name}</div>
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Right: Overview & Details */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-4xl font-bold mb-6 text-gray-900">Industry Overview</h2>
-                <div className="prose prose-lg text-gray-700 leading-relaxed">
-                  {industry.overview.split('\n\n').map((paragraph, i) => (
-                    <p key={i} className="mb-4">{paragraph}</p>
-                  ))}
-                </div>
-              </div>
-
-              {/* Stats Cards */}
-              <div className="grid grid-cols-3 gap-4">
-                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                  <div className="text-3xl font-bold text-primary mb-2">{challenges.length}</div>
-                  <div className="text-sm text-gray-600 font-medium">Key Challenges</div>
-                </div>
-                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                  <div className="text-3xl font-bold text-primary mb-2">{trends.length}</div>
-                  <div className="text-sm text-gray-600 font-medium">Emerging Trends</div>
-                </div>
-                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-                  <div className="text-3xl font-bold text-primary mb-2">{industry.services.length}</div>
-                  <div className="text-sm text-gray-600 font-medium">Solutions</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Challenges & Trends Section */}
-          <div className="grid lg:grid-cols-2 gap-8 mb-16">
-            {/* Key Challenges */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Key Challenges</h3>
-              </div>
-              <ul className="space-y-3">
-                {challenges.map((challenge: string, i: number) => (
-                  <li key={i} className="flex items-start gap-3 group">
-                    <span className="text-primary mt-1 text-xl group-hover:scale-125 transition-transform">→</span>
-                    <span className="text-gray-700 leading-relaxed">{challenge}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
             
-            {/* Emerging Trends */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                  <svg className="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clipRule="evenodd"/>
-                  </svg>
+            <div>
+              <p className="text-sm text-primary font-semibold mb-2">THE PARTNERSHIP ADVANTAGE</p>
+              <h2 className="text-4xl font-bold text-gray-900 mb-6">Why Leading Companies Partner With Us</h2>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                We deliver exceptional through a combination of deep industry expertise and relentless innovation.
+              </p>
+              
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Deep Industry Expertise</h3>
+                    <p className="text-sm text-gray-600">Our consultants bring deep industry and functional expertise across all major sectors.</p>
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900">Emerging Trends</h3>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Proven Scalability</h3>
+                    <p className="text-sm text-gray-600">We provide a 360° fully integrated policy, delivering impact across the business and economy.</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 mb-2">Scalable Solutions</h3>
+                    <p className="text-sm text-gray-600">Our solutions are built to grow with your business and adapt to changing market conditions.</p>
+                  </div>
+                </div>
               </div>
-              <ul className="space-y-3">
-                {trends.map((trend: string, i: number) => (
-                  <li key={i} className="flex items-start gap-3 group">
-                    <span className="text-primary mt-1 text-xl group-hover:scale-125 transition-transform">→</span>
-                    <span className="text-gray-700 leading-relaxed">{trend}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Related Services & Experts */}
-          <div className="grid lg:grid-cols-2 gap-8">
-            {industry.services.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 border border-blue-200">
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">Related Services</h3>
-                <div className="space-y-3">
-                  {industry.services.map((service) => (
-                    <a 
-                      key={service.id}
-                      href={`/services/${service.slug}`}
-                      className="block p-4 bg-white rounded-xl hover:shadow-lg transition-all hover:translate-x-2 border border-transparent hover:border-primary"
-                    >
-                      <span className="font-medium text-gray-900">{service.name}</span>
-                      <span className="text-primary ml-2">→</span>
-                    </a>
-                  ))}
+      {/* Success Stories Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <p className="text-sm text-primary font-semibold mb-2">TESTIMONIALS</p>
+            <h2 className="text-4xl font-bold text-gray-900">Success Stories from Our Clients</h2>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.length > 0 ? (
+              testimonials.map((testimonial) => (
+                <div key={testimonial.id} className="bg-white rounded-xl p-8 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className={`w-5 h-5 ${star <= testimonial.rating ? 'text-yellow-400' : 'text-gray-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    "{testimonial.content}"
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">{testimonial.name.split(' ').map(n => n[0]).join('')}</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                      <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ))
+            ) : (
+              [1, 2, 3].map((i) => (
+                <div key={i} className="bg-white rounded-xl p-8 shadow-sm">
+                  <div className="flex items-center mb-4">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <svg key={star} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                      </svg>
+                    ))}
+                  </div>
+                  <p className="text-gray-600 mb-6 leading-relaxed">
+                    "Working with this team transformed our digital strategy. We saw a 30% increase in efficiency within the first six months."
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">JD</span>
+                    </div>
+                    <div>
+                      <div className="font-semibold text-gray-900">John Doe</div>
+                      <div className="text-sm text-gray-600">CEO, Tech Solutions</div>
+                    </div>
+                  </div>
+                </div>
+              ))
             )}
+          </div>
+        </div>
+      </section>
 
-            {industry.experts.length > 0 && (
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 border border-purple-200">
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">Our Experts</h3>
-                <div className="space-y-3">
-                  {industry.experts.slice(0, 3).map((expert) => (
-                    <a 
-                      key={expert.id}
-                      href={`/experts/${expert.slug}`}
-                      className="block p-4 bg-white rounded-xl hover:shadow-lg transition-all hover:translate-x-2 border border-transparent hover:border-primary"
-                    >
-                      <div className="font-medium text-gray-900">{expert.name}</div>
-                      <div className="text-sm text-gray-600">{expert.role}</div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            )}
+      {/* CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-primary to-blue-700">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Business Future?</h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Join hundreds of industry leaders who have already mastered innovation with our expert solutions.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all">
+              Talk to an Expert
+            </button>
+            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all">
+              View Case Studies
+            </button>
           </div>
         </div>
       </section>

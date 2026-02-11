@@ -46,6 +46,7 @@ export default function InsightsAdminPage() {
     scheduledAt: "" as string
   });
   const [uploading, setUploading] = useState(false);
+  const [sendingNewsletter, setSendingNewsletter] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -163,6 +164,31 @@ export default function InsightsAdminPage() {
       fetchData();
     } catch (error) {
       console.error("Error deleting insight:", error);
+    }
+  };
+
+  const handleSendNewsletter = async (insightId: string, title: string) => {
+    if (!confirm(`Send newsletter for "${title}" to all subscribers?`)) return;
+    
+    setSendingNewsletter(insightId);
+    try {
+      const res = await fetch('/api/newsletter/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ insightId })
+      });
+      
+      const data = await res.json();
+      if (res.ok) {
+        alert(`Newsletter sent to ${data.emailData?.subscriberCount || 0} subscribers!`);
+      } else {
+        alert('Error: ' + (data.error || 'Failed to send newsletter'));
+      }
+    } catch (error) {
+      console.error('Newsletter send error:', error);
+      alert('Failed to send newsletter');
+    } finally {
+      setSendingNewsletter(null);
     }
   };
 
@@ -509,18 +535,29 @@ export default function InsightsAdminPage() {
                         {new Date(insight.publishedAt).toLocaleDateString()}
                       </td>
                       <td className="p-4 text-right">
-                        <button
-                          onClick={() => handleEdit(insight)}
-                          className="text-primary hover:underline text-sm mr-4"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(insight.id)}
-                          className="text-red-600 hover:underline text-sm"
-                        >
-                          Delete
-                        </button>
+                        <div className="flex gap-2 justify-end">
+                          {insight.status === 'published' && (
+                            <button
+                              onClick={() => handleSendNewsletter(insight.id, insight.title)}
+                              disabled={sendingNewsletter === insight.id}
+                              className="text-green-600 hover:underline text-sm disabled:opacity-50"
+                            >
+                              {sendingNewsletter === insight.id ? 'Sending...' : 'Send Newsletter'}
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleEdit(insight)}
+                            className="text-primary hover:underline text-sm"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(insight.id)}
+                            className="text-red-600 hover:underline text-sm"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

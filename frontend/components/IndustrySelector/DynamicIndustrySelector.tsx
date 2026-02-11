@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface Industry {
@@ -9,27 +9,60 @@ interface Industry {
   slug: string;
 }
 
-export default function IndustrySelector({ content, industries }: { content: any; industries: Industry[] }) {
+export default function DynamicIndustrySelector({ content }: { content: any }) {
   const router = useRouter();
   const [selectedIndustry, setSelectedIndustry] = useState("");
+  const [industries, setIndustries] = useState<Industry[]>([]);
+  const [loading, setLoading] = useState(true);
   
   const title = content?.industry_title || 'We champion the bold to achieve the extraordinary.';
   const subtitle = content?.industry_subtitle || 'Around two questions we help our clients win: one on your challenges.';
   const image = content?.industry_image || 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop';
-  
-  // Use database industries or fallback to static list that matches admin panel
-  const industryList = industries && industries.length > 0 ? industries : [
-    { id: '1', name: 'Management Consulting', slug: 'management-consulting' },
-    { id: '2', name: 'Technology & IoT Solutions', slug: 'technology-iot-solutions' },
-    { id: '3', name: 'Hospitality & Tourism', slug: 'hospitality-tourism' },
-    { id: '4', name: 'IT Services & Software Development', slug: 'it-services-software-development' },
-    { id: '5', name: 'Manufacturing & Industry 4.0', slug: 'manufacturing-industry-4' },
-    { id: '6', name: 'Education & Training', slug: 'education-training' },
-    { id: '7', name: 'Energy & Utilities', slug: 'energy-utilities' },
-    { id: '8', name: 'Real Estate & Infrastructure', slug: 'real-estate-infrastructure' },
-    { id: '9', name: 'Financial Services', slug: 'financial-services' },
-    { id: '10', name: 'Healthcare & Life Sciences', slug: 'healthcare-life-sciences' }
-  ];
+
+  useEffect(() => {
+    fetchIndustries();
+  }, []);
+
+  const fetchIndustries = async () => {
+    try {
+      const response = await fetch('/api/industries');
+      if (response.ok) {
+        const data = await response.json();
+        setIndustries(data);
+      } else {
+        // Use fallback industries
+        setIndustries([
+          { id: '1', name: 'Management Consulting', slug: 'management-consulting' },
+          { id: '2', name: 'Technology & IoT Solutions', slug: 'technology-iot-solutions' },
+          { id: '3', name: 'Hospitality & Tourism', slug: 'hospitality-tourism' },
+          { id: '4', name: 'IT Services & Software Development', slug: 'it-services-software-development' },
+          { id: '5', name: 'Manufacturing & Industry 4.0', slug: 'manufacturing-industry-4' },
+          { id: '6', name: 'Education & Training', slug: 'education-training' },
+          { id: '7', name: 'Energy & Utilities', slug: 'energy-utilities' },
+          { id: '8', name: 'Real Estate & Infrastructure', slug: 'real-estate-infrastructure' },
+          { id: '9', name: 'Financial Services', slug: 'financial-services' },
+          { id: '10', name: 'Healthcare & Life Sciences', slug: 'healthcare-life-sciences' }
+        ]);
+      }
+    } catch (error) {
+      console.error('Failed to fetch industries:', error);
+      // Use fallback industries
+      setIndustries([
+        { id: '1', name: 'Management Consulting', slug: 'management-consulting' },
+        { id: '2', name: 'Technology & IoT Solutions', slug: 'technology-iot-solutions' },
+        { id: '3', name: 'Hospitality & Tourism', slug: 'hospitality-tourism' },
+        { id: '4', name: 'IT Services & Software Development', slug: 'it-services-software-development' },
+        { id: '5', name: 'Manufacturing & Industry 4.0', slug: 'manufacturing-industry-4' },
+        { id: '6', name: 'Education & Training', slug: 'education-training' },
+        { id: '7', name: 'Energy & Utilities', slug: 'energy-utilities' },
+        { id: '8', name: 'Real Estate & Infrastructure', slug: 'real-estate-infrastructure' },
+        { id: '9', name: 'Financial Services', slug: 'financial-services' },
+        { id: '10', name: 'Healthcare & Life Sciences', slug: 'healthcare-life-sciences' }
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleIndustryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedIndustry(e.target.value);
@@ -37,8 +70,7 @@ export default function IndustrySelector({ content, industries }: { content: any
 
   const handleGoClick = () => {
     if (selectedIndustry) {
-      // Find the industry by name to get its slug
-      const industry = industryList.find(ind => ind.name === selectedIndustry);
+      const industry = industries.find(ind => ind.name === selectedIndustry);
       const slug = industry ? industry.slug : selectedIndustry.toLowerCase().replace(/\s*&\s*/g, '-').replace(/\s+/g, '-');
       router.push(`/industries/${slug}`);
     }
@@ -75,16 +107,17 @@ export default function IndustrySelector({ content, industries }: { content: any
               <select 
                 value={selectedIndustry}
                 onChange={handleIndustryChange}
-                className="flex-1 border border-gray-300 px-4 py-3 rounded hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+                disabled={loading}
+                className="flex-1 border border-gray-300 px-4 py-3 rounded hover:border-primary transition-colors focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer disabled:opacity-50"
               >
-                <option value="">Select one</option>
-                {industryList.map((industry) => (
+                <option value="">{loading ? 'Loading...' : 'Select one'}</option>
+                {industries.map((industry) => (
                   <option key={industry.id} value={industry.name}>{industry.name}</option>
                 ))}
               </select>
               <button
                 onClick={handleGoClick}
-                disabled={!selectedIndustry}
+                disabled={!selectedIndustry || loading}
                 className="px-6 py-3 bg-primary text-white rounded font-semibold hover:bg-primary/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-scale"
               >
                 GO
@@ -93,7 +126,7 @@ export default function IndustrySelector({ content, industries }: { content: any
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            {industryList.map((industry) => (
+            {industries.map((industry) => (
               <button
                 key={industry.id}
                 onClick={() => handleTagClick(industry)}

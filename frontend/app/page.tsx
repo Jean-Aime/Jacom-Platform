@@ -1,6 +1,6 @@
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Hero from "@/components/Hero/Hero";
-import IndustrySelector from "@/components/IndustrySelector/IndustrySelector";
+import DynamicIndustrySelector from "@/components/IndustrySelector/DynamicIndustrySelector";
 import FeaturedStories from "@/components/FeaturedStories/FeaturedStories";
 import VideoSection from "@/components/VideoSection/VideoSection";
 import ImageBanner from "@/components/ImageBanner/ImageBanner";
@@ -18,39 +18,45 @@ export default async function Home() {
   const banner = await getContent('home', 'banner');
   const cta = await getContent('home', 'cta');
   
-  const insights = await prisma.insight.findMany({
-    where: {
-      OR: [
-        { status: 'published' },
-        { status: 'scheduled', scheduledAt: { lte: new Date() } }
-      ]
-    },
-    select: {
-      id: true,
-      title: true,
-      slug: true,
-      excerpt: true,
-      image: true,
-      type: true,
-      readTime: true,
-      publishedAt: true,
-      author: {
-        select: {
-          name: true,
-          slug: true
+  let insights = [];
+  try {
+    insights = await prisma.insight.findMany({
+      where: {
+        OR: [
+          { status: 'published' },
+          { status: 'scheduled', scheduledAt: { lte: new Date() } }
+        ]
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        excerpt: true,
+        image: true,
+        type: true,
+        readTime: true,
+        publishedAt: true,
+        author: {
+          select: {
+            name: true,
+            slug: true
+          }
         }
-      }
-    },
-    orderBy: { publishedAt: 'desc' },
-    take: 2
-  });
+      },
+      orderBy: { publishedAt: 'desc' },
+      take: 2
+    });
+  } catch (error) {
+    console.error('Failed to fetch insights:', error);
+    insights = [];
+  }
   
   return (
     <>
       <MegaMenuHeader />
       <main id="main-content">
         <Hero content={hero} />
-        <IndustrySelector content={industry} />
+        <DynamicIndustrySelector content={industry} />
         <FeaturedStories content={stories} />
         <ImageBanner content={banner} />
         <VideoSection content={video} />

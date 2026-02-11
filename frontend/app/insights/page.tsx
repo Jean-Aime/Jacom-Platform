@@ -6,9 +6,33 @@ import InsightsGrid from "./InsightsGrid";
 
 export const revalidate = 60;
 
-export default async function InsightsPage() {
+interface InsightsPageProps {
+  searchParams: {
+    type?: string;
+    featured?: string;
+  };
+}
+
+export default async function InsightsPage({ searchParams }: InsightsPageProps) {
+  const { type, featured } = searchParams;
+  
+  const where: any = {
+    OR: [
+      { status: 'published' },
+      { status: 'scheduled', scheduledAt: { lte: new Date() } }
+    ]
+  };
+  
+  if (type) {
+    where.type = type;
+  }
+  
+  if (featured === 'true') {
+    where.featured = true;
+  }
+  
   const insights = await prisma.insight.findMany({
-    where: { status: 'published' },
+    where,
     include: {
       author: {
         select: {
@@ -20,14 +44,19 @@ export default async function InsightsPage() {
     },
     orderBy: { publishedAt: 'desc' }
   });
+  
+  const pageTitle = type ? `${type}s` : 'Insights & Thought Leadership';
+  const pageDescription = type === 'Case Study' 
+    ? 'Explore our client success stories and transformational projects.'
+    : 'Explore our latest research, industry perspectives, and innovative solutions.';
 
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       <PageHero 
-        title="Insights & Thought Leadership"
-        description="Explore our latest research, industry perspectives, and innovative solutions."
+        title={pageTitle}
+        description={pageDescription}
         illustrationContent={
           <div className="w-full h-full p-4 flex items-center justify-center">
             <div className="w-full">

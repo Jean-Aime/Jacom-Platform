@@ -4,9 +4,29 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+    const featured = searchParams.get('featured');
+    
+    const where: any = {
+      OR: [
+        { status: 'published' },
+        { status: 'scheduled', scheduledAt: { lte: new Date() } }
+      ]
+    };
+    
+    if (type) {
+      where.type = type;
+    }
+    
+    if (featured === 'true') {
+      where.featured = true;
+    }
+    
     const insights = await prisma.insight.findMany({
+      where,
       include: {
         author: true,
         industries: true,
@@ -60,6 +80,10 @@ export async function PUT(request: NextRequest) {
     const data = await request.json();
     console.log('Updating insight:', id, 'Content length:', data.content?.length);
     
+    // Check if status is changing to published
+    const currentInsight = await prisma.insight.findUnique({ where: { id } });
+    const isBeingPublished = currentInsight?.status !== 'published' && data.status === 'published';
+    
     const updateData: any = {
       title: data.title,
       slug: data.slug,
@@ -83,10 +107,30 @@ export async function PUT(request: NextRequest) {
       updateData.scheduledAt = new Date(data.scheduledAt);
     }
 
+    // Set publishedAt when publishing
+    if (isBeingPublished) {
+      updateData.publishedAt = new Date();
+    }
+
     const insight = await prisma.insight.update({
       where: { id },
       data: updateData
     });
+
+    // Send newsletter if insight is being published
+    if (isBeingPublished) {
+      try {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/newsletter/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ insightId: id })
+        });
+      } catch (emailError) {
+        console.error('Failed to send newsletter:', emailError);
+        // Don't fail the insight update if newsletter fails
+      }
+    }
+
     return NextResponse.json(insight);
   } catch (error: any) {
     console.error('Update error:', error);
