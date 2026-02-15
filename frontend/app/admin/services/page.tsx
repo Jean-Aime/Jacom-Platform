@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import MultiSelect from "@/components/Admin/MultiSelect";
 import Modal from "@/components/Admin/Modal";
+import { domainAPI } from "@/lib/domain-api";
 
 interface Service {
   id: string;
@@ -43,6 +44,7 @@ export default function ServicesAdminPage() {
     overview: "",
     methodologies: "",
     tools: "",
+    tagline: "",
     featured: false,
     industryIds: [] as string[],
     expertIds: [] as string[],
@@ -56,10 +58,10 @@ export default function ServicesAdminPage() {
   const fetchData = async () => {
     try {
       const [servicesRes, industriesRes, expertsRes, insightsRes] = await Promise.all([
-        fetch("/api/services").then(r => r.json()),
-        fetch("/api/industries").then(r => r.json()),
-        fetch("/api/experts").then(r => r.json()),
-        fetch("/api/insights").then(r => r.json())
+        domainAPI.getServices(),
+        domainAPI.getIndustries(),
+        domainAPI.getExperts(),
+        domainAPI.getInsights()
       ]);
       setServices(servicesRes);
       setIndustries(industriesRes);
@@ -82,19 +84,13 @@ export default function ServicesAdminPage() {
     };
 
     try {
-      const url = editingId ? `/api/services?id=${editingId}` : "/api/services";
-      const method = editingId ? "PUT" : "POST";
-      
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      if (res.ok) {
-        fetchData();
-        resetForm();
+      if (editingId) {
+        await domainAPI.updateService(editingId, payload);
+      } else {
+        await domainAPI.createService(payload);
       }
+      fetchData();
+      resetForm();
     } catch (error) {
       console.error("Error saving service:", error);
     }
@@ -102,13 +98,25 @@ export default function ServicesAdminPage() {
 
   const handleEdit = (service: any) => {
     setEditingId(service.id);
+    
+    let methodologies = "";
+    let tools = "";
+    try {
+      methodologies = JSON.parse(service.methodologies || "[]").join("\n");
+      tools = JSON.parse(service.tools || "[]").join("\n");
+    } catch {
+      methodologies = service.methodologies || "";
+      tools = service.tools || "";
+    }
+    
     setFormData({
       name: service.name,
       slug: service.slug,
       description: service.description,
       overview: service.overview,
-      methodologies: JSON.parse(service.methodologies || "[]").join("\n"),
-      tools: JSON.parse(service.tools || "[]").join("\n"),
+      methodologies,
+      tools,
+      tagline: service.tagline || "",
       featured: service.featured,
       industryIds: service.industries?.map((i: any) => i.id) || [],
       expertIds: service.experts?.map((e: any) => e.id) || [],
@@ -121,7 +129,7 @@ export default function ServicesAdminPage() {
     if (!confirm("Delete this service?")) return;
     
     try {
-      await fetch(`/api/services?id=${id}`, { method: "DELETE" });
+      await domainAPI.deleteService(id);
       fetchData();
     } catch (error) {
       console.error("Error deleting service:", error);
@@ -136,6 +144,7 @@ export default function ServicesAdminPage() {
       overview: "",
       methodologies: "",
       tools: "",
+      tagline: "",
       featured: false,
       industryIds: [],
       expertIds: [],
@@ -238,6 +247,29 @@ export default function ServicesAdminPage() {
                 </div>
               </div>
 
+              <div className="border-t pt-6 mt-6">
+                <h3 className="font-semibold mb-4 text-lg">Service Detail Page</h3>
+                
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Tagline</label>
+                    <input
+                      type="text"
+                      value={formData.tagline}
+                      onChange={(e) => setFormData({...formData, tagline: e.target.value})}
+                      placeholder="e.g., Transform your business with cutting-edge digital solutions"
+                      className="w-full p-3 border rounded focus:border-primary focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p className="text-sm text-gray-700 mb-3">
+                      To manage Capabilities, Process Steps, Metrics, and Case Study, save this service first, then click "Manage Details" from the services list.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
@@ -332,6 +364,12 @@ export default function ServicesAdminPage() {
                         {new Date(service.createdAt).toLocaleDateString()}
                       </td>
                       <td className="p-4 text-right">
+                        <a
+                          href={`/admin/services/${service.id}/details`}
+                          className="text-green-600 hover:underline text-sm mr-4"
+                        >
+                          Manage Details
+                        </a>
                         <button
                           onClick={() => handleEdit(service)}
                           className="text-primary hover:underline text-sm mr-4"

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { domainAPI } from "@/lib/domain-api";
 
 export default function OfficesAdminPage() {
   const [offices, setOffices] = useState<any[]>([]);
@@ -25,8 +26,8 @@ export default function OfficesAdminPage() {
 
   const fetchOffices = async () => {
     try {
-      const res = await fetch("/api/offices");
-      setOffices(await res.json());
+      const data = await domainAPI.getOffices();
+      setOffices(data);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -44,15 +45,11 @@ export default function OfficesAdminPage() {
     };
 
     try {
-      const url = editingId ? `/api/offices?id=${editingId}` : "/api/offices";
-      const method = editingId ? "PUT" : "POST";
-      
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
+      if (editingId) {
+        await domainAPI.updateOffice(editingId, payload);
+      } else {
+        await domainAPI.createOffice(payload);
+      }
       fetchOffices();
       resetForm();
     } catch (error) {
@@ -68,7 +65,7 @@ export default function OfficesAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this office?")) return;
-    await fetch(`/api/offices?id=${id}`, { method: "DELETE" });
+    await domainAPI.deleteOffice(id);
     fetchOffices();
   };
 

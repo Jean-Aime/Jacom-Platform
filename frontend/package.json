@@ -15,10 +15,15 @@
     "security:audit": "npm audit && npm outdated",
     "kill:node": "taskkill /f /im node.exe /t || true",
     "prisma:generate": "prisma generate",
-    "dev:reset": "npm run kill:node && npm run prisma:generate && npm run dev"
+    "dev:reset": "npm run kill:node && npm run prisma:generate && npm run dev",
+    "test:smoke": "node tests/smoke-api.mjs",
+    "test:smoke:json": "set OUTPUT_JSON=1&& node tests/smoke-api.mjs",
+    "test:phase6": "node tests/phase6-simple.mjs",
+    "validate:all": "npm run test:smoke && npm run test:phase6"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "animejs": "^4.3.6",
     "bcryptjs": "^3.0.3",
     "cloudinary": "^2.9.0",
     "critters": "^0.0.23",

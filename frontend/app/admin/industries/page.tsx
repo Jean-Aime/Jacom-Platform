@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import MultiSelect from "@/components/Admin/MultiSelect";
 import Modal from "@/components/Admin/Modal";
+import { domainAPI } from "@/lib/domain-api";
 
 interface Industry {
   id: string;
@@ -82,17 +83,12 @@ export default function AdminIndustriesPage() {
 
   const loadData = async () => {
     try {
-      const [industriesRes, servicesRes, expertsRes, insightsRes] = await Promise.all([
-        fetch('/api/industries'),
-        fetch('/api/services'),
-        fetch('/api/experts'),
-        fetch('/api/insights')
+      const [industries, services, experts, insights] = await Promise.all([
+        domainAPI.getIndustries(),
+        domainAPI.getServices(),
+        domainAPI.getExperts(),
+        domainAPI.getInsights()
       ]);
-      
-      const industries = await industriesRes.json().catch(() => []);
-      const services = await servicesRes.json().catch(() => []);
-      const experts = await expertsRes.json().catch(() => []);
-      const insights = await insightsRes.json().catch(() => []);
       
       setIndustries(Array.isArray(industries) ? industries : []);
       setServices(Array.isArray(services) ? services : []);
@@ -120,18 +116,10 @@ export default function AdminIndustriesPage() {
 
     try {
       if (editingId) {
-        await fetch('/api/industries', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...payload, id: editingId })
-        });
+        await domainAPI.updateIndustry(editingId, payload);
         alert("Industry updated successfully!");
       } else {
-        await fetch('/api/industries', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
+        await domainAPI.createIndustry(payload);
         alert("Industry created successfully!");
       }
       resetForm();
@@ -161,7 +149,7 @@ export default function AdminIndustriesPage() {
 
   const handleDelete = async (id: string) => {
     if (confirm("Are you sure you want to delete this industry?")) {
-      await fetch(`/api/industries?id=${id}`, { method: 'DELETE' });
+      await domainAPI.deleteIndustry(id);
       alert("Industry deleted successfully!");
       loadData();
     }

@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
+import { domainAPI } from "@/lib/domain-api";
 
 export default function ContentAdminPage() {
   const [blocks, setBlocks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingKey, setEditingKey] = useState<string | null>(null);
   const [selectedPage, setSelectedPage] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({ key: "", page: "", section: "", type: "text", content: "", image: "", order: 0 });
@@ -15,8 +16,8 @@ export default function ContentAdminPage() {
 
   const fetchBlocks = async () => {
     try {
-      const res = await fetch("/api/content");
-      setBlocks(await res.json());
+      const data = await domainAPI.getContent();
+      setBlocks(data);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -27,9 +28,11 @@ export default function ContentAdminPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const url = editingId ? `/api/content?id=${editingId}` : "/api/content";
-      const method = editingId ? "PUT" : "POST";
-      await fetch(url, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(formData) });
+      if (editingKey) {
+        await domainAPI.updateContent(editingKey, formData);
+      } else {
+        await domainAPI.createContent(formData);
+      }
       fetchBlocks();
       resetForm();
     } catch (error) {
@@ -38,19 +41,19 @@ export default function ContentAdminPage() {
   };
 
   const handleEdit = (block: any) => {
-    setEditingId(block.id);
+    setEditingKey(block.key);
     setFormData({ key: block.key, page: block.page, section: block.section, type: block.type, content: block.content, image: block.image || "", order: block.order });
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (key: string) => {
     if (!confirm("Delete?")) return;
-    await fetch(`/api/content?id=${id}`, { method: "DELETE" });
+    await domainAPI.deleteContent(key);
     fetchBlocks();
   };
 
   const resetForm = () => {
     setFormData({ key: "", page: "", section: "", type: "text", content: "", image: "", order: 0 });
-    setEditingId(null);
+    setEditingKey(null);
   };
 
   const filteredBlocks = blocks.filter(b => 
@@ -119,13 +122,13 @@ export default function ContentAdminPage() {
         <div className="bg-white border-b px-8 py-4 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {editingId ? "Edit Content Block" : "Content Blocks"}
+              {editingKey ? "Edit Content Block" : "Content Blocks"}
             </h1>
             <p className="text-sm text-gray-500 mt-1">
               {filteredBlocks.length} {filteredBlocks.length === 1 ? "item" : "items"} found
             </p>
           </div>
-          {editingId && (
+          {editingKey && (
             <button onClick={resetForm} className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
               ✕ Cancel Edit
             </button>
@@ -133,7 +136,7 @@ export default function ContentAdminPage() {
         </div>
 
         <div className="flex-1 overflow-auto p-8">
-          {editingId ? (
+          {editingKey ? (
             <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border">
               <form onSubmit={handleSubmit} className="p-8 space-y-6">
                 <div className="grid grid-cols-2 gap-4">
@@ -220,7 +223,7 @@ export default function ContentAdminPage() {
                         <button onClick={() => handleEdit(block)} className="px-4 py-2 text-sm font-medium text-primary hover:bg-primary/10 rounded-lg transition-colors">
                           Edit
                         </button>
-                        <button onClick={() => handleDelete(block.id)} className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        <button onClick={() => handleDelete(block.key)} className="px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                           Delete
                         </button>
                       </div>

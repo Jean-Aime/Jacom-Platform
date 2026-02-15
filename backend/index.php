@@ -91,8 +91,14 @@ try {
             
             if ($method === 'POST') {
                 $controller->create();
-            } elseif ($method === 'GET') {
+            } elseif ($method === 'GET' && !$id) {
                 $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getById($id);
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
             } else {
                 http_response_code(405);
                 echo json_encode(['error' => 'Method not allowed']);
@@ -180,7 +186,7 @@ try {
             break;
             
         case 'careers':
-            require_once __DIR__ . '/controllers/OfficesController.php';
+            require_once __DIR__ . '/controllers/CareersController.php';
             $controller = new CareersController();
             
             if ($method === 'GET' && !$id) {

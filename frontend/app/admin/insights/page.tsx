@@ -5,6 +5,7 @@ import MultiSelect from "@/components/Admin/MultiSelect";
 import StatusBadge from "@/components/Admin/StatusBadge";
 import WorkflowActions from "@/components/Admin/WorkflowActions";
 import Modal from "@/components/Admin/Modal";
+import { domainAPI } from "@/lib/domain-api";
 
 interface Insight {
   id: string;
@@ -74,15 +75,15 @@ export default function InsightsAdminPage() {
   const fetchData = async () => {
     try {
       const [insightsRes, expertsRes, industriesRes, servicesRes] = await Promise.all([
-        fetch("/api/insights"),
-        fetch("/api/experts"),
-        fetch("/api/industries"),
-        fetch("/api/services")
+        domainAPI.getInsights(),
+        domainAPI.getExperts(),
+        domainAPI.getIndustries(),
+        domainAPI.getServices()
       ]);
-      setInsights(await insightsRes.json());
-      setExperts(await expertsRes.json());
-      setIndustries(await industriesRes.json());
-      setServices(await servicesRes.json());
+      setInsights(insightsRes);
+      setExperts(expertsRes);
+      setIndustries(industriesRes);
+      setServices(servicesRes);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
@@ -103,28 +104,14 @@ export default function InsightsAdminPage() {
     };
 
     try {
-      const url = editingId ? `/api/insights?id=${editingId}` : "/api/insights";
-      const method = editingId ? "PUT" : "POST";
-      
-      console.log('Sending request:', method, url, payload);
-      
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
-      console.log('Response status:', res.status);
-      const data = await res.json();
-      console.log('Response data:', data);
-
-      if (res.ok) {
-        alert('Insight saved successfully!');
-        fetchData();
-        resetForm();
+      if (editingId) {
+        await domainAPI.updateInsight(editingId, payload);
       } else {
-        alert('Error: ' + (data.error || 'Failed to save'));
+        await domainAPI.createInsight(payload);
       }
+      alert('Insight saved successfully!');
+      fetchData();
+      resetForm();
     } catch (error) {
       console.error("Error saving insight:", error);
       alert('Error saving insight: ' + error);
@@ -160,7 +147,7 @@ export default function InsightsAdminPage() {
     if (!confirm("Delete this insight?")) return;
     
     try {
-      await fetch(`/api/insights?id=${id}`, { method: "DELETE" });
+      await domainAPI.deleteInsight(id);
       fetchData();
     } catch (error) {
       console.error("Error deleting insight:", error);

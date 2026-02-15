@@ -33,6 +33,11 @@ model Service {
   overview      String
   methodologies String
   tools         String
+  tagline       String?
+  capabilities  String   @db.Text
+  processSteps  String   @db.Text
+  impactMetrics String   @db.Text
+  caseStudy     String?  @db.Text
   featured      Boolean  @default(false)
   image         String?
   status        String   @default("published")

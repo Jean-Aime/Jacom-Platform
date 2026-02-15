@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { domainAPI } from "@/lib/domain-api";
 
 interface Lead {
   id: string;
@@ -30,13 +31,7 @@ export default function LeadsAdminPage() {
 
   const fetchLeads = async () => {
     try {
-      const res = await fetch("/api/leads");
-      if (!res.ok) {
-        console.error('Failed to fetch leads:', res.status);
-        setLeads([]);
-        return;
-      }
-      const data = await res.json();
+      const data = await domainAPI.getLeads();
       setLeads(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching leads:", error);

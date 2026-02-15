@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase 6 Validation Dashboard</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f5f5; padding: 20px; }
+    .container { max-width: 1400px; margin: 0 auto; }
+    h1 { color: #333; margin-bottom: 10px; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+    .mode-selector { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .mode-selector label { display: block; margin-bottom: 10px; font-weight: 600; }
+    .mode-selector select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .card h3 { color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+    .status { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+    .status.pending { background: #fbbf24; }
+    .status.pass { background: #10b981; }
+    .status.fail { background: #ef4444; }
+    .test-item { padding: 10px; margin: 5px 0; background: #f9fafb; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .test-item.disabled { opacity: 0.5; }
+    button { padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 500; }
+    .btn-primary { background: #3b82f6; color: white; }
+    .btn-primary:hover { background: #2563eb; }
+    .btn-success { background: #10b981; color: white; }
+    .btn-danger { background: #ef4444; color: white; }
+    .btn-secondary { background: #6b7280; color: white; }
+    .actions { display: flex; gap: 10px; margin-top: 10px; }
+    .summary { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+    .summary-item { text-align: center; padding: 15px; background: #f9fafb; border-radius: 4px; }
+    .summary-item .value { font-size: 32px; font-weight: bold; color: #3b82f6; }
+    .summary-item .label { font-size: 14px; color: #666; margin-top: 5px; }
+    .log { background: #1f2937; color: #f3f4f6; padding: 15px; border-radius: 4px; font-family: 'Courier New', monospace; font-size: 12px; max-height: 300px; overflow-y: auto; margin-top: 20px; }
+    .log-entry { margin: 2px 0; }
+    .log-success { color: #10b981; }
+    .log-error { color: #ef4444; }
+    .log-info { color: #3b82f6; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 Phase 6 Validation Dashboard</h1>
+    <p class="subtitle">Automated testing for all admin panels in both API modes</p>
+
+    <div class="mode-selector">
+      <label>Current API Mode:</label>
+      <select id="modeSelect">
+        <option value="frontend">Frontend API (/api/*)</option>
+        <option value="backend">Backend API (PHP)</option>
+      </select>
+    </div>
+
+    <div class="summary">
+      <h3>Test Summary</h3>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="value" id="totalTests">0</div>
+          <div class="label">Total Tests</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="passedTests" style="color: #10b981;">0</div>
+          <div class="label">Passed</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="failedTests" style="color: #ef4444;">0</div>
+          <div class="label">Failed</div>
+        </div>
+        <div class="summary-item">
+          <div class="value" id="passRate">0%</div>
+          <div class="label">Pass Rate</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" onclick="runAllTests()">▶️ Run All Tests</button>
+        <button class="btn-secondary" onclick="clearResults()">🔄 Clear Results</button>
+        <button class="btn-success" onclick="exportResults()">📥 Export Results</button>
+      </div>
+    </div>
+
+    <div class="grid" id="entityGrid"></div>
+
+    <div class="log" id="logOutput"></div>
+  </div>
+
+  <script>
+    const entities = [
+      { name: 'industries', label: 'Industries', hasRelations: true, hasCRUD: true },
+      { name: 'services', label: 'Services', hasRelations: true, hasCRUD: true },
+      { name: 'insights', label: 'Insights', hasRelations: true, hasCRUD: true },
+      { name: 'experts', label: 'Experts', hasRelations: true, hasCRUD: true },
+      { name: 'offices', label: 'Offices', hasRelations: false, hasCRUD: true },
+      { name: 'content', label: 'Content', hasRelations: false, hasCRUD: true, usesKey: true },
+      { name: 'leads', label: 'Leads', hasRelations: false, hasCRUD: false },
+      { name: 'careers', label: 'Careers', hasRelations: false, hasCRUD: true },
+    ];
+
+    const results = {};
+    const logs = [];
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      logs.push({ timestamp, message, type });
+      const logOutput = document.getElementById('logOutput');
+      const entry = document.createElement('div');
+      entry.className = `log-entry log-${type}`;
+      entry.textContent = `[${timestamp}] ${message}`;
+      logOutput.appendChild(entry);
+      logOutput.scrollTop = logOutput.scrollHeight;
+    }
+
+    function getBaseUrl() {
+      const mode = document.getElementById('modeSelect').value;
+      return mode === 'frontend' 
+        ? '/api' 
+        : 'http://localhost/Jacom-Platform/backend';
+    }
+
+    async function testEntity(entity) {
+      const baseUrl = getBaseUrl();
+      const entityName = entity.name;
+      
+      results[entityName] = {
+        list: 'pending',
+        create: 'pending',
+        update: 'pending',
+        delete: 'pending',
+        relations: 'pending',
+      };
+
+      updateUI();
+      log(`Testing ${entity.label}...`, 'info');
+
+      // Test LIST
+      try {
+        const res = await fetch(`${baseUrl}/${entityName}`, {
+          credentials: 'include'
+        });
+        const data = await res.json();
+        
+        if (res.ok && Array.isArray(data)) {
+          results[entityName].list = 'pass';
+          log(`✅ ${entity.label}: List works (${data.length} items)`, 'success');
+
+          // Check relations
+          if (entity.hasRelations && data.length > 0) {
+            const hasRelations = data[0].industries || data[0].services || data[0].experts || data[0].insights || data[0].author;
+            results[entityName].relations = hasRelations ? 'pass' : 'fail';
+            log(hasRelations ? `✅ ${entity.label}: Relations loaded` : `❌ ${entity.label}: Relations missing`, hasRelations ? 'success' : 'error');
+          } else {
+            results[entityName].relations = 'n/a';
+          }
+        } else {
+          results[entityName].list = 'fail';
+          log(`❌ ${entity.label}: List failed`, 'error');
+        }
+      } catch (error) {
+        results[entityName].list = 'fail';
+        log(`❌ ${entity.label}: List error - ${error.message}`, 'error');
+      }
+
+      // Test CRUD operations
+      if (entity.hasCRUD) {
+        const testData = generateTestData(entityName);
+        
+        // CREATE
+        try {
+          const res = await fetch(`${baseUrl}/${entityName}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(testData),
+          });
+          const data = await res.json();
+
+          if (res.ok) {
+            results[entityName].create = 'pass';
+            log(`✅ ${entity.label}: Create works`, 'success');
+
+            const createdId = data.id || data[entity.usesKey ? 'key' : 'id'];
+
+            // UPDATE
+            if (createdId) {
+              const updateData = { ...testData };
+              // Update the appropriate field based on entity
+              if (testData.name) {
+                updateData.name = testData.name + ' Updated';
+              } else if (testData.title) {
+                updateData.title = testData.title + ' Updated';
+              } else if (testData.key) {
+                updateData.content = testData.content + ' Updated';
+              }
+              
+              const updateUrl = document.getElementById('modeSelect').value === 'frontend'
+                ? `${baseUrl}/${entityName}?${entity.usesKey ? 'key' : 'id'}=${createdId}`
+                : `${baseUrl}/${entityName}/${createdId}`;
+
+              const updateRes = await fetch(updateUrl, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(updateData),
+              });
+
+              if (updateRes.ok) {
+                results[entityName].update = 'pass';
+                log(`✅ ${entity.label}: Update works`, 'success');
+              } else {
+                results[entityName].update = 'fail';
+                log(`❌ ${entity.label}: Update failed`, 'error');
+              }
+
+              // DELETE
+              const deleteUrl = document.getElementById('modeSelect').value === 'frontend'
+                ? `${baseUrl}/${entityName}?${entity.usesKey ? 'key' : 'id'}=${createdId}`
+                : `${baseUrl}/${entityName}/${createdId}`;
+
+              const deleteRes = await fetch(deleteUrl, { 
+                method: 'DELETE',
+                credentials: 'include'
+              });
+
+              if (deleteRes.ok) {
+                results[entityName].delete = 'pass';
+                log(`✅ ${entity.label}: Delete works`, 'success');
+              } else {
+                results[entityName].delete = 'fail';
+                log(`❌ ${entity.label}: Delete failed`, 'error');
+              }
+            }
+          } else {
+            results[entityName].create = 'fail';
+            log(`❌ ${entity.label}: Create failed`, 'error');
+          }
+        } catch (error) {
+          results[entityName].create = 'fail';
+          log(`❌ ${entity.label}: Create error - ${error.message}`, 'error');
+        }
+      } else {
+        results[entityName].create = 'n/a';
+        results[entityName].update = 'n/a';
+        results[entityName].delete = 'n/a';
+      }
+
+      updateUI();
+    }
+
+    function generateTestData(entityName) {
+      const timestamp = Date.now();
+      const testData = {
+        industries: { name: `Test ${timestamp}`, slug: `test-${timestamp}`, description: 'Test', overview: 'Test', featured: false, serviceIds: [], expertIds: [], insightIds: [] },
+        services: { name: `Test ${timestamp}`, slug: `test-${timestamp}`, description: 'Test', overview: 'Test', featured: false, industryIds: [], expertIds: [], insightIds: [] },
+        insights: { title: `Test ${timestamp}`, slug: `test-${timestamp}`, type: 'Article', content: 'Test', excerpt: 'Test', authorId: '1', readTime: 5, featured: false, industryIds: [], serviceIds: [], status: 'published', publishedAt: new Date().toISOString() },
+        experts: { name: `Test ${timestamp}`, slug: `test-${timestamp}`, role: 'Test', bio: 'Test', featured: false, industryIds: [], serviceIds: [] },
+        offices: { name: `Test ${timestamp}`, slug: `test-${timestamp}`, region: 'North America', country: 'USA', city: 'Test', address: 'Test', phone: '+1234567890', email: 'test@test.com', lat: 0, lng: 0 },
+        content: { key: `test_${timestamp}`, page: 'home', section: 'test', type: 'text', content: 'Test', order: 0 },
+        careers: { title: `Test ${timestamp}`, slug: `test-${timestamp}`, department: 'Test', location: 'Test', type: 'Full-time', experience: 'Mid-level', description: 'Test', requirements: '[]', benefits: '[]', featured: false, expiresAt: new Date(Date.now() + 30*24*60*60*1000).toISOString() },
+      };
+      return testData[entityName];
+    }
+
+    async function runAllTests() {
+      log('🚀 Starting Phase 6 validation...', 'info');
+      for (const entity of entities) {
+        await testEntity(entity);
+      }
+      log('✅ All tests complete!', 'success');
+      updateSummary();
+    }
+
+    function updateUI() {
+      const grid = document.getElementById('entityGrid');
+      grid.innerHTML = '';
+
+      entities.forEach(entity => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        
+        const status = results[entity.name]?.list || 'pending';
+        const statusClass = status === 'pass' ? 'pass' : status === 'fail' ? 'fail' : 'pending';
+
+        card.innerHTML = `
+          <h3><span class="status ${statusClass}"></span>${entity.label}</h3>
+          <div class="test-item ${!entity.hasCRUD ? 'disabled' : ''}">
+            <span>List</span>
+            <span class="status ${getStatusClass(results[entity.name]?.list)}"></span>
+          </div>
+          <div class="test-item ${!entity.hasCRUD ? 'disabled' : ''}">
+            <span>Create</span>
+            <span class="status ${getStatusClass(results[entity.name]?.create)}"></span>
+          </div>
+          <div class="test-item ${!entity.hasCRUD ? 'disabled' : ''}">
+            <span>Update</span>
+            <span class="status ${getStatusClass(results[entity.name]?.update)}"></span>
+          </div>
+          <div class="test-item ${!entity.hasCRUD ? 'disabled' : ''}">
+            <span>Delete</span>
+            <span class="status ${getStatusClass(results[entity.name]?.delete)}"></span>
+          </div>
+          ${entity.hasRelations ? `
+          <div class="test-item">
+            <span>Relations</span>
+            <span class="status ${getStatusClass(results[entity.name]?.relations)}"></span>
+          </div>` : ''}
+          <div class="actions">
+            <button class="btn-primary" onclick="testEntity(entities.find(e => e.name === '${entity.name}'))">Test</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      updateSummary();
+    }
+
+    function getStatusClass(status) {
+      if (status === 'pass') return 'pass';
+      if (status === 'fail') return 'fail';
+      if (status === 'n/a') return 'pending';
+      return 'pending';
+    }
+
+    function updateSummary() {
+      let total = 0, passed = 0, failed = 0;
+      
+      Object.values(results).forEach(tests => {
+        Object.values(tests).forEach(status => {
+          if (status !== 'n/a' && status !== 'pending') {
+            total++;
+            if (status === 'pass') passed++;
+            if (status === 'fail') failed++;
+          }
+        });
+      });
+
+      document.getElementById('totalTests').textContent = total;
+      document.getElementById('passedTests').textContent = passed;
+      document.getElementById('failedTests').textContent = failed;
+      document.getElementById('passRate').textContent = total > 0 ? Math.round(passed/total*100) + '%' : '0%';
+    }
+
+    function clearResults() {
+      Object.keys(results).forEach(key => delete results[key]);
+      logs.length = 0;
+      document.getElementById('logOutput').innerHTML = '';
+      updateUI();
+      log('Results cleared', 'info');
+    }
+
+    function exportResults() {
+      const mode = document.getElementById('modeSelect').value;
+      const report = {
+        timestamp: new Date().toISOString(),
+        mode,
+        results,
+        logs,
+      };
+      const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `phase6-results-${mode}-${Date.now()}.json`;
+      a.click();
+      log('Results exported', 'success');
+    }
+
+    // Initialize
+    updateUI();
+    log('Phase 6 Validation Dashboard ready', 'info');
+  </script>
+</body>
+</html>

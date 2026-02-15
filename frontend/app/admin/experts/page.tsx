@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import MultiSelect from "@/components/Admin/MultiSelect";
 import Modal from "@/components/Admin/Modal";
+import { domainAPI } from "@/lib/domain-api";
 
 export default function ExpertsAdminPage() {
   const [experts, setExperts] = useState<any[]>([]);
@@ -51,9 +52,9 @@ export default function ExpertsAdminPage() {
   const fetchData = async () => {
     try {
       const [expertsRes, industriesRes, servicesRes] = await Promise.all([
-        fetch("/api/experts").then(r => r.json()),
-        fetch("/api/industries").then(r => r.json()),
-        fetch("/api/services").then(r => r.json())
+        domainAPI.getExperts(),
+        domainAPI.getIndustries(),
+        domainAPI.getServices()
       ]);
       setExperts(expertsRes);
       setIndustries(industriesRes);
@@ -70,15 +71,11 @@ export default function ExpertsAdminPage() {
     setLoading(true);
     
     try {
-      const url = editingId ? `/api/experts?id=${editingId}` : "/api/experts";
-      const method = editingId ? "PUT" : "POST";
-      
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData)
-      });
-
+      if (editingId) {
+        await domainAPI.updateExpert(editingId, formData);
+      } else {
+        await domainAPI.createExpert(formData);
+      }
       await fetchData();
       resetForm();
     } catch (error) {
@@ -109,7 +106,7 @@ export default function ExpertsAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this expert?")) return;
-    await fetch(`/api/experts?id=${id}`, { method: "DELETE" });
+    await domainAPI.deleteExpert(id);
     fetchData();
   };
 

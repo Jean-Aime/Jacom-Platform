@@ -31,73 +31,13 @@ export default async function IndustriesPage() {
           <div className="w-full h-full flex items-center justify-center">
             <div className="w-full max-w-md px-6 py-8">
               <div className="relative mx-auto" style={{ width: '300px', height: '300px' }}>
-                {/* Center Hub */}
                 <div className="absolute" style={{ left: '150px', top: '150px', transform: 'translate(-50%, -50%)' }}>
                   <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg z-20 border-2 border-white animate-pulse-glow">
                     <span className="text-white text-sm font-bold">JACOM</span>
                   </div>
                 </div>
-                
-                {/* Industry Nodes */}
-                {[
-                  { name: 'Tech', color: 'from-blue-500 to-blue-600', angle: 0, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clipRule="evenodd"/>
-                    </svg>
-                  ) },
-                  { name: 'Energy', color: 'from-green-500 to-green-600', angle: 60, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd"/>
-                    </svg>
-                  ) },
-                  { name: 'Mfg', color: 'from-purple-500 to-purple-600', angle: 120, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7zm6 7a1 1 0 011 1v3a1 1 0 11-2 0v-3a1 1 0 011-1zm-3 3a1 1 0 100 2h.01a1 1 0 100-2H10zm-4 1a1 1 0 011-1h.01a1 1 0 110 2H7a1 1 0 01-1-1zm1-4a1 1 0 100 2h.01a1 1 0 100-2H7zm2 1a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zm4-4a1 1 0 100 2h.01a1 1 0 100-2H13zM9 9a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1zM7 8a1 1 0 000 2h.01a1 1 0 000-2H7z" clipRule="evenodd"/>
-                    </svg>
-                  ) },
-                  { name: 'Finance', color: 'from-orange-500 to-orange-600', angle: 180, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd"/>
-                    </svg>
-                  ) },
-                  { name: 'Edu', color: 'from-pink-500 to-pink-600', angle: 240, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                    </svg>
-                  ) },
-                  { name: 'Hotel', color: 'from-teal-500 to-teal-600', angle: 300, icon: (
-                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
-                    </svg>
-                  ) }
-                ].map((industry, i) => {
-                  const radius = 115;
-                  const angleRad = (industry.angle - 90) * Math.PI / 180;
-                  const x = 150 + radius * Math.cos(angleRad);
-                  const y = 150 + radius * Math.sin(angleRad);
-                  return (
-                    <div key={i} className="absolute" style={{ left: `${x}px`, top: `${y}px`, transform: 'translate(-50%, -50%)' }}>
-                      <div className={`w-16 h-16 bg-gradient-to-br ${industry.color} rounded-lg flex items-center justify-center shadow-lg z-10 border-2 border-white diagram-node animate-bounce-in`} style={{ animationDelay: `${0.3 + i * 0.1}s` }}>
-                        {industry.icon}
-                      </div>
-                    </div>
-                  );
-                })}
-                
-                {/* Connection Lines */}
-                <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 5 }}>
-                  {[0, 60, 120, 180, 240, 300].map((angle, i) => {
-                    const radius = 115;
-                    const angleRad = (angle - 90) * Math.PI / 180;
-                    const x2 = 150 + radius * Math.cos(angleRad);
-                    const y2 = 150 + radius * Math.sin(angleRad);
-                    return <line key={i} x1="150" y1="150" x2={x2} y2={y2} stroke="#60a5fa" strokeWidth="2" strokeDasharray="5,5" opacity="0.4" className="animate-draw-line" style={{animationDelay: `${0.2 + i * 0.05}s`}} />;
-                  })}
-                </svg>
               </div>
               
-              {/* Stats Cards */}
               <div className="mt-8 flex justify-center gap-4">
                 <div className="bg-white/10 backdrop-blur-sm shadow-lg px-4 py-2.5 rounded-lg border border-white/20 animate-slide-up">
                   <div className="text-xl font-bold text-white">9+</div>
@@ -116,131 +56,203 @@ export default async function IndustriesPage() {
           </div>
         }
       />
-
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-12">Our Industry Expertise</h2>
-          
-          <div className="grid md:grid-cols-2 gap-16 items-center mb-16">
-            <div>
-              <div className="flex items-start gap-4">
-                <div className="text-orange-500 text-3xl">📊</div>
-                <div>
-                  <h3 className="text-xl font-bold text-orange-500 mb-2">In-depth Analytics</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    With a single click, you will get in-depth traffic and engagement stats, including monthly visits trend, time on the site, page-views and bounce rate.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg">
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop" 
-                    alt="Analytics Dashboard"
-                    className="rounded-lg w-full"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="order-2 md:order-1">
-              <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-lg">
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop" 
-                    alt="Traffic Sources"
-                    className="rounded-lg w-full"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="order-1 md:order-2">
-              <div className="flex items-start gap-4">
-                <div className="text-blue-500 text-3xl">📈</div>
-                <div>
-                  <h3 className="text-xl font-bold text-blue-500 mb-2">Traffic Sources</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Discover the sources that generate traffic to any website - you'll see a bar graph outlining the site's direct, referrals, search, social, mail, and display traffic sources.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
+      {/* Core Industries */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-12">All Industries</h2>
-          
-          <div className="grid md:grid-cols-2 gap-16 items-center mb-16">
-            <div>
-              <div className="flex items-start gap-4">
-                <div className="text-orange-500 text-3xl">📊</div>
-                <div>
-                  <h3 className="text-xl font-bold text-orange-500 mb-2">In-depth Analytics</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    With a single click, you will get in-depth traffic and engagement stats, including monthly visits trend, time on the site, page-views and bounce rate.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-orange-50 to-white p-8 rounded-2xl shadow-lg">
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=300&fit=crop" 
-                    alt="Analytics Dashboard"
-                    className="rounded-lg w-full"
-                  />
-                </div>
-              </div>
-            </div>
+          <div className="mb-12">
+            <span className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Sectors</span>
+            <h2 className="text-4xl font-bold text-gray-900 mt-2">Core Industries</h2>
+            <p className="text-gray-600 mt-3 max-w-2xl">
+              We deploy cross-functional teams with deep vertical knowledge to drive the world's most complex challenges across 9 key sectors.
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-16 items-center">
-            <div className="order-2 md:order-1">
-              <div className="bg-gradient-to-br from-blue-50 to-white p-8 rounded-2xl shadow-lg">
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <img 
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=300&fit=crop" 
-                    alt="Traffic Sources"
-                    className="rounded-lg w-full"
-                  />
+          <div className="grid md:grid-cols-3 gap-6">
+            {industries.slice(0, 3).map((industry, index) => {
+              const designs = [
+                { bg: 'from-gray-900 via-blue-900 to-black', iconBg: 'bg-blue-600', glow: 'bg-blue-500/30' },
+                { bg: 'from-teal-500 to-teal-600', iconBg: 'bg-white/20', glow: 'bg-teal-300/30', textOverlay: true },
+                { bg: 'from-gray-800 to-gray-900', iconBg: 'bg-blue-600', glow: 'bg-gray-600/30', bordered: true }
+              ];
+              const design = designs[index];
+
+              return (
+                <div key={industry.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100">
+                  <div className={`relative h-40 bg-gradient-to-br ${design.bg} overflow-hidden`}>
+                    {design.textOverlay ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-white/20 text-4xl font-bold text-center px-4">{industry.name.toUpperCase()}</div>
+                      </div>
+                    ) : design.bordered ? (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="border-2 border-white/30 rounded-lg px-6 py-3">
+                          <div className="text-lg font-bold text-white text-center">{industry.name.toUpperCase()}</div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className={`w-20 h-20 ${design.glow} rounded-full blur-2xl`}></div>
+                      </div>
+                    )}
+                    <div className={`absolute top-4 left-4 w-8 h-8 ${design.iconBg} backdrop-blur-sm rounded-lg flex items-center justify-center`}>
+                      <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2">{industry.name}</h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      {industry.description || 'Delivering innovative solutions and expertise across the sector.'}
+                    </p>
+                    <a href={`/industries/${industry.slug}`} className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
+                      Learn More
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div className="order-1 md:order-2">
-              <div className="flex items-start gap-4">
-                <div className="text-blue-500 text-3xl">📈</div>
-                <div>
-                  <h3 className="text-xl font-bold text-blue-500 mb-2">Traffic Sources</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Discover the sources that generate traffic to any website - you'll see a bar graph outlining the site's direct, referrals, search, social, mail, and display traffic sources.
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Industries */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Key Sectors</span>
+            <h2 className="text-4xl font-bold text-gray-900 mt-2">Featured Industries</h2>
+          </div>
+
+          {/* Large Featured Industry */}
+          {industries.slice(3, 4).map((industry) => (
+            <div key={industry.id} className="mb-8">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl h-[400px]">
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-600 to-teal-500">
+                  <div className="absolute right-0 bottom-0 w-1/2 h-full opacity-30">
+                    <div className="absolute bottom-0 right-20 w-32 h-48 bg-gray-400/50 rounded-t-lg"></div>
+                    <div className="absolute bottom-0 right-40 w-24 h-32 bg-gray-500/50 rounded-t-lg"></div>
+                  </div>
+                </div>
+                <div className="absolute bottom-8 left-8 z-10 max-w-xl">
+                  <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4">
+                    <svg className="w-5 h-5 text-gray-800" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-3">{industry.name}</h3>
+                  <p className="text-white/90 text-sm mb-4 max-w-lg">
+                    {industry.description || 'Leading innovation and transformation across the sector with cutting-edge solutions.'}
                   </p>
+                  <a href={`/industries/${industry.slug}`} className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-all">
+                    Explore {industry.name}
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
                 </div>
               </div>
             </div>
+          ))}
+
+          {/* Two Column Grid */}
+          <div className="grid md:grid-cols-2 gap-8">
+            {industries.slice(4, 6).map((industry, index) => {
+              const colors = [
+                { bg: 'from-green-900 via-green-800 to-green-950', iconColor: 'text-green-600' },
+                { bg: 'from-teal-800 via-teal-700 to-teal-900', iconColor: 'text-teal-700' }
+              ];
+              const color = colors[index];
+
+              return (
+                <div key={industry.id} className="relative rounded-2xl overflow-hidden shadow-xl h-[350px]">
+                  <div className={`absolute inset-0 bg-gradient-to-br ${color.bg}`}>
+                    <div className="absolute inset-0 opacity-30">
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-white rounded-full blur-3xl"></div>
+                    </div>
+                  </div>
+                  <div className="absolute bottom-6 left-6 z-10">
+                    <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mb-4">
+                      <svg className={`w-5 h-5 ${color.iconColor}`} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>
+                      </svg>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white mb-2">{industry.name}</h3>
+                    <p className="text-white/90 text-sm mb-4 max-w-sm">
+                      {industry.description || 'Innovative solutions driving transformation and growth.'}
+                    </p>
+                    <a href={`/industries/${industry.slug}`} className="inline-flex items-center gap-2 text-white text-sm font-semibold">
+                      Learn More
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* All Industries */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <span className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Complete Portfolio</span>
+              <h2 className="text-4xl font-bold text-gray-900 mt-2">All Industries</h2>
+            </div>
+            <a href="/industries" className="text-blue-600 font-semibold hover:gap-2 flex items-center gap-1 transition-all">
+              Browse all sectors
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {industries.slice(6).map((industry) => (
+              <div key={industry.id} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 000 2h6a1 1 0 100-2H7z" clipRule="evenodd"/>
+                    </svg>
+                  </div>
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{industry.name}</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  {industry.description || 'Specialized expertise and innovative solutions for the sector.'}
+                </p>
+                <a href={`/industries/${industry.slug}`} className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
+                  Learn More
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="bg-gradient-to-r from-primary to-red-600 text-white rounded-2xl p-12 text-center">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl p-12 text-center">
             <h2 className="text-3xl font-bold mb-4">Industry Insights & Expertise</h2>
             <p className="text-xl mb-8 opacity-90">
               Access our latest research, case studies, and thought leadership across all industries
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a href="/insights" className="btn-primary cursor-scale bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
+              <a href="/insights" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:shadow-lg transition-all">
                 Browse Insights
               </a>
-              <a href="/experts" className="cursor-scale border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all focus:outline-none focus:ring-2 focus:ring-white/50">
+              <a href="/experts" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-all">
                 Meet Our Experts
               </a>
             </div>

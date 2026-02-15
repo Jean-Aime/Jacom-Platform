@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { domainAPI } from "@/lib/domain-api";
 
 export default function CareersAdminPage() {
   const [careers, setCareers] = useState<any[]>([]);
@@ -26,8 +27,8 @@ export default function CareersAdminPage() {
 
   const fetchCareers = async () => {
     try {
-      const res = await fetch("/api/careers");
-      setCareers(await res.json());
+      const data = await domainAPI.getCareers();
+      setCareers(data);
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -46,15 +47,11 @@ export default function CareersAdminPage() {
     };
 
     try {
-      const url = editingId ? `/api/careers?id=${editingId}` : "/api/careers";
-      const method = editingId ? "PUT" : "POST";
-      
-      await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-
+      if (editingId) {
+        await domainAPI.updateCareer(editingId, payload);
+      } else {
+        await domainAPI.createCareer(payload);
+      }
       fetchCareers();
       resetForm();
     } catch (error) {
@@ -82,7 +79,7 @@ export default function CareersAdminPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this job?")) return;
-    await fetch(`/api/careers?id=${id}`, { method: "DELETE" });
+    await domainAPI.deleteCareer(id);
     fetchCareers();
   };
 

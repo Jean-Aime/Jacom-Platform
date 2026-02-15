@@ -59,9 +59,25 @@ model Service {
   overview      String
   methodologies String
   tools         String
+  tagline       String?
+  capabilities  String?  @db.Text
+  processSteps  String?  @db.Text
+  impactMetrics String?  @db.Text
+  caseStudy     String?  @db.Text
   featured      Boolean  @default(false)
   image         String?
   status        String   @default("published")
+  impactMetricsTitle String? @default("Performance Metrics")
+  caseStudyLabel String?
+  caseStudyTitle String?
+  caseStudyDescription String? @db.Text
+  caseStudyImage String?
+  caseStudyMetric1Label String?
+  caseStudyMetric1Value String?
+  caseStudyMetric2Label String?
+  caseStudyMetric2Value String?
+  caseStudyCtaText String?
+  caseStudyCtaLink String?
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   
@@ -70,6 +86,51 @@ model Service {
   experts       Expert[]
   subServices   SubService[]
   testimonials  Testimonial[]
+  serviceCapabilities ServiceCapability[]
+  serviceProcessSteps ServiceProcessStep[]
+  serviceMetrics ServiceMetric[]
+}
+
+model ServiceCapability {
+  id          String   @id @default(cuid())
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  icon        String
+  title       String
+  description String   @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([serviceId])
+}
+
+model ServiceProcessStep {
+  id          String   @id @default(cuid())
+  serviceId   String
+  service     Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  step        String
+  title       String
+  description String   @db.Text
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([serviceId])
+}
+
+model ServiceMetric {
+  id        String   @id @default(cuid())
+  serviceId String
+  service   Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  label     String
+  value     String
+  change    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([serviceId])
 }
 
 model SubService {

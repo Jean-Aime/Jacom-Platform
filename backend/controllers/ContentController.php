@@ -70,6 +70,7 @@ class ContentController {
             $data['active'] ?? 1
         ]);
         
+        http_response_code(201);
         echo json_encode(['success' => true, 'id' => $id]);
     }
     
