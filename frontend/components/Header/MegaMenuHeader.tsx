@@ -8,8 +8,6 @@ export default function MegaMenuHeader() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [industries, setIndustries] = useState<Industry[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -17,21 +15,7 @@ export default function MegaMenuHeader() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [industriesRes, servicesRes] = await Promise.all([
-          fetch(`/api/industries?t=${Date.now()}`),
-          fetch(`/api/services?t=${Date.now()}`)
-        ]);
-        setIndustries(await industriesRes.json() || []);
-        setServices(await servicesRes.json() || []);
-      } catch (error) {
-        console.error('Failed to load data:', error);
-      }
-    };
-    loadData();
-  }, []);
+
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -68,46 +52,67 @@ export default function MegaMenuHeader() {
             </span>
           </a>
           
-          <nav className="hidden lg:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
+          <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
             <div 
               className="relative"
-              onMouseEnter={() => setActiveDropdown("industries")}
+              onMouseEnter={() => setActiveDropdown("solutions")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <a 
-                href="/industries" 
-                className={`text-sm font-medium transition-all flex items-center gap-1 ${
-                  scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-                }`}
-              >
-                Industries
+              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              }`}>
+                Solutions
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </a>
+              </button>
               
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[600px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
-                activeDropdown === "industries" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
+                activeDropdown === "solutions" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6">
-                  <div className="grid grid-cols-2 gap-3">
-                    {industries.length > 0 ? industries.slice(0, 12).map((industry) => (
-                      <a 
-                        key={industry.id}
-                        href={`/industries/${industry.slug}`}
-                        className="block p-3 rounded-lg hover:bg-blue-50 transition-all text-sm text-gray-700 hover:text-blue-600"
-                      >
-                        {industry.name}
-                      </a>
-                    )) : (
-                      <div className="col-span-2 text-center text-gray-400 py-4">Loading...</div>
-                    )}
+                <div className="p-6 grid grid-cols-4 gap-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Consulting Solutions</h4>
+                    <div className="space-y-2">
+                      <a href="/services/strategy-planning" className="block text-xs text-gray-600 hover:text-blue-600">Strategy & Planning</a>
+                      <a href="/services/business-it-consulting" className="block text-xs text-gray-600 hover:text-blue-600">Business IT Consulting</a>
+                      <a href="/services/digital-transformation" className="block text-xs text-gray-600 hover:text-blue-600">Innovation & Digital Transformation</a>
+                      <a href="/services/investment-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Investment Policy & Advisory</a>
+                      <a href="/services/program-management" className="block text-xs text-gray-600 hover:text-blue-600">Program Management</a>
+                      <a href="/services/leadership-governance" className="block text-xs text-gray-600 hover:text-blue-600">Leadership & Corporate Governance</a>
+                    </div>
                   </div>
-                  {industries.length > 12 && (
-                    <a href="/industries" className="block mt-4 pt-4 border-t text-sm text-blue-600 hover:text-blue-700 text-center">
-                      View All Industries →
-                    </a>
-                  )}
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Technical Solutions</h4>
+                    <div className="space-y-2">
+                      <a href="/services/iot-platform" className="block text-xs text-gray-600 hover:text-blue-600">IoT Platform & Integration</a>
+                      <a href="/services/smart-factory" className="block text-xs text-gray-600 hover:text-blue-600">Smart Factory Solutions</a>
+                      <a href="/services/renewable-energy" className="block text-xs text-gray-600 hover:text-blue-600">Renewable Energy Systems</a>
+                      <a href="/services/system-integration" className="block text-xs text-gray-600 hover:text-blue-600">System Integration Services</a>
+                      <a href="/services/embedded-systems" className="block text-xs text-gray-600 hover:text-blue-600">Embedded Systems Development</a>
+                      <a href="/services/security-access" className="block text-xs text-gray-600 hover:text-blue-600">Security & Access Control</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Financial Solutions</h4>
+                    <div className="space-y-2">
+                      <a href="/services/financial-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Financial Advisory</a>
+                      <a href="/services/tax-management" className="block text-xs text-gray-600 hover:text-blue-600">Tax Management</a>
+                      <a href="/services/risk-management" className="block text-xs text-gray-600 hover:text-blue-600">Risk Management</a>
+                      <a href="/services/asset-management" className="block text-xs text-gray-600 hover:text-blue-600">Asset Management</a>
+                      <a href="/services/banking-services" className="block text-xs text-gray-600 hover:text-blue-600">Banking & Financial Services</a>
+                      <a href="/services/compliance" className="block text-xs text-gray-600 hover:text-blue-600">Compliance</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">By Location</h4>
+                    <div className="space-y-2">
+                      <a href="/offices/tokyo" className="block text-xs text-gray-600 hover:text-blue-600">Tokyo Office (Japan)</a>
+                      <a href="/offices/ethiopia" className="block text-xs text-gray-600 hover:text-blue-600">Ethiopia Office (Africa)</a>
+                      <a href="/offices/nepal" className="block text-xs text-gray-600 hover:text-blue-600">Nepal Office (Asia)</a>
+                      <a href="/offices" className="block text-xs text-gray-600 hover:text-blue-600">Global Services</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -117,68 +122,155 @@ export default function MegaMenuHeader() {
               onMouseEnter={() => setActiveDropdown("services")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <a 
-                href="/services" 
-                className={`text-sm font-medium transition-all flex items-center gap-1 ${
-                  scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-                }`}
-              >
+              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              }`}>
                 Services
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </a>
+              </button>
               
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[600px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "services" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6">
-                  <div className="grid grid-cols-2 gap-3">
-                    {services.length > 0 ? services.slice(0, 8).map((service) => (
-                      <a 
-                        key={service.id}
-                        href={`/services/${service.slug}`}
-                        className="block p-3 rounded-lg hover:bg-blue-50 transition-all"
-                      >
-                        <h4 className="text-sm text-gray-900 hover:text-blue-600">{service.name}</h4>
-                      </a>
-                    )) : (
-                      <div className="col-span-2 text-center text-gray-400 py-4">Loading...</div>
-                    )}
+                <div className="p-6 grid grid-cols-4 gap-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Core Industries</h4>
+                    <div className="space-y-2">
+                      <a href="/industries/manufacturing" className="block text-xs text-gray-600 hover:text-blue-600">Manufacturing & Industrial</a>
+                      <a href="/industries/healthcare" className="block text-xs text-gray-600 hover:text-blue-600">Healthcare & Life Sciences</a>
+                      <a href="/industries/hospitality" className="block text-xs text-gray-600 hover:text-blue-600">Hospitality & Tourism</a>
+                      <a href="/industries/technology" className="block text-xs text-gray-600 hover:text-blue-600">IT & Technology</a>
+                      <a href="/industries/financial-services" className="block text-xs text-gray-600 hover:text-blue-600">Financial Services</a>
+                      <a href="/industries/energy" className="block text-xs text-gray-600 hover:text-blue-600">Energy & Utilities</a>
+                    </div>
                   </div>
-                  {services.length > 8 && (
-                    <a href="/services" className="block mt-4 pt-4 border-t text-sm text-blue-600 hover:text-blue-700 text-center">
-                      View All Services →
-                    </a>
-                  )}
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Specialized Sectors</h4>
+                    <div className="space-y-2">
+                      <a href="/industries/retail" className="block text-xs text-gray-600 hover:text-blue-600">Retail & E-commerce</a>
+                      <a href="/industries/real-estate" className="block text-xs text-gray-600 hover:text-blue-600">Real Estate & Infrastructure</a>
+                      <a href="/industries/education" className="block text-xs text-gray-600 hover:text-blue-600">Education & Training</a>
+                      <a href="/industries/agriculture" className="block text-xs text-gray-600 hover:text-blue-600">Agriculture & Agribusiness</a>
+                      <a href="/industries/telecommunications" className="block text-xs text-gray-600 hover:text-blue-600">Telecommunications</a>
+                      <a href="/industries/public-sector" className="block text-xs text-gray-600 hover:text-blue-600">Public Sector & Government</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Service Types</h4>
+                    <div className="space-y-2">
+                      <a href="/services/economic-development" className="block text-xs text-gray-600 hover:text-blue-600">Economic Development</a>
+                      <a href="/services/business-development" className="block text-xs text-gray-600 hover:text-blue-600">Business Development</a>
+                      <a href="/services/employment-skills" className="block text-xs text-gray-600 hover:text-blue-600">Employment & Skills</a>
+                      <a href="/services/growth-sectors" className="block text-xs text-gray-600 hover:text-blue-600">Growth Sectors</a>
+                      <a href="/services/inclusion" className="block text-xs text-gray-600 hover:text-blue-600">Equalities & Inclusion</a>
+                      <a href="/services/communities" className="block text-xs text-gray-600 hover:text-blue-600">Communities & Not-for-Profit</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Featured Work</h4>
+                    <div className="space-y-2">
+                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-blue-600">Case Studies</a>
+                      <a href="/case-studies#success" className="block text-xs text-gray-600 hover:text-blue-600">Success Stories</a>
+                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-blue-600">Client Testimonials</a>
+                      <a href="/case-studies#impact" className="block text-xs text-gray-600 hover:text-blue-600">Impact Reports</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <a href="/digital" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-            }`}>Digital & AI</a>
+            <div 
+              className="relative"
+              onMouseEnter={() => setActiveDropdown("community")}
+              onMouseLeave={() => setActiveDropdown(null)}
+            >
+              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              }`}>
+                Community
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
+                activeDropdown === "community" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
+              }`}>
+                <div className="p-6 grid grid-cols-4 gap-6">
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Resources & Insights</h4>
+                    <div className="space-y-2">
+                      <a href="/insights?topic=job-market" className="block text-xs text-gray-600 hover:text-blue-600">Job Market Trends</a>
+                      <a href="/insights?topic=visa" className="block text-xs text-gray-600 hover:text-blue-600">Visa & Immigration Guides</a>
+                      <a href="/insights?topic=industry" className="block text-xs text-gray-600 hover:text-blue-600">Industry Analysis</a>
+                      <a href="/insights?topic=technology" className="block text-xs text-gray-600 hover:text-blue-600">Technology Trends</a>
+                      <a href="/insights?topic=economic" className="block text-xs text-gray-600 hover:text-blue-600">Economic Reports</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Knowledge Hub</h4>
+                    <div className="space-y-2">
+                      <a href="/insights?type=whitepaper" className="block text-xs text-gray-600 hover:text-blue-600">Whitepapers & Research</a>
+                      <a href="/insights?type=webinar" className="block text-xs text-gray-600 hover:text-blue-600">Webinars & Events</a>
+                      <a href="/insights?type=training" className="block text-xs text-gray-600 hover:text-blue-600">Training Materials</a>
+                      <a href="/insights?topic=sdg" className="block text-xs text-gray-600 hover:text-blue-600">SDGs & Social Impact</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Success Stories</h4>
+                    <div className="space-y-2">
+                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-blue-600">Client Case Studies</a>
+                      <a href="/case-studies#portfolio" className="block text-xs text-gray-600 hover:text-blue-600">Project Portfolios</a>
+                      <a href="/case-studies#alumni" className="block text-xs text-gray-600 hover:text-blue-600">Alumni Network</a>
+                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-blue-600">Testimonials</a>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Quick Links</h4>
+                    <div className="space-y-2">
+                      <a href="/insights" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold">View All Insights →</a>
+                      <a href="/case-studies" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold">Browse Case Studies →</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             
-            <a href="/insights" className={`text-sm font-medium transition-all ${
+            <a href="/careers" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-            }`}>Insights</a>
+            }`}>Academy</a>
+            
+            <a href="/contact" className={`text-sm font-medium transition-all ${
+              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+            }`}>Contact</a>
             
             <a href="/about" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-            }`}>About</a>
+            }`}>About Us</a>
           </nav>
 
-          <button
-            onClick={() => setSearchOpen(true)}
-            className={`transition-all flex items-center gap-2 ${
+          <div className="flex items-center gap-4">
+            <a href="/admin/login" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-            }`}
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
-            </svg>
-            <span className="text-sm font-medium">Search</span>
-          </button>
+            }`}>Login</a>
+            
+            <button
+              onClick={() => setSearchOpen(true)}
+              className={`transition-all ${
+                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              }`}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"/>
+              </svg>
+            </button>
+            
+            <a href="/contact?type=consultation" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-semibold text-sm transition">
+              Book Consultation
+            </a>
+          </div>
         </div>
       </header>
 

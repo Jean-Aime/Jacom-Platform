@@ -28,6 +28,7 @@
     "cloudinary": "^2.9.0",
     "critters": "^0.0.23",
     "helmet": "^7.1.0",
+    "lucide-react": "^0.564.0",
     "next": "^15",
     "next-auth": "^4.24.13",
     "next-cloudinary": "^6.17.5",

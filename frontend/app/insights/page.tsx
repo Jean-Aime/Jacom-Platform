@@ -7,14 +7,14 @@ import InsightsGrid from "./InsightsGrid";
 export const revalidate = 60;
 
 interface InsightsPageProps {
-  searchParams: {
+  searchParams: Promise<{
     type?: string;
     featured?: string;
-  };
+  }>;
 }
 
 export default async function InsightsPage({ searchParams }: InsightsPageProps) {
-  const { type, featured } = searchParams;
+  const { type, featured } = await searchParams;
   
   const where: any = {
     OR: [
