@@ -82,34 +82,34 @@ export default function MegaMenuHeader() {
                   <div>
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Consulting Solutions</h4>
                     <div className="space-y-2">
-                      <a href="/services/strategy-planning" className="block text-xs text-gray-600 hover:text-blue-600">Strategy & Planning</a>
-                      <a href="/services/business-it-consulting" className="block text-xs text-gray-600 hover:text-blue-600">Business IT Consulting</a>
-                      <a href="/services/digital-transformation" className="block text-xs text-gray-600 hover:text-blue-600">Innovation & Digital Transformation</a>
-                      <a href="/services/investment-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Investment Policy & Advisory</a>
-                      <a href="/services/program-management" className="block text-xs text-gray-600 hover:text-blue-600">Program Management</a>
-                      <a href="/services/leadership-governance" className="block text-xs text-gray-600 hover:text-blue-600">Leadership & Corporate Governance</a>
+                      <a href="/services/digital-transformation" className="block text-xs text-gray-600 hover:text-blue-600">Digital Transformation</a>
+                      <a href="/services/operational-excellence" className="block text-xs text-gray-600 hover:text-blue-600">Operational Excellence</a>
+                      <a href="/services/financial-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Financial Advisory</a>
+                      <a href="/services/risk-management" className="block text-xs text-gray-600 hover:text-blue-600">Risk Management</a>
+                      <a href="/services/policy-development" className="block text-xs text-gray-600 hover:text-blue-600">Policy Development</a>
+                      <a href="/services/project-delivery" className="block text-xs text-gray-600 hover:text-blue-600">Project Delivery</a>
                     </div>
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Technical Solutions</h4>
                     <div className="space-y-2">
-                      <a href="/services/iot-platform" className="block text-xs text-gray-600 hover:text-blue-600">IoT Platform & Integration</a>
-                      <a href="/services/smart-factory" className="block text-xs text-gray-600 hover:text-blue-600">Smart Factory Solutions</a>
-                      <a href="/services/renewable-energy" className="block text-xs text-gray-600 hover:text-blue-600">Renewable Energy Systems</a>
-                      <a href="/services/system-integration" className="block text-xs text-gray-600 hover:text-blue-600">System Integration Services</a>
-                      <a href="/services/embedded-systems" className="block text-xs text-gray-600 hover:text-blue-600">Embedded Systems Development</a>
-                      <a href="/services/security-access" className="block text-xs text-gray-600 hover:text-blue-600">Security & Access Control</a>
+                      <a href="/services/iot-solutions" className="block text-xs text-gray-600 hover:text-blue-600">IoT Solutions</a>
+                      <a href="/services/smart-factory" className="block text-xs text-gray-600 hover:text-blue-600">Smart Factory</a>
+                      <a href="/services/renewable-energy" className="block text-xs text-gray-600 hover:text-blue-600">Renewable Energy</a>
+                      <a href="/services/system-integration" className="block text-xs text-gray-600 hover:text-blue-600">System Integration</a>
+                      <a href="/services/software-development" className="block text-xs text-gray-600 hover:text-blue-600">Software Development</a>
+                      <a href="/services/cloud-infrastructure" className="block text-xs text-gray-600 hover:text-blue-600">Cloud & Infrastructure</a>
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Financial Solutions</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Specialized Services</h4>
                     <div className="space-y-2">
-                      <a href="/services/financial-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Financial Advisory</a>
-                      <a href="/services/tax-management" className="block text-xs text-gray-600 hover:text-blue-600">Tax Management</a>
-                      <a href="/services/risk-management" className="block text-xs text-gray-600 hover:text-blue-600">Risk Management</a>
-                      <a href="/services/asset-management" className="block text-xs text-gray-600 hover:text-blue-600">Asset Management</a>
-                      <a href="/services/banking-services" className="block text-xs text-gray-600 hover:text-blue-600">Banking & Financial Services</a>
-                      <a href="/services/compliance" className="block text-xs text-gray-600 hover:text-blue-600">Compliance</a>
+                      <a href="/services/digital-health" className="block text-xs text-gray-600 hover:text-blue-600">Digital Health</a>
+                      <a href="/services/smart-building" className="block text-xs text-gray-600 hover:text-blue-600">Smart Building</a>
+                      <a href="/services/ecommerce-platform" className="block text-xs text-gray-600 hover:text-blue-600">E-commerce Platform</a>
+                      <a href="/services/cybersecurity" className="block text-xs text-gray-600 hover:text-blue-600">Cybersecurity</a>
+                      <a href="/services/talent-acquisition" className="block text-xs text-gray-600 hover:text-blue-600">Talent Acquisition</a>
+                      <a href="/services/training-development" className="block text-xs text-gray-600 hover:text-blue-600">Training & Development</a>
                     </div>
                   </div>
                   <div>

@@ -4,18 +4,19 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 
 interface CaseStudyPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
+  const { slug } = await params;
   let caseStudy;
   
   try {
     caseStudy = await prisma.insight.findUnique({
       where: { 
-        slug: params.slug,
+        slug: slug,
         type: 'Case Study'
       },
       include: {

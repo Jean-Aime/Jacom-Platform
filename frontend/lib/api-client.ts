@@ -92,6 +92,13 @@ class ApiClient {
   createCareer(data: any) { return this.request('/careers', { method: 'POST', body: JSON.stringify(data) }); }
   updateCareer(id: string, data: any) { return this.request(`/careers/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
   deleteCareer(id: string) { return this.request(`/careers/${id}`, { method: 'DELETE' }); }
+
+  // Solutions
+  getSolutions() { return this.request('/solutions', { method: 'GET' }); }
+  getSolutionBySlug(slug: string) { return this.request(`/solutions/${slug}`, { method: 'GET' }); }
+  createSolution(data: any) { return this.request('/solutions', { method: 'POST', body: JSON.stringify(data) }); }
+  updateSolution(id: string, data: any) { return this.request(`/solutions/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteSolution(id: string) { return this.request(`/solutions/${id}`, { method: 'DELETE' }); }
 }
 
 export const apiClient = new ApiClient();
