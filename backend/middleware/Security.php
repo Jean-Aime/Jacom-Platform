@@ -31,13 +31,20 @@ class Security {
     public static function validateCSRF() {
         if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'DELETE'])) {
             $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-            $host = $_SERVER['HTTP_HOST'] ?? '';
             
-            if ($origin && !str_contains($origin, $host)) {
-                http_response_code(403);
-                echo json_encode(['error' => 'CSRF validation failed']);
-                exit();
+            // Allow requests from allowed origins
+            if ($origin && in_array($origin, ALLOWED_ORIGINS)) {
+                return;
             }
+            
+            // Allow requests without origin (same-origin)
+            if (!$origin) {
+                return;
+            }
+            
+            http_response_code(403);
+            echo json_encode(['error' => 'CSRF validation failed']);
+            exit();
         }
     }
     

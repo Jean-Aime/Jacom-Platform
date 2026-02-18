@@ -7,14 +7,11 @@ export const revalidate = 60;
 export async function GET() {
   try {
     const testimonials = await prisma.testimonial.findMany({
-      include: {
-        industries: true,
-        services: true
-      },
       orderBy: { createdAt: 'desc' }
     });
     return NextResponse.json(testimonials);
   } catch (error) {
+    console.error('Testimonials error:', error);
     return NextResponse.json({ error: 'Failed to fetch testimonials' }, { status: 500 });
   }
 }

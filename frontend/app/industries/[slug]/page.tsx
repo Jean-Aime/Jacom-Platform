@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { dataFetcher } from "@/lib/data-fetcher";
 import { notFound } from "next/navigation";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import PageHero from "@/components/Hero/PageHero";
@@ -10,14 +10,7 @@ interface IndustryPageProps {
 
 export default async function IndustryPage({ params }: IndustryPageProps) {
   const { slug } = await params;
-  const industry = await prisma.industry.findUnique({
-    where: { slug },
-    include: {
-      services: true,
-      insights: { take: 3, include: { author: true }, orderBy: { publishedAt: 'desc' } },
-      experts: true
-    }
-  });
+  const industry = await dataFetcher.getIndustryBySlug(slug);
 
   if (!industry) {
     notFound();
@@ -25,15 +18,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
 
   // Fetch testimonials separately for now
   const testimonials = [];
-  try {
-    const allTestimonials = await prisma.testimonial.findMany({
-      where: { featured: true },
-      take: 3
-    });
-    testimonials.push(...allTestimonials);
-  } catch {
-    // Testimonials table doesn't exist yet
-  }
+  // TODO: Add testimonials API endpoint
 
   let challenges: string[] = [];
   let trends: string[] = [];
@@ -134,11 +119,18 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
                 <svg key="4" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd"/></svg>
               ];
               return (
-                <div key={service.id} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all">
+                <a
+                  key={service.id}
+                  href={`/services/${service.slug}`}
+                  className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all block group"
+                >
                   <div className="mb-4">{icons[i]}</div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-3">{service.name}</h3>
-                  <p className="text-sm text-gray-600 leading-relaxed">{service.description}</p>
-                </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors">{service.name}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed mb-3">{service.description}</p>
+                  <span className="text-primary text-sm font-semibold group-hover:translate-x-1 transition-transform inline-block">
+                    Learn More →
+                  </span>
+                </a>
               );
             })}
           </div>

@@ -29,6 +29,7 @@ export async function GET() {
     });
     return NextResponse.json(subscribers);
   } catch (error) {
+    console.error('Newsletter error:', error);
     return NextResponse.json({ error: 'Failed to fetch subscribers' }, { status: 500 });
   }
 }

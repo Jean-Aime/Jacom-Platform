@@ -58,14 +58,14 @@ export default function MegaMenuHeader() {
               onMouseEnter={() => setActiveDropdown("solutions")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+              <a href="/solutions" className={`text-sm font-medium transition-all flex items-center gap-1 ${
                 scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
               }`}>
                 Solutions
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </button>
+              </a>
               
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "solutions" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
@@ -122,14 +122,14 @@ export default function MegaMenuHeader() {
               onMouseEnter={() => setActiveDropdown("services")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+              <a href="/services" className={`text-sm font-medium transition-all flex items-center gap-1 ${
                 scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
               }`}>
                 Services
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </button>
+              </a>
               
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "services" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
@@ -186,14 +186,14 @@ export default function MegaMenuHeader() {
               onMouseEnter={() => setActiveDropdown("community")}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <button className={`text-sm font-medium transition-all flex items-center gap-1 ${
+              <a href="/community" className={`text-sm font-medium transition-all flex items-center gap-1 ${
                 scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
               }`}>
                 Community
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
-              </button>
+              </a>
               
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "community" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
@@ -238,17 +238,17 @@ export default function MegaMenuHeader() {
               </div>
             </div>
             
-            <a href="/careers" className={`text-sm font-medium transition-all ${
+            <a href="/academy" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
             }`}>Academy</a>
-            
-            <a href="/contact" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
-            }`}>Contact</a>
             
             <a href="/about" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
             }`}>About Us</a>
+            
+            <a href="/contact" className={`text-sm font-medium transition-all ${
+              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+            }`}>Contact</a>
           </nav>
 
           <div className="flex items-center gap-4">

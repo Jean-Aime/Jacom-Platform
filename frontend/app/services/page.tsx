@@ -1,223 +1,255 @@
-import { prisma } from "@/lib/prisma";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
-import PageHero from "@/components/Hero/PageHero";
 import Footer from "@/components/Footer/Footer";
-import ServiceResults from "@/components/Services/ServiceResults";
-import ServiceCTA from "@/components/Services/ServiceCTA";
+import { prisma } from "@/lib/prisma";
+import { ServiceType } from "@prisma/client";
 
 export default async function ServicesPage() {
+  // Fetch all non-training services from database
   const services = await prisma.service.findMany({
+    where: {
+      status: 'published',
+      type: { not: ServiceType.TRAINING } // Exclude training (those go to Academy)
+    },
     orderBy: { featured: 'desc' }
   });
 
-  const coreServices = services.filter(s => ['digital-transformation', 'strategy-consulting', 'operations-excellence'].includes(s.slug));
-  const advancedServices = services.filter(s => ['smart-factory', 'renewable-energy', 'smart-building'].includes(s.slug));
-  const domainServices = services.filter(s => ['web-development-training', 'financial-advisory', 'pmo-services'].includes(s.slug));
+  // Group services by type
+  const consulting = services.filter(s => s.type === ServiceType.CONSULTING);
+  const technical = services.filter(s => s.type === ServiceType.TECHNICAL);
+  const financial = services.filter(s => s.type === ServiceType.FINANCIAL);
 
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
-      <PageHero 
-        title="Services & Capabilities"
-        description="We deliver transformative solutions across strategy, operations, technology, and innovation to help organizations achieve sustainable growth."
-        illustrationContent={
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="w-full max-w-md px-6 py-8">
-              <div className="relative mx-auto" style={{ width: '300px', height: '300px' }}>
-                <div className="absolute" style={{ left: '150px', top: '150px', transform: 'translate(-50%, -50%)' }}>
-                  <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center shadow-lg z-20 border-2 border-white animate-pulse-glow">
-                    <span className="text-white text-xs font-bold text-center">Services</span>
-                  </div>
-                </div>
-                
-                {[
-                  { name: 'Digital', color: 'from-blue-500 to-blue-600', angle: 0 },
-                  { name: 'IoT', color: 'from-green-500 to-green-600', angle: 72 },
-                  { name: 'Consult', color: 'from-purple-500 to-purple-600', angle: 144 },
-                  { name: 'Training', color: 'from-orange-500 to-orange-600', angle: 216 },
-                  { name: 'Strategy', color: 'from-pink-500 to-pink-600', angle: 288 }
-                ].map((service, i) => {
-                  const radius = 115;
-                  const angleRad = (service.angle - 90) * Math.PI / 180;
-                  const x = 150 + radius * Math.cos(angleRad);
-                  const y = 150 + radius * Math.sin(angleRad);
-                  return (
-                    <div key={i} className="absolute" style={{ left: `${x}px`, top: `${y}px`, transform: 'translate(-50%, -50%)' }}>
-                      <div className={`w-16 h-16 bg-gradient-to-br ${service.color} rounded-lg flex items-center justify-center shadow-lg z-10 border-2 border-white`}></div>
-                    </div>
-                  );
-                })}
-                
-                <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 5 }}>
-                  {[0, 72, 144, 216, 288].map((angle, i) => {
-                    const radius = 115;
-                    const angleRad = (angle - 90) * Math.PI / 180;
-                    const x2 = 150 + radius * Math.cos(angleRad);
-                    const y2 = 150 + radius * Math.sin(angleRad);
-                    return <line key={i} x1="150" y1="150" x2={x2} y2={y2} stroke="#60a5fa" strokeWidth="2" strokeDasharray="5,5" opacity="0.4" />;
-                  })}
+      {/* Hero Section with Mega Menu */}
+      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-56 overflow-hidden min-h-[580px]">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-900/30 to-transparent"></div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="max-w-xl">
+            <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
+              Our cross-functional teams deliver specialized vertical knowledge to solve your most complex industry challenges through tailored strategies and innovative execution.
+            </h1>
+            <div className="flex gap-4 mt-8">
+              <a href="/contact" className="bg-white hover:bg-gray-100 text-blue-600 px-6 py-3 rounded-md font-medium text-sm transition shadow-lg flex items-center gap-2">
+                Explore Industries
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-              </div>
-              
-              <div className="mt-8 flex justify-center gap-4">
-                <div className="bg-white/10 backdrop-blur-sm shadow-lg px-4 py-2.5 rounded-lg border border-white/20">
-                  <div className="text-xl font-bold text-white">{services.length}+</div>
-                  <div className="text-[10px] text-blue-200">Services</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm shadow-lg px-4 py-2.5 rounded-lg border border-white/20">
-                  <div className="text-xl font-bold text-white">100+</div>
-                  <div className="text-[10px] text-blue-200">Clients</div>
-                </div>
-                <div className="bg-white/10 backdrop-blur-sm shadow-lg px-4 py-2.5 rounded-lg border border-white/20">
-                  <div className="text-xl font-bold text-white">98%</div>
-                  <div className="text-[10px] text-blue-200">Success</div>
-                </div>
-              </div>
+              </a>
+              <a href="/case-studies" className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-6 py-3 rounded-md font-medium text-sm transition">
+                View Case Studies
+              </a>
             </div>
           </div>
-        }
-      />
-      
-      {/* Core Services */}
-      <section className="py-16 bg-gray-50">
+        </div>
+      </section>
+
+      {/* Specialized Industry Solutions */}
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-12">
-            <span className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Capabilities</span>
-            <h2 className="text-4xl font-bold text-gray-900 mt-2">Core Services</h2>
-            <p className="text-gray-600 mt-3 max-w-2xl">
-              We provide specialized consulting across the entire value chain to ensure operational resilience and growth.
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Specialized Industry Solutions</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              We provide tailored strategies across key sectors, focusing on sustainable growth and operational excellence.
             </p>
           </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {coreServices.map((service, idx) => (
-              <div key={service.id} className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all border border-gray-100">
-                <div className={`relative h-40 ${
-                  idx === 0 ? 'bg-gradient-to-br from-gray-900 via-blue-900 to-black' :
-                  idx === 1 ? 'bg-gradient-to-br from-teal-500 to-teal-600' :
-                  'bg-gradient-to-br from-gray-800 to-gray-900'
-                } overflow-hidden`}>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    {idx === 0 && <div className="w-20 h-20 bg-blue-500/30 rounded-full blur-2xl"></div>}
-                    {idx === 1 && <div className="text-white/20 text-6xl font-bold">STRATEGY</div>}
-                    {idx === 2 && (
-                      <div className="text-white text-center px-6">
-                        <div className="border-2 border-white/30 rounded-lg px-6 py-3 inline-block">
-                          <div className="text-xl font-bold">OPERATIONS</div>
-                          <div className="text-sm tracking-widest">EXCELLENCE</div>
-                        </div>
-                      </div>
-                    )}
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {services.map((service, i) => {
+              const icons = [
+                <svg key="1" className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>,
+                <svg key="2" className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
+                <svg key="3" className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+              ];
+              const icon = icons[i % icons.length];
+              
+              return (
+                <a
+                  key={service.id}
+                  href={`/services/${service.slug}`}
+                  className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-xl transition-shadow block"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center">
+                      {icon}
+                    </div>
                   </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">{service.name}</h3>
-                  <p className="text-sm text-gray-600 mb-4">{service.tagline || service.description}</p>
-                  <a href={`/services/${service.slug}`} className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
-                    Learn More
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Advanced Solutions */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-sm text-gray-500 font-semibold uppercase tracking-wider">Next Gen Industry</span>
-            <h2 className="text-4xl font-bold text-gray-900 mt-2">Advanced Solutions</h2>
-          </div>
-
-          {advancedServices[0] && (
-            <div className="mb-8">
-              <div className="relative rounded-2xl overflow-hidden shadow-xl h-[400px]">
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-800 via-gray-600 to-teal-500"></div>
-                <div className="absolute bottom-8 left-8 z-10 max-w-xl">
-                  <h3 className="text-3xl font-bold text-white mb-3">{advancedServices[0].name}</h3>
-                  <p className="text-white/90 text-sm mb-4 max-w-lg">{advancedServices[0].tagline || advancedServices[0].description}</p>
-                  <a href={`/services/${advancedServices[0].slug}`} className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition-all">
-                    Discover More
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {advancedServices.slice(1, 3).map((service, idx) => (
-              <div key={service.id} className="relative rounded-2xl overflow-hidden shadow-xl h-[350px]">
-                <div className={`absolute inset-0 ${idx === 0 ? 'bg-gradient-to-br from-green-900 via-green-800 to-green-950' : 'bg-gradient-to-br from-teal-800 via-teal-700 to-teal-900'}`}></div>
-                <div className="absolute bottom-6 left-6 z-10">
-                  <h3 className="text-2xl font-bold text-white mb-2">{service.name}</h3>
-                  <p className="text-white/90 text-sm mb-4 max-w-sm">{service.tagline || service.description}</p>
-                  <a href={`/services/${service.slug}`} className="inline-flex items-center gap-2 text-white text-sm font-semibold">
-                    Learn More
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Domain Specific Expertise */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-12">
-            <div>
-              <span className="text-sm text-blue-600 font-semibold uppercase tracking-wider">Specialized Domain</span>
-              <h2 className="text-4xl font-bold text-gray-900 mt-2">Domain Specific Expertise</h2>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {domainServices.map((service, idx) => (
-              <div key={service.id} className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-all">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"/>
-                    </svg>
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">{service.name}</h3>
+                  <p className="text-xs text-gray-500 font-semibold mb-4 uppercase tracking-wider">{service.type}</p>
+                  <p className="text-sm text-gray-600 mb-4">{service.description}</p>
+                  <div className="text-blue-600 font-medium group-hover:translate-x-1 transition-transform">
+                    Learn More →
                   </div>
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2">{service.name}</h3>
-                <p className="text-sm text-gray-600 mb-4">{service.tagline || service.description}</p>
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-xs text-gray-600 mb-1">
-                    <span>Progress</span>
-                    <span>{85 - idx * 7}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${85 - idx * 7}%` }}></div>
-                  </div>
-                </div>
-                <a href={`/services/${service.slug}`} className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
-                  Learn More
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
                 </a>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Cross-Industry Capabilities */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold text-gray-900 mb-2">
+                Cross-Industry <span className="text-blue-600">Capabilities</span>
+              </h2>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Beyond vertical expertise, our specialized service groups work horizontally across all sectors to ensure inclusive growth and economic resilience.
+              </p>
+              
+              <div className="grid grid-cols-2 gap-6">
+                {[
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                      </svg>
+                    ),
+                    title: "Economic Development",
+                    desc: "Regional growth strategies"
+                  },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    ),
+                    title: "Equalities & Inclusion",
+                    desc: "Diversity & equity programs"
+                  },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      </svg>
+                    ),
+                    title: "Communities",
+                    desc: "Local impact initiatives"
+                  },
+                  {
+                    icon: (
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    ),
+                    title: "Employment & Skills",
+                    desc: "Workforce development"
+                  }
+                ].map((cap, i) => (
+                  <div key={i} className="flex gap-3">
+                    <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      {cap.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-gray-900 text-sm mb-1">{cap.title}</h4>
+                      <p className="text-xs text-gray-600">{cap.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src="/images/hero-bg.jpg" 
+                  alt="Team collaboration" 
+                  className="w-full h-[400px] object-cover"
+                />
+                <div className="absolute bottom-6 left-6 bg-blue-600 text-white px-6 py-4 rounded-lg shadow-lg">
+                  <div className="text-3xl font-bold">12+</div>
+                  <div className="text-sm font-medium">GLOBAL VERTICALS</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Strategic Approach */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-3">Our Strategic Approach</h2>
+            <div className="w-20 h-1 bg-blue-600 mx-auto"></div>
+          </div>
+          
+          <div className="grid md:grid-cols-4 gap-8">
+            {[
+              {
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                ),
+                title: "Deep Sector Knowledge",
+                desc: "Expertise that goes beyond the surface to understand unique industry drivers."
+              },
+              {
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />
+                  </svg>
+                ),
+                title: "Customized Solutions",
+                desc: "We design, tailor strategies, we build solutions crafted for your specific needs."
+              },
+              {
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                ),
+                title: "Proven Track Record",
+                desc: "Decades of experience delivering measurable results for global organizations."
+              },
+              {
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                ),
+                title: "Collaborative Approach",
+                desc: "We work as an extension of your team to ensure long-term sustainable success."
+              }
+            ].map((approach, i) => (
+              <div key={i} className="text-center">
+                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {approach.icon}
+                </div>
+                <h3 className="font-bold text-gray-900 mb-2">{approach.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{approach.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <ServiceResults />
-      <ServiceCTA />
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-blue-700">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Ready to Transform Your Industry?
+          </h2>
+          <p className="text-blue-100 text-lg mb-10 leading-relaxed">
+            Connect with our specialized vertical teams to see how we can drive efficiency and growth in your sector.
+          </p>
+          <div className="flex gap-4 justify-center flex-wrap">
+            <a href="/contact" className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg">
+              Schedule Industry Consultation
+            </a>
+            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition">
+              Download Industry Insights
+            </button>
+          </div>
+        </div>
+      </section>
 
       <Footer />
     </div>

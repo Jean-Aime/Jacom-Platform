@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ServiceType {
+  CONSULTING @map("consulting")
+  TECHNICAL  @map("technical")
+  TRAINING   @map("training")
+  FINANCIAL  @map("financial")
+}
+
+enum EnrollmentStatus {
+  OPEN   @map("open")
+  CLOSED @map("closed")
+  FULL   @map("full")
+}
+
 model Subscriber {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -59,25 +72,17 @@ model Service {
   overview      String
   methodologies String
   tools         String
-  tagline       String?
-  capabilities  String?  @db.Text
-  processSteps  String?  @db.Text
-  impactMetrics String?  @db.Text
-  caseStudy     String?  @db.Text
   featured      Boolean  @default(false)
   image         String?
   status        String   @default("published")
-  impactMetricsTitle String? @default("Performance Metrics")
-  caseStudyLabel String?
-  caseStudyTitle String?
-  caseStudyDescription String? @db.Text
-  caseStudyImage String?
-  caseStudyMetric1Label String?
-  caseStudyMetric1Value String?
-  caseStudyMetric2Label String?
-  caseStudyMetric2Value String?
-  caseStudyCtaText String?
-  caseStudyCtaLink String?
+  type          ServiceType @default(CONSULTING)
+  category      String?
+  upcoming      Boolean  @default(false)
+  startDate     DateTime?
+  duration      String?
+  price         String?
+  capacity      Int?
+  enrollmentStatus EnrollmentStatus? @default(OPEN)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   

@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { dataFetcher } from "@/lib/data-fetcher";
 import { notFound } from "next/navigation";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import PageHero from "@/components/Hero/PageHero";
@@ -10,21 +10,7 @@ interface ServicePageProps {
 
 export default async function ServicePage({ params }: ServicePageProps) {
   const { slug } = await params;
-  const service = await prisma.service.findUnique({
-    where: { slug },
-    include: {
-      serviceCapabilities: { orderBy: { order: 'asc' } },
-      serviceProcessSteps: { orderBy: { order: 'asc' } },
-      serviceMetrics: { orderBy: { order: 'asc' } },
-      subServices: true,
-      industries: true,
-      insights: {
-        take: 3,
-        orderBy: { publishedAt: 'desc' }
-      },
-      experts: true
-    }
-  });
+  const service = await dataFetcher.getServiceBySlug(slug);
 
   if (!service) {
     notFound();

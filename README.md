@@ -6,7 +6,7 @@
 Jacom-Platform/
 ├── frontend/          # Next.js 15 + TypeScript
 ├── backend/           # PHP REST API
-└── docs/             # Documentation
+└── docs/             # All Documentation (59 MD files)
 ```
 
 ## Quick Start
@@ -18,23 +18,17 @@ Jacom-Platform/
 4. Test: http://localhost/Jacom-Platform/backend
 
 ### Frontend (Next.js)
-1. Navigate to frontend:
 ```bash
 cd frontend
 npm install
-```
-
-2. Configure environment:
-```bash
-cp .env.example .env.local
-```
-
-3. Run development:
-```bash
 npm run dev
 ```
+Open: http://localhost:3000
 
-4. Open: http://localhost:3000
+### Admin Panel
+- URL: http://localhost:3000/admin
+- Login: admin@jas.com / admin123
+- Pages: 10 (Dashboard + 9 management pages)
 
 ## Architecture
 
@@ -42,53 +36,19 @@ npm run dev
 Frontend (Next.js) → API Client → PHP Backend → MySQL Database
 ```
 
-## Security Features
-
-✅ SQL Injection Prevention (PDO)
-✅ XSS Protection (Input sanitization)
-✅ CSRF Protection (Origin validation)
-✅ Rate Limiting (IP-based)
-✅ Session Management (Secure tokens)
-✅ Security Headers (CSP, HSTS, etc.)
-
 ## Documentation
 
-- Frontend: `frontend/README.md`
-- Backend: `backend/README.md`
-- Security: `docs/SECURITY_CHECKLIST.md`
-- Deployment: `docs/DEPLOYMENT_GUIDE.md`
+All documentation is in `/docs` folder (59 files):
+- Architecture & Setup Guides
+- Phase Completion Reports
+- Content Documentation
+- Security & Deployment
+- API Documentation
 
 ## Tech Stack
 
-### Frontend
-- Next.js 15
-- TypeScript
-- Tailwind CSS
-- React 18
-
-### Backend
-- PHP 8+
-- MySQL
-- PDO
-- RESTful API
-
-## Development
-
-### Frontend
-```bash
-cd frontend
-npm run dev
-```
-
-### Backend
-Runs on XAMPP Apache at:
-```
-http://localhost/Jacom-Platform/backend
-```
-
-## Production Deployment
-
-See `docs/DEPLOYMENT_GUIDE.md` for complete instructions.
+**Frontend:** Next.js 15, TypeScript, Tailwind CSS, React 18
+**Backend:** PHP 8+, MySQL, PDO, RESTful API
 
 ## License
 

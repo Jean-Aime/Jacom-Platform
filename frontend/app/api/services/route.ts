@@ -4,19 +4,23 @@ import { prisma } from '@/lib/prisma';
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type');
+    
+    const where: any = {};
+    if (type) {
+      where.type = type;
+    }
+    
     const services = await prisma.service.findMany({
-      include: {
-        subServices: true,
-        industries: true,
-        insights: true,
-        experts: true
-      },
+      where,
       orderBy: { createdAt: 'desc' }
     });
     return NextResponse.json(services);
   } catch (error) {
+    console.error('Services error:', error);
     return NextResponse.json({ error: 'Failed to fetch services' }, { status: 500 });
   }
 }

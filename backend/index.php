@@ -39,6 +39,8 @@ try {
                 $controller->login();
             } elseif ($action === 'logout' && $method === 'POST') {
                 $controller->logout();
+            } elseif ($action === 'check' && $method === 'GET') {
+                $controller->check();
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'Not found']);

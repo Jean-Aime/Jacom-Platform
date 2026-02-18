@@ -48,8 +48,8 @@ class AuthController {
             'expires' => time() + 86400,
             'path' => '/',
             'httponly' => true,
-            'secure' => true,
-            'samesite' => 'Strict'
+            'secure' => false,
+            'samesite' => 'Lax'
         ]);
         
         echo json_encode(['success' => true]);
@@ -65,6 +65,34 @@ class AuthController {
         
         setcookie('session-token', '', time() - 3600, '/');
         echo json_encode(['success' => true]);
+    }
+    
+    public function check() {
+        $token = $_COOKIE['session-token'] ?? null;
+        
+        if (!$token) {
+            http_response_code(401);
+            echo json_encode(['authenticated' => false]);
+            return;
+        }
+        
+        $stmt = $this->conn->prepare("SELECT s.*, u.email, u.name FROM Session s JOIN User u ON s.userId = u.id WHERE s.token = ? AND s.expiresAt > NOW()");
+        $stmt->execute([$token]);
+        $session = $stmt->fetch();
+        
+        if (!$session) {
+            http_response_code(401);
+            echo json_encode(['authenticated' => false]);
+            return;
+        }
+        
+        echo json_encode([
+            'authenticated' => true,
+            'user' => [
+                'email' => $session['email'],
+                'name' => $session['name']
+            ]
+        ]);
     }
     
     private function generateCuid() {

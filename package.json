@@ -1,0 +1,24 @@
+{
+  "name": "jacom-platform",
+  "version": "1.0.0",
+  "description": "```\r Jacom-Platform/\r ├── frontend/          # Next.js 15 + TypeScript\r ├── backend/           # PHP REST API\r └── docs/             # Documentation\r ```",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jean-Aime/Jacom-Platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jean-Aime/Jacom-Platform/issues"
+  },
+  "homepage": "https://github.com/Jean-Aime/Jacom-Platform#readme"
+}

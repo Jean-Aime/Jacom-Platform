@@ -9,7 +9,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative h-[600px] overflow-hidden">
+      <section className="relative h-[680px] overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-900 to-blue-700">
         </div>
         <div className="relative max-w-7xl mx-auto px-6 h-full flex items-center">

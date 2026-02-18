@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiClient } from "@/lib/api-client";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,23 +16,11 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        router.push("/admin");
-        router.refresh();
-      } else {
-        setError(data.error || "Invalid credentials");
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      setError("Login failed. Please try again.");
+      await apiClient.login(email, password);
+      router.push("/admin");
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message || "Invalid credentials");
     } finally {
       setLoading(false);
     }
@@ -41,12 +30,12 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-red-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-2xl">
+          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg">
             J
           </div>
           <div>
-            <div className="font-bold text-2xl">JAS.COM</div>
-            <div className="text-sm text-gray-500">Admin Login</div>
+            <div className="font-bold text-2xl">JACOM Admin</div>
+            <div className="text-sm text-gray-500">Management Portal</div>
           </div>
         </div>
 
@@ -65,7 +54,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border rounded-lg focus:border-primary focus:outline-none"
-              placeholder="admin@jas.com"
+              placeholder="admin@jacom.com"
             />
           </div>
 
@@ -92,7 +81,7 @@ export default function LoginPage() {
 
         <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded text-sm">
           <p className="font-semibold mb-1">Default Credentials:</p>
-          <p className="text-gray-700">Email: admin@jas.com</p>
+          <p className="text-gray-700">Email: admin@jacom.com</p>
           <p className="text-gray-700">Password: admin123</p>
         </div>
 

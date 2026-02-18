@@ -1,348 +1,53 @@
 "use client";
-import { useState, useEffect } from "react";
-import MultiSelect from "@/components/Admin/MultiSelect";
-import Modal from "@/components/Admin/Modal";
-import { domainAPI } from "@/lib/domain-api";
+import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api-client";
 
-interface Industry {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  overview: string;
-  challenges: string;
-  trends: string;
-  featured: boolean;
-  image?: string;
-}
-
-interface Service {
-  id: string;
-  name: string;
-}
-
-interface Expert {
-  id: string;
-  name: string;
-}
-
-interface Insight {
-  id: string;
-  title: string;
-}
-
-export default function AdminIndustriesPage() {
-  const [industries, setIndustries] = useState<Industry[]>([]);
-  const [services, setServices] = useState<Service[]>([]);
-  const [experts, setExperts] = useState<Expert[]>([]);
-  const [insights, setInsights] = useState<Insight[]>([]);
-  const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    overview: "",
-    challenges: "",
-    trends: "",
-    featured: false,
-    image: "",
-    serviceIds: [] as string[],
-    expertIds: [] as string[],
-    insightIds: [] as string[]
-  });
-  const [uploading, setUploading] = useState(false);
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    
-    setUploading(true);
-    const fd = new FormData();
-    fd.append('file', file);
-    
-    try {
-      const res = await fetch('/api/upload', { method: 'POST', body: fd });
-      const data = await res.json();
-      console.log('Upload response:', data);
-      if (data.url) {
-        setFormData(prev => ({...prev, image: data.url}));
-        console.log('Image URL set:', data.url);
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      alert('Upload failed');
-    } finally {
-      setUploading(false);
-    }
-  };
+export default function IndustriesPage() {
+  const [industries, setIndustries] = useState([]);
 
   useEffect(() => {
-    loadData();
+    apiClient.getIndustries()
+      .then((data: any) => setIndustries(data))
+      .catch(err => console.error(err));
   }, []);
 
-  const loadData = async () => {
-    try {
-      const [industries, services, experts, insights] = await Promise.all([
-        domainAPI.getIndustries(),
-        domainAPI.getServices(),
-        domainAPI.getExperts(),
-        domainAPI.getInsights()
-      ]);
-      
-      setIndustries(Array.isArray(industries) ? industries : []);
-      setServices(Array.isArray(services) ? services : []);
-      setExperts(Array.isArray(experts) ? experts : []);
-      setInsights(Array.isArray(insights) ? insights : []);
-    } catch (error) {
-      console.error('Error loading data:', error);
-      setIndustries([]);
-      setServices([]);
-      setExperts([]);
-      setInsights([]);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const payload = {
-      ...formData,
-      challenges: formData.challenges,
-      trends: formData.trends
-    };
-
-    console.log('Submitting industry with image:', payload.image);
-
-    try {
-      if (editingId) {
-        await domainAPI.updateIndustry(editingId, payload);
-        alert("Industry updated successfully!");
-      } else {
-        await domainAPI.createIndustry(payload);
-        alert("Industry created successfully!");
-      }
-      resetForm();
-      loadData();
-    } catch (error) {
-      alert("Error saving industry");
-    }
-  };
-
-  const handleEdit = (industry: any) => {
-    setFormData({
-      name: industry.name,
-      slug: industry.slug,
-      description: industry.description,
-      overview: industry.overview || "",
-      challenges: industry.challenges || "",
-      trends: industry.trends || "",
-      featured: industry.featured,
-      image: industry.image || "",
-      serviceIds: industry.services?.map((s: any) => s.id) || [],
-      expertIds: industry.experts?.map((e: any) => e.id) || [],
-      insightIds: industry.insights?.map((i: any) => i.id) || []
-    });
-    setEditingId(industry.id);
-    setShowForm(true);
-  };
-
-  const handleDelete = async (id: string) => {
-    if (confirm("Are you sure you want to delete this industry?")) {
-      await domainAPI.deleteIndustry(id);
-      alert("Industry deleted successfully!");
-      loadData();
-    }
-  };
-
-  const resetForm = () => {
-    setFormData({ 
-      name: "", 
-      slug: "", 
-      description: "", 
-      overview: "", 
-      challenges: "",
-      trends: "",
-      featured: false,
-      image: "",
-      serviceIds: [],
-      expertIds: [],
-      insightIds: []
-    });
-    setEditingId(null);
-    setShowForm(false);
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold">Industries Management</h1>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90"
-          >
-            {showForm ? "Cancel" : "+ Add Industry"}
-          </button>
+    <div className="p-8 space-y-8 max-w-7xl mx-auto w-full bg-white min-h-screen">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-3xl font-extrabold tracking-tight ">Industries & Services</h2>
+          <p className="text-gray-500">Manage core corporate sectors and specialized capabilities.</p>
         </div>
+        <button className="bg-blue-600 text-white px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 transition-all shadow-lg">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          Add Industry
+        </button>
+      </div>
 
-        <Modal isOpen={showForm} onClose={resetForm} title={editingId ? "Edit Industry" : "Create New Industry"}>
-          <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value, slug: e.target.value.toLowerCase().replace(/ /g, '-')})}
-                    placeholder="e.g., Financial Services"
-                    className="w-full p-2 border rounded focus:border-primary focus:outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Slug *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.slug}
-                    onChange={(e) => setFormData({...formData, slug: e.target.value})}
-                    placeholder="e.g., financial-services"
-                    className="w-full p-2 border rounded focus:border-primary focus:outline-none"
-                  />
-                </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {industries.map((ind: any, i) => (
+          <div key={i} className="group bg-white  border border-gray-200  rounded-2xl p-6 hover:border-orange-600 transition-all cursor-pointer shadow-sm">
+            <div className="flex justify-between items-start mb-4">
+              <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Description *</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                  placeholder="e.g., Transforming financial institutions through digital innovation"
-                  className="w-full p-2 border rounded focus:border-primary focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Overview *</label>
-                <textarea
-                  required
-                  rows={15}
-                  value={formData.overview}
-                  onChange={(e) => setFormData({...formData, overview: e.target.value})}
-                  placeholder="e.g., We help financial services organizations navigate digital transformation, regulatory compliance, and customer experience enhancement..."
-                  className="w-full p-3 border-2 rounded focus:border-primary focus:outline-none font-mono text-sm leading-relaxed resize-y min-h-[400px]"
-                  style={{ minHeight: '400px' }}
-                />
-                <p className="text-xs text-gray-500 mt-2">✓ No character limit | ✓ Supports multiple paragraphs | ✓ Drag corner to resize</p>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-2">Industry Image</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  disabled={uploading}
-                  className="w-full p-2 border rounded focus:border-primary focus:outline-none"
-                />
-                {uploading && <p className="text-sm text-gray-500 mt-1">Uploading...</p>}
-                {formData.image && (
-                  <div className="mt-2">
-                    <img src={formData.image} alt="Preview" className="h-32 w-auto rounded border" />
-                    <p className="text-sm text-green-600 mt-1">✓ Uploaded</p>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={formData.featured}
-                  onChange={(e) => setFormData({...formData, featured: e.target.checked})}
-                  className="w-4 h-4"
-                />
-                <label className="text-sm font-medium">Featured Industry</label>
-              </div>
-
-              <div className="border-t pt-4">
-                <h3 className="font-semibold mb-3">Cross-Linking</h3>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <MultiSelect
-                    label="Related Services"
-                    options={services}
-                    selected={formData.serviceIds}
-                    onChange={(ids) => setFormData({...formData, serviceIds: ids})}
-                  />
-                  <MultiSelect
-                    label="Related Experts"
-                    options={experts}
-                    selected={formData.expertIds}
-                    onChange={(ids) => setFormData({...formData, expertIds: ids})}
-                  />
-                  <MultiSelect
-                    label="Related Insights"
-                    options={insights}
-                    selected={formData.insightIds}
-                    onChange={(ids) => setFormData({...formData, insightIds: ids})}
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-2">
-                <button type="submit" className="bg-primary text-white px-6 py-2 rounded-lg hover:bg-primary/90">
-                  {editingId ? "Update" : "Create"}
-                </button>
-                <button type="button" onClick={resetForm} className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400">
-                  Cancel
-                </button>
-              </div>
-            </form>
-        </Modal>
-
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
-          {industries.length === 0 ? (
-            <div className="p-12 text-center text-gray-500">
-              <p className="text-lg mb-2">No industries found</p>
-              <p className="text-sm">Click "+ Add Industry" to create your first industry</p>
+              <button className="p-2 text-gray-400 hover:text-blue-600">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+              </button>
             </div>
-          ) : (
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b">
-                <tr>
-                  <th className="text-left p-4 font-semibold">Image</th>
-                  <th className="text-left p-4 font-semibold">Name</th>
-                  <th className="text-left p-4 font-semibold">Slug</th>
-                  <th className="text-left p-4 font-semibold">Featured</th>
-                  <th className="text-right p-4 font-semibold">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {industries.map((industry) => (
-                  <tr key={industry.id} className="border-b hover:bg-gray-50">
-                    <td className="p-4">
-                      {industry.image ? (
-                        <img src={industry.image} alt={industry.name} className="h-12 w-20 object-cover rounded" />
-                      ) : (
-                        <div className="h-12 w-20 bg-gray-200 rounded flex items-center justify-center text-xs text-gray-400">No image</div>
-                      )}
-                    </td>
-                    <td className="p-4">{industry.name}</td>
-                    <td className="p-4 text-gray-600">{industry.slug}</td>
-                    <td className="p-4">
-                      {industry.featured && <span className="px-2 py-1 bg-primary/10 text-primary text-xs rounded">Featured</span>}
-                    </td>
-                    <td className="p-4 text-right">
-                      <button onClick={() => handleEdit(industry)} className="text-primary hover:underline mr-4">
-                        Edit
-                      </button>
-                      <button onClick={() => handleDelete(industry.id)} className="text-red-500 hover:underline">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+            <h3 className="text-lg font-bold ">{ind.name}</h3>
+            <p className="text-sm text-gray-500 mt-2 line-clamp-2">{ind.description}</p>
+            <div className="mt-6 flex gap-4 pt-4 border-t border-gray-100 ">
+              <div><span className="text-xs uppercase font-bold text-gray-400">Projects</span><p className="text-sm font-bold ">24 Active</p></div>
+              <div><span className="text-xs uppercase font-bold text-gray-400">Experts</span><p className="text-sm font-bold ">12 Assigned</p></div>
+            </div>
+          </div>
+        ))}
+        <div className="border-2 border-dashed border-gray-200  rounded-2xl p-6 flex flex-col items-center justify-center text-center group hover:border-blue-600 hover:bg-blue-50  transition-all cursor-pointer">
+          <div className="w-12 h-12 rounded-full bg-gray-100  flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          </div>
+          <p className="mt-4 font-bold text-gray-500 group-hover:text-blue-600">Add New Industry</p>
         </div>
       </div>
     </div>
