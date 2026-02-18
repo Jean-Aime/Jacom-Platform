@@ -64,7 +64,66 @@ class ServicesController {
             return;
         }
         
+        // Fetch related data
+        $service['serviceCapabilities'] = $this->getServiceCapabilities($service['id']);
+        $service['serviceProcessSteps'] = $this->getServiceProcessSteps($service['id']);
+        $service['serviceMetrics'] = $this->getServiceMetrics($service['id']);
+        $service['subServices'] = [];
+        $service['industries'] = $this->getServiceIndustries($service['id']);
+        $service['insights'] = $this->getServiceInsights($service['id']);
+        $service['experts'] = $this->getServiceExperts($service['id']);
+        
         echo json_encode($service);
+    }
+    
+    private function getServiceCapabilities($serviceId) {
+        $stmt = $this->conn->prepare("SELECT * FROM ServiceCapability WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
+    }
+    
+    private function getServiceProcessSteps($serviceId) {
+        $stmt = $this->conn->prepare("SELECT * FROM ServiceProcessStep WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
+    }
+    
+    private function getServiceMetrics($serviceId) {
+        $stmt = $this->conn->prepare("SELECT * FROM ServiceMetric WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
+    }
+    
+    private function getServiceIndustries($serviceId) {
+        $stmt = $this->conn->prepare("
+            SELECT i.* FROM Industry i
+            JOIN _IndustryToService its ON i.id = its.A
+            WHERE its.B = ?
+        ");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
+    }
+    
+    private function getServiceInsights($serviceId) {
+        $stmt = $this->conn->prepare("
+            SELECT ins.* FROM Insight ins
+            JOIN _InsightToService inss ON ins.id = inss.A
+            WHERE inss.B = ?
+            ORDER BY ins.publishedAt DESC
+            LIMIT 3
+        ");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
+    }
+    
+    private function getServiceExperts($serviceId) {
+        $stmt = $this->conn->prepare("
+            SELECT e.* FROM Expert e
+            JOIN _ExpertToService ets ON e.id = ets.A
+            WHERE ets.B = ?
+        ");
+        $stmt->execute([$serviceId]);
+        return $stmt->fetchAll() ?: [];
     }
     
     public function create() {

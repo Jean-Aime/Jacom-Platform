@@ -41,8 +41,10 @@ class IndustriesController {
                 'trends' => $industry['trends'],
                 'featured' => (bool)$industry['featured'],
                 'image' => $industry['image'],
+                'status' => $industry['status'] ?? 'published',
                 'createdAt' => $industry['createdAt'],
                 'updatedAt' => $industry['updatedAt'],
+                'serviceIds' => $industry['serviceIds'] ? explode(',', $industry['serviceIds']) : [],
                 'services' => $industry['serviceIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['serviceIds'])) : [],
                 'experts' => $industry['expertIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['expertIds'])) : [],
                 'insights' => $industry['insightIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['insightIds'])) : []
@@ -53,17 +55,90 @@ class IndustriesController {
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Industry WHERE slug = ?");
+        $stmt = $this->conn->prepare("
+            SELECT i.*, 
+                   GROUP_CONCAT(DISTINCT s.id) as serviceIds,
+                   GROUP_CONCAT(DISTINCT s.name) as serviceNames,
+                   GROUP_CONCAT(DISTINCT s.slug) as serviceSlugs,
+                   GROUP_CONCAT(DISTINCT s.description SEPARATOR '|||') as serviceDescriptions,
+                   GROUP_CONCAT(DISTINCT e.id) as expertIds,
+                   GROUP_CONCAT(DISTINCT ins.id) as insightIds,
+                   GROUP_CONCAT(DISTINCT ins.title) as insightTitles,
+                   GROUP_CONCAT(DISTINCT ins.slug) as insightSlugs,
+                   GROUP_CONCAT(DISTINCT ins.excerpt SEPARATOR '|||') as insightExcerpts,
+                   GROUP_CONCAT(DISTINCT ins.type) as insightTypes,
+                   GROUP_CONCAT(DISTINCT ins.authorId) as insightAuthorIds
+            FROM Industry i
+            LEFT JOIN _IndustryToService its ON i.id = its.A
+            LEFT JOIN Service s ON its.B = s.id AND s.status = 'published'
+            LEFT JOIN _ExpertToIndustry eti ON i.id = eti.B
+            LEFT JOIN Expert e ON eti.A = e.id
+            LEFT JOIN _IndustryToInsight iti ON i.id = iti.A
+            LEFT JOIN Insight ins ON iti.B = ins.id AND ins.status = 'published'
+            WHERE i.slug = ?
+            GROUP BY i.id
+        ");
         $stmt->execute([$slug]);
         $industry = $stmt->fetch();
         
         if (!$industry) {
             http_response_code(404);
-            echo json_encode(['error' => 'Not found']);
+            echo json_encode(['error' => 'Industry not found']);
             return;
         }
         
-        echo json_encode($industry);
+        $services = [];
+        if (!empty($industry['serviceIds'])) {
+            $ids = explode(',', $industry['serviceIds']);
+            $names = explode(',', $industry['serviceNames']);
+            $slugs = explode(',', $industry['serviceSlugs']);
+            $descriptions = explode('|||', $industry['serviceDescriptions']);
+            for ($i = 0; $i < count($ids); $i++) {
+                $services[] = [
+                    'id' => $ids[$i],
+                    'name' => $names[$i] ?? '',
+                    'slug' => $slugs[$i] ?? '',
+                    'description' => $descriptions[$i] ?? ''
+                ];
+            }
+        }
+        
+        $insights = [];
+        if (!empty($industry['insightIds'])) {
+            $ids = explode(',', $industry['insightIds']);
+            $titles = explode(',', $industry['insightTitles']);
+            $slugs = explode(',', $industry['insightSlugs']);
+            $excerpts = explode('|||', $industry['insightExcerpts']);
+            $types = explode(',', $industry['insightTypes']);
+            $authorIds = explode(',', $industry['insightAuthorIds']);
+            for ($i = 0; $i < count($ids); $i++) {
+                $insights[] = [
+                    'id' => $ids[$i],
+                    'title' => $titles[$i] ?? '',
+                    'slug' => $slugs[$i] ?? '',
+                    'excerpt' => $excerpts[$i] ?? '',
+                    'type' => $types[$i] ?? '',
+                    'author' => ['id' => $authorIds[$i] ?? '', 'name' => 'Author']
+                ];
+            }
+        }
+        
+        echo json_encode([
+            'id' => $industry['id'],
+            'name' => $industry['name'],
+            'slug' => $industry['slug'],
+            'description' => $industry['description'] ?? '',
+            'overview' => $industry['overview'] ?? '',
+            'challenges' => $industry['challenges'] ?? '[]',
+            'trends' => $industry['trends'] ?? '[]',
+            'featured' => (bool)$industry['featured'],
+            'image' => $industry['image'],
+            'createdAt' => $industry['createdAt'],
+            'updatedAt' => $industry['updatedAt'],
+            'services' => $services,
+            'experts' => !empty($industry['expertIds']) ? array_map(fn($id) => ['id' => $id], explode(',', $industry['expertIds'])) : [],
+            'insights' => $insights
+        ]);
     }
     
     public function create() {

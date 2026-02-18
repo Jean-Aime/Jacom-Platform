@@ -11,13 +11,21 @@ Jacom-Platform/
 
 ## Quick Start
 
-### Backend (PHP)
-1. Ensure XAMPP Apache is running
-2. Import database: `backend/jas_consulting.sql`
-3. Configure: `backend/config/config.php`
+### 1. Database Setup (REQUIRED)
+```bash
+# Run this first to seed the database
+seed_database.bat
+```
+This creates tables and adds sample data (5 industries, 4 services, admin user).
+
+### 2. Backend (PHP)
+### 2. Backend (PHP)
+1. Ensure XAMPP Apache & MySQL are running
+2. Database is already seeded from step 1
+3. Configure: `backend/config/config.php` (if needed)
 4. Test: http://localhost/Jacom-Platform/backend
 
-### Frontend (Next.js)
+### 3. Frontend (Next.js)
 ```bash
 cd frontend
 npm install

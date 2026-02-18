@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Industry, Service } from "@/lib/types";
+import { apiClient } from "@/lib/api-client";
 
 export default function MegaMenuHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -8,10 +9,17 @@ export default function MegaMenuHeader() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [industries, setIndustries] = useState<any[]>([]);
+  const [services, setServices] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
+    
+    // Fetch industries and services
+    apiClient.getIndustries().then(setIndustries).catch(console.error);
+    apiClient.getServices().then(setServices).catch(console.error);
+    
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -134,38 +142,27 @@ export default function MegaMenuHeader() {
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "services" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6 grid grid-cols-4 gap-6">
+                <div className="p-6 grid grid-cols-3 gap-6">
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Core Industries</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Industries We Serve</h4>
                     <div className="space-y-2">
-                      <a href="/industries/manufacturing" className="block text-xs text-gray-600 hover:text-blue-600">Manufacturing & Industrial</a>
-                      <a href="/industries/healthcare" className="block text-xs text-gray-600 hover:text-blue-600">Healthcare & Life Sciences</a>
-                      <a href="/industries/hospitality" className="block text-xs text-gray-600 hover:text-blue-600">Hospitality & Tourism</a>
-                      <a href="/industries/technology" className="block text-xs text-gray-600 hover:text-blue-600">IT & Technology</a>
-                      <a href="/industries/financial-services" className="block text-xs text-gray-600 hover:text-blue-600">Financial Services</a>
-                      <a href="/industries/energy" className="block text-xs text-gray-600 hover:text-blue-600">Energy & Utilities</a>
+                      {industries.slice(0, 10).map((ind: any) => (
+                        <a key={ind.id} href={`/industries/${ind.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{ind.name}</a>
+                      ))}
+                      {industries.length > 10 && (
+                        <a href="/industries" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Industries →</a>
+                      )}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Specialized Sectors</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Our Services</h4>
                     <div className="space-y-2">
-                      <a href="/industries/retail" className="block text-xs text-gray-600 hover:text-blue-600">Retail & E-commerce</a>
-                      <a href="/industries/real-estate" className="block text-xs text-gray-600 hover:text-blue-600">Real Estate & Infrastructure</a>
-                      <a href="/industries/education" className="block text-xs text-gray-600 hover:text-blue-600">Education & Training</a>
-                      <a href="/industries/agriculture" className="block text-xs text-gray-600 hover:text-blue-600">Agriculture & Agribusiness</a>
-                      <a href="/industries/telecommunications" className="block text-xs text-gray-600 hover:text-blue-600">Telecommunications</a>
-                      <a href="/industries/public-sector" className="block text-xs text-gray-600 hover:text-blue-600">Public Sector & Government</a>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Service Types</h4>
-                    <div className="space-y-2">
-                      <a href="/services/economic-development" className="block text-xs text-gray-600 hover:text-blue-600">Economic Development</a>
-                      <a href="/services/business-development" className="block text-xs text-gray-600 hover:text-blue-600">Business Development</a>
-                      <a href="/services/employment-skills" className="block text-xs text-gray-600 hover:text-blue-600">Employment & Skills</a>
-                      <a href="/services/growth-sectors" className="block text-xs text-gray-600 hover:text-blue-600">Growth Sectors</a>
-                      <a href="/services/inclusion" className="block text-xs text-gray-600 hover:text-blue-600">Equalities & Inclusion</a>
-                      <a href="/services/communities" className="block text-xs text-gray-600 hover:text-blue-600">Communities & Not-for-Profit</a>
+                      {services.slice(0, 10).map((svc: any) => (
+                        <a key={svc.id} href={`/services/${svc.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{svc.name}</a>
+                      ))}
+                      {services.length > 10 && (
+                        <a href="/services" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Services →</a>
+                      )}
                     </div>
                   </div>
                   <div>
@@ -174,7 +171,7 @@ export default function MegaMenuHeader() {
                       <a href="/case-studies" className="block text-xs text-gray-600 hover:text-blue-600">Case Studies</a>
                       <a href="/case-studies#success" className="block text-xs text-gray-600 hover:text-blue-600">Success Stories</a>
                       <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-blue-600">Client Testimonials</a>
-                      <a href="/case-studies#impact" className="block text-xs text-gray-600 hover:text-blue-600">Impact Reports</a>
+                      <a href="/insights" className="block text-xs text-gray-600 hover:text-blue-600">Insights & Research</a>
                     </div>
                   </div>
                 </div>

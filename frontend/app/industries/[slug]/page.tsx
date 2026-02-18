@@ -274,16 +274,59 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Business Future?</h2>
           <p className="text-xl text-blue-100 mb-8">
-            Join hundreds of industry leaders who have already mastered innovation with our expert solutions.
+            Select the services you're interested in and our experts will contact you within 24 hours.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:shadow-xl transition-all">
-              Talk to an Expert
+          
+          <form className="bg-white rounded-2xl p-8 text-left">
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name *</label>
+                <input type="text" required className="w-full px-4 py-3 border rounded-lg" placeholder="John Doe" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
+                <input type="email" required className="w-full px-4 py-3 border rounded-lg" placeholder="john@company.com" />
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Company</label>
+                <input type="text" className="w-full px-4 py-3 border rounded-lg" placeholder="Your Company" />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                <input type="tel" className="w-full px-4 py-3 border rounded-lg" placeholder="+1 (555) 000-0000" />
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Services You're Interested In *</label>
+              <div className="grid md:grid-cols-2 gap-3">
+                {industry.services.map((service: any) => (
+                  <label key={service.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
+                    <input type="checkbox" name="services" value={service.id} className="mt-1" />
+                    <div>
+                      <div className="font-semibold text-gray-900">{service.name}</div>
+                      <div className="text-xs text-gray-600">{service.description}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <div className="mb-6">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Additional Details</label>
+              <textarea rows={4} className="w-full px-4 py-3 border rounded-lg" placeholder="Tell us about your project, timeline, budget, or any specific requirements..."></textarea>
+            </div>
+            
+            <button type="submit" className="w-full bg-primary text-white py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all">
+              Request Consultation
             </button>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition-all">
-              View Case Studies
-            </button>
-          </div>
+            <p className="text-xs text-gray-500 text-center mt-3">
+              By submitting, you agree to our Privacy Policy. We'll contact you within 24 hours.
+            </p>
+          </form>
         </div>
       </section>
 

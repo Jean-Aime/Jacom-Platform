@@ -1,0 +1,49 @@
+-- Complete Database Seed for Jacom Platform
+-- Run this after importing jas_consulting.sql
+
+USE jas_consulting;
+
+-- Clear existing data
+DELETE FROM _IndustryToService;
+DELETE FROM _IndustryToInsight;
+DELETE FROM _ExpertToIndustry;
+DELETE FROM Industry;
+DELETE FROM Service;
+
+-- Insert Industries
+INSERT INTO Industry (id, name, slug, description, overview, challenges, trends, featured, image, createdAt, updatedAt) VALUES
+('ind1', 'Management Consulting', 'management-consulting', 'Strategic consulting for digital transformation and business growth in Japan', 'JACOM provides comprehensive management consulting services focusing on digital transformation (DX), ESG initiatives, and PMO services. We support Japanese companies in developing growth strategies and navigating the evolving consulting market with expertise in AI, IoT, and system integration.', '["Digital transformation adoption", "ESG compliance and reporting", "Project management efficiency", "Generative AI integration", "Global expansion strategies"]', '["AI-driven consulting", "Sustainability focus", "Remote consulting models", "Data-driven decision making", "Cross-border collaboration"]', 1, 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800', NOW(), NOW()),
+('ind2', 'Technology & IoT Solutions', 'technology-iot', 'IoT platform and electromechanical system integration services', 'JACOM specializes in IoT e-commerce platforms and electromechanical system integration. We provide innovative solutions for smart devices, system standardization, and engineering consulting for consumers and manufacturers. Our platform infrastructure enables low-cost system integration with secured IoT software applications.', '["System integration complexity", "IoT security standards", "Device interoperability", "Cost optimization", "Technology adoption barriers"]', '["Smart device proliferation", "Edge computing", "5G connectivity", "AI-powered automation", "Cloud-native architectures"]', 1, 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', NOW(), NOW()),
+('ind3', 'Hospitality & Tourism', 'hospitality-tourism', 'Recruitment and training services for hospitality professionals', 'Through our partnership with Nepal recruitment agencies, JACOM facilitates the deployment of qualified hospitality professionals to Japan. We provide comprehensive training including Japanese language proficiency (JLPT N3/N4), cultural orientation, and industry-specific technical skills for hotel services, culinary arts, and hospitality management.', '["Skilled labor shortage", "Cultural adaptation", "Language barriers", "Quality standards maintenance", "Visa and immigration processes"]', '["International workforce mobility", "Digital hospitality services", "Sustainable tourism", "Experience-driven services", "Health and safety protocols"]', 1, 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800', NOW(), NOW()),
+('ind4', 'IT Services & Software Development', 'it-services', 'Software development and IT professional recruitment for Japanese market', 'JACOM connects IT professionals with opportunities in Japan, focusing on software engineers, data scientists, and cybersecurity experts. We support J-Find visa holders and provide training in programming (Java, Python, C++), database management, and cloud computing to meet Japan\'s growing demand for digital talent.', '["Tech talent shortage", "Rapid technology evolution", "Cybersecurity threats", "Legacy system modernization", "Remote work infrastructure"]', '["AI and machine learning", "Cloud-first strategies", "DevOps automation", "Low-code platforms", "Quantum computing readiness"]', 0, 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800', NOW(), NOW()),
+('ind5', 'Manufacturing & Industry 4.0', 'manufacturing', 'Smart factory solutions and industrial automation consulting', 'JACOM delivers Industry 4.0 transformation through IoT integration, predictive maintenance, and smart factory design. We specialize in production management, quality control systems, and mechanical design with expertise in sensors, actuators, robotics, and embedded systems for manufacturing excellence.', '["Supply chain disruptions", "Automation investment costs", "Skills gap in workforce", "Quality control consistency", "Sustainability requirements"]', '["Smart factories", "Digital twins", "Predictive maintenance", "Collaborative robots", "Sustainable manufacturing"]', 0, 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=800', NOW(), NOW()),
+('ind6', 'Education & Training', 'education', 'Professional development and technical training programs', 'JACOM offers customized training programs including web development bootcamps, technical skills training, and professional certifications. We provide both online live sessions and face-to-face training in HTML, CSS, JavaScript, React, and Node.js, supporting career development for international professionals seeking opportunities in Japan.', '["Digital literacy gaps", "Curriculum relevance", "Student engagement", "Certification standards", "Access to quality education"]', '["EdTech platforms", "Hybrid learning models", "Micro-credentials", "Personalized learning paths", "Industry-aligned curricula"]', 0, 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800', NOW(), NOW()),
+('ind7', 'Energy & Utilities', 'energy', 'Renewable energy systems and smart grid solutions', 'JACOM provides renewable energy consulting including solar and wind power generation equipment design, VPP and EMS system innovation, and smart grid infrastructure. We specialize in energy management systems, remote monitoring, and control automation for sustainable energy transition.', '["Grid modernization costs", "Renewable integration", "Energy storage solutions", "Regulatory compliance", "Asset optimization"]', '["Clean energy transition", "Smart grids", "Energy storage systems", "Carbon neutrality goals", "Distributed energy resources"]', 0, 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=800', NOW(), NOW()),
+('ind8', 'Real Estate & Infrastructure', 'real-estate', 'Smart building systems and infrastructure development', 'JACOM designs intelligent building systems including access control, security surveillance, electrical equipment, and utility systems. We provide comprehensive infrastructure solutions for hotels, hospitals, and commercial facilities with focus on energy efficiency, safety, and operational excellence.', '["Aging infrastructure", "Smart building integration", "Energy efficiency standards", "Security requirements", "Maintenance costs"]', '["Smart buildings", "Green construction", "IoT-enabled facilities", "Predictive maintenance", "Sustainable design"]', 0, 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800', NOW(), NOW()),
+('ind9', 'Financial Services', 'financial-services', 'Financial advisory and investment consulting', 'JACOM offers financial consulting services including tax management, asset management, risk assessment, and investment policy development. We provide expertise in banking services, portfolio management, and ESG investment strategies to support business growth and financial sustainability.', '["Regulatory complexity", "Market volatility", "Digital disruption", "Risk management", "ESG compliance"]', '["Fintech innovation", "ESG investing", "Digital currencies", "Robo-advisory", "Open banking"]', 0, 'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=800', NOW(), NOW());
+
+-- Insert Services
+INSERT INTO Service (id, name, slug, description, overview, methodologies, tools, featured, image, status, createdAt, updatedAt) VALUES
+('srv1', 'Digital Transformation', 'digital-transformation', 'End-to-end digital transformation consulting', 'We help organizations modernize their operations through technology adoption and process optimization.', '["Agile", "Design Thinking", "Lean"]', '["Cloud Platforms", "AI/ML Tools", "Analytics"]', 1, 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800', 'published', NOW(), NOW()),
+('srv2', 'IoT Solutions', 'iot-solutions', 'Custom IoT platform development', 'Build scalable IoT ecosystems for connected devices and smart systems.', '["Rapid Prototyping", "Iterative Development"]', '["AWS IoT", "Azure IoT", "MQTT"]', 1, 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=800', 'published', NOW(), NOW()),
+('srv3', 'Talent Acquisition', 'talent-acquisition', 'Global talent recruitment services', 'Connect with skilled professionals across technology and hospitality sectors.', '["Competency-Based", "Cultural Fit"]', '["ATS Systems", "LinkedIn", "Assessment Tools"]', 1, 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800', 'published', NOW(), NOW()),
+('srv4', 'Training & Development', 'training-development', 'Professional skills training programs', 'Upskill your workforce with technical and soft skills training.', '["Blended Learning", "Hands-on Practice"]', '["LMS Platforms", "Virtual Labs", "Certifications"]', 0, 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=800', 'published', NOW(), NOW());
+
+-- Link Industries to Services
+INSERT INTO _IndustryToService (A, B) VALUES
+('ind1', 'srv1'), ('ind1', 'srv4'),
+('ind2', 'srv1'), ('ind2', 'srv2'),
+('ind3', 'srv3'), ('ind3', 'srv4'),
+('ind4', 'srv1'), ('ind4', 'srv3'),
+('ind5', 'srv1'), ('ind5', 'srv2'),
+('ind6', 'srv4'),
+('ind7', 'srv1'), ('ind7', 'srv2'),
+('ind8', 'srv1'),
+('ind9', 'srv1');
+
+-- Insert Admin User
+INSERT INTO User (id, email, password, name, role, createdAt, updatedAt) VALUES
+('usr1', 'admin@jas.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin User', 'admin', NOW(), NOW())
+ON DUPLICATE KEY UPDATE email=email;
+
+SELECT 'Database seeded successfully!' as status;

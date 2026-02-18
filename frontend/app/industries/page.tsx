@@ -1,46 +1,40 @@
-import { prisma } from "@/lib/prisma";
+import { dataFetcher } from "@/lib/data-fetcher";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 export const revalidate = 3600;
 
 export default async function IndustriesPage() {
-  const industries = await prisma.industry.findMany({
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      featured: true,
-    },
-    orderBy: { featured: 'desc' },
-    take: 50
-  });
+  const industries = await dataFetcher.getIndustries();
 
   return (
     <>
       <MegaMenuHeader />
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 pt-32 pb-56 min-h-[580px]">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl">
+        <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-[700px] overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-900/30 to-transparent"></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-6 relative z-10">
+            <div className="max-w-xl">
               <div className="text-blue-300 text-sm font-semibold mb-4 uppercase tracking-wider">INDUSTRIES WE SERVE</div>
-              <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
+              <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
                 Deep Expertise Across <span className="text-blue-300">Key Sectors</span>
               </h1>
-              <p className="text-blue-100 text-lg mb-8 leading-relaxed">
-                Driving global impact across 9+ specialized sectors with cutting-edge technical innovation and strategic consulting prowess. We don't just advise; we transform.
+              <p className="text-blue-100 text-base mb-8 leading-relaxed">
+                Driving global impact across {industries.length}+ specialized sectors with cutting-edge technical innovation and strategic consulting prowess.
               </p>
               <div className="flex gap-4">
-                <button className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2">
+                <button className="px-6 py-3 bg-white hover:bg-gray-100 text-blue-600 rounded-md font-medium transition shadow-lg flex items-center gap-2">
                   Explore Industries
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
-                <button className="px-6 py-3 border border-white/30 text-white rounded-lg font-medium hover:bg-white/10 transition-colors">
-                  Download Capabilities
+                <button className="px-6 py-3 border-2 border-white hover:bg-white hover:text-blue-600 text-white rounded-md font-medium transition">
+                  View Case Studies
                 </button>
               </div>
             </div>
@@ -48,152 +42,77 @@ export default async function IndustriesPage() {
         </section>
 
         {/* Specialized Sector Solutions */}
-        <section className="py-20 bg-white -mt-32">
+        <section className="relative py-12 bg-gray-50 -mt-[400px] z-10">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Specialized Sector Solutions</h2>
-                <p className="text-gray-600">
-                  Discover how JACOM empowers industry leaders with technical innovation and strategic consulting for sustainable, industry-changing outcomes.
+            <div className="flex items-start justify-between mb-8">
+              <div className="hidden md:block">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Specialized Sector Solutions</h2>
+                <p className="text-sm text-gray-600 max-w-2xl">
+                  Discover how JACOM empowers industry leaders with technical innovation and strategic consulting across the globe.
                 </p>
               </div>
               <div className="flex gap-2">
-                <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                  </svg>
+                <button className="p-2 bg-white border border-gray-200 rounded hover:bg-gray-50">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/></svg>
                 </button>
-                <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                  </svg>
+                <button className="p-2 bg-white border border-gray-200 rounded hover:bg-gray-50">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 000 2h14a1 1 0 100-2H3zM3 9a1 1 0 000 2h14a1 1 0 100-2H3zM3 14a1 1 0 100 2h14a1 1 0 100-2H3z"/></svg>
                 </button>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              {/* Manufacturing */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all">
-                <div className="relative h-48 bg-gray-100">
-                  <img src="/api/placeholder/400/300" alt="Manufacturing" className="w-full h-full object-cover" />
-                  <div className="absolute top-4 left-4 bg-white rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-700 flex items-center gap-1">
-                    <span className="w-2 h-2 bg-red-500 rounded-full"></span>
-                    2024 | 45+ new clients
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
-                    <h3 className="text-xl font-bold text-gray-900">Manufacturing</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Smart factory solutions, IoT integration, and supply chain optimization for the future of production.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>AI-Powered Manufacturing</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Sustainable Operations</span>
+            <div className="grid md:grid-cols-3 gap-5">
+              {industries.map((industry: any) => (
+                <a key={industry.id} href={`/industries/${industry.slug}`} className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-all">
+                  <div className="relative h-36 bg-gradient-to-br from-blue-500 to-blue-600">
+                    {industry.image ? (
+                      <img src={industry.image} alt={industry.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-white text-5xl font-bold opacity-20">{industry.name.charAt(0)}</span>
+                      </div>
+                    )}
+                    <div className="absolute top-3 right-3 bg-white rounded px-2.5 py-1 text-xs font-medium text-gray-700 shadow-sm">
+                      {industry.serviceIds?.length || 0} Services
                     </div>
                   </div>
-                  <a href="/industries/manufacturing" className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
-                    Learn More →
-                  </a>
-                </div>
-              </div>
-
-              {/* Healthcare */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all">
-                <div className="relative h-48 bg-teal-500">
-                  <img src="/api/placeholder/400/300" alt="Healthcare" className="w-full h-full object-cover" />
-                  <div className="absolute top-4 right-4 bg-white rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-700">
-                    Featured Sector
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                    </svg>
-                    <h3 className="text-xl font-bold text-gray-900">Healthcare</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Digital health transformation and patient-centric solutions with AI and data security.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Telemedicine Platforms</span>
+                  <div className="p-5">
+                    <div className="flex items-start gap-2.5 mb-3">
+                      <div className="w-6 h-6 rounded bg-blue-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                        </svg>
+                      </div>
+                      <h3 className="text-base font-bold text-gray-900 leading-tight">{industry.name}</h3>
                     </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Healthcare →</span>
+                    <p className="text-xs text-gray-600 mb-3 leading-relaxed">
+                      {industry.description?.substring(0, 100)}{industry.description?.length > 100 ? '...' : ''}
+                    </p>
+                    <div className="space-y-1.5 mb-4">
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                        <span>Automated systems</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                        <span>Information Resilience</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-600">
+                        <svg className="w-3.5 h-3.5 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                        <span>Data-led Security</span>
+                      </div>
+                    </div>
+                    <div className="text-blue-600 text-xs font-semibold group-hover:gap-1.5 flex items-center gap-1 transition-all">
+                      Learn More →
                     </div>
                   </div>
-                  <a href="/industries/healthcare" className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
-                    Learn More →
-                  </a>
-                </div>
-              </div>
-
-              {/* IT & Tech */}
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all">
-                <div className="relative h-48 bg-gray-900">
-                  <img src="/api/placeholder/400/300" alt="IT & Tech" className="w-full h-full object-cover" />
-                  <div className="absolute top-4 right-4 bg-blue-600 text-white rounded-lg px-3 py-1.5 text-xs font-semibold">
-                    High Growth
-                  </div>
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center gap-2 mb-3">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                    <h3 className="text-xl font-bold text-gray-900">IT & Tech</h3>
-                  </div>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Cloud infrastructure, cybersecurity, and enterprise software solutions for tech leaders.
-                  </p>
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Multi-cloud Migration</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                      <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                      <span>Zero-trust Security</span>
-                    </div>
-                  </div>
-                  <a href="/industries/it-tech" className="text-blue-600 text-sm font-semibold hover:gap-2 flex items-center gap-1 transition-all">
-                    Learn More →
-                  </a>
-                </div>
-              </div>
+                </a>
+              ))}
             </div>
 
             <div className="text-center mt-8">
-              <button className="text-blue-600 font-semibold hover:gap-2 flex items-center gap-1 transition-all mx-auto">
-                View All 9+ Sectors
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
+              <button className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors">
+                View All {industries.length}+ Sectors
               </button>
             </div>
           </div>
