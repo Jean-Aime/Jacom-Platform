@@ -4,10 +4,11 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jac
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
+  const { slug } = await params;
   try {
-    const response = await fetch(`${BACKEND_URL}/solutions/${params.slug}`, {
+    const response = await fetch(`${BACKEND_URL}/solutions/${slug}`, {
       cache: 'no-store'
     });
 
