@@ -1,0 +1,13 @@
+backend/
+docs/
+_UNUSED_FILES/
+*.bat
+*.md
+.git/
+.vscode/
+node_modules/
+.next/
+.env.local
+migrate.php
+run_migration.php
+test_subscribers.php

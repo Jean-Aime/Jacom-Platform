@@ -1,66 +1,63 @@
-# Unused Files Archive
+# Jacom Platform
 
-This folder contains files that are NOT part of the active platform functionality.
+## Project Structure
 
-## Contents:
+```
+Jacom-Platform/
+├── frontend/          # Next.js 15 + TypeScript
+├── backend/           # PHP REST API
+└── docs/             # All Documentation (59 MD files)
+```
 
-### Test Files (Root Level)
-- `test.php` - Backend test file
-- `test-api.html` - API testing HTML
-- `test-login.html` - Login testing HTML
-- `test_solutions.php` - Solutions test file
-- `add_education.sql` - Old SQL file
-- `phase6-dashboard.html` - Phase 6 test dashboard
-- `create-admin.ts` - Admin creation script
+## Quick Start
 
-### Folders
-- `test-industries/` - Test industries page (not used)
-- `tests/` - Old test files (crud-test.js, phase6 tests, smoke tests)
+### 1. Database Setup (REQUIRED)
+```bash
+# Run this first to seed the database
+seed_database.bat
+```
+This creates tables and adds sample data (5 industries, 4 services, admin user).
 
-### Seed Files
-- `seed.ts` - Prisma seed script
-- `seed-case-studies.ts` - Case studies seed
-- `seed-industries.ts` - Industries seed
-- `seed-subscribers.ts` - Subscribers seed
+### 2. Backend (PHP)
+### 2. Backend (PHP)
+1. Ensure XAMPP Apache & MySQL are running
+2. Database is already seeded from step 1
+3. Configure: `backend/config/config.php` (if needed)
+4. Test: http://localhost/Jacom-Platform/backend
 
-### Old Migrations (`old_migrations/`)
-- Multiple outdated SQL migration files
-- Service-related migrations
-- Solutions-related migrations
-- Update scripts
+### 3. Frontend (Next.js)
+```bash
+cd frontend
+npm install
+npm run dev
+```
+Open: http://localhost:3000
 
-### Old Documentation (`old_docs/`)
-- `CASE_STUDIES_SETUP.md`
-- `DATABASE_SETUP.md`
-- `FIX_SUMMARY.md`
-- `INTEGRATION_COMPLETE.md`
-- `SOLUTIONS_COMPLETE.md`
-- `SOLUTIONS_IMPLEMENTATION.md`
-- `SOLUTIONS_QUICK_START.md`
-- `SOLUTIONS_SETUP.md`
-- `SYSTEM_STRUCTURE.md`
-- `QUICK_START.md`
+### Admin Panel
+- URL: http://localhost:3000/admin
+- Login: admin@jas.com / admin123
+- Pages: 10 (Dashboard + 9 management pages)
 
-## Why These Files Are Not Used:
+## Architecture
 
-1. **Test files** - Development/debugging only, not production code
-2. **Seed files** - Database already seeded, not needed in runtime
-3. **Old migrations** - Already applied or superseded by newer migrations
-4. **Old docs** - Outdated documentation, replaced by current docs in `/docs`
+```
+Frontend (Next.js) → API Client → PHP Backend → MySQL Database
+```
 
-## Can These Be Deleted?
+## Documentation
 
-**YES** - These files can be safely deleted if:
-- Database is already set up and seeded
-- You don't need test/debug files
-- You have backups
+All documentation is in `/docs` folder (59 files):
+- Architecture & Setup Guides
+- Phase Completion Reports
+- Content Documentation
+- Security & Deployment
+- API Documentation
 
-**Keep them if:**
-- You need to reset/reseed the database
-- You want reference for old implementations
-- You're debugging historical issues
+## Tech Stack
 
----
+**Frontend:** Next.js 15, TypeScript, Tailwind CSS, React 18
+**Backend:** PHP 8+, MySQL, PDO, RESTful API
 
-**Created:** 2025-01-XX  
-**Purpose:** Clean up unused files from active codebase
+## License
+
+Private - All Rights Reserved

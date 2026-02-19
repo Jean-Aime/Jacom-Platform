@@ -1,32 +1,18 @@
 # Dependencies
 node_modules/
 frontend/node_modules/
-backend/vendor/
 
 # Build outputs
-.next/
 frontend/.next/
 frontend/out/
 frontend/build/
 
-# Environment files
+# Environment variables
 .env
 .env.local
-.env*.local
-frontend/.env
+.env.production.local
+.env.development.local
 frontend/.env.local
-backend/config/config.php
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
 
 # Logs
 *.log
@@ -34,10 +20,26 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Testing
-coverage/
-.nyc_output/
+# OS files
+.DS_Store
+Thumbs.db
 
-# Misc
-.cache/
-*.tsbuildinfo
+# IDE
+.vscode/
+.idea/
+
+# Local development
+backend/config/config.local.php
+*.sql
+*.bak
+
+# Temporary files
+*.tmp
+*.temp
+migrate.php
+run_migration.php
+test_subscribers.php
+_UNUSED_FILES/
+
+# Vercel
+.vercel
