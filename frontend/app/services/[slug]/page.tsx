@@ -21,21 +21,8 @@ export default async function ServicePage({ params }: ServicePageProps) {
   const metrics = service.serviceMetrics;
   
   const impactMetrics = metrics.length > 0 ? {
-    title: service.impactMetricsTitle || "Performance Metrics",
+    title: "Performance Metrics",
     metrics: metrics
-  } : null;
-  
-  const caseStudy = service.caseStudyTitle ? {
-    label: service.caseStudyLabel,
-    title: service.caseStudyTitle,
-    description: service.caseStudyDescription,
-    image: service.caseStudyImage,
-    metrics: [
-      { label: service.caseStudyMetric1Label, value: service.caseStudyMetric1Value },
-      { label: service.caseStudyMetric2Label, value: service.caseStudyMetric2Value }
-    ].filter(m => m.label && m.value),
-    ctaText: service.caseStudyCtaText,
-    ctaLink: service.caseStudyCtaLink
   } : null;
 
   const iconMap: Record<string, JSX.Element> = {
@@ -51,12 +38,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       
       <PageHero 
         title={service.name}
-        description={service.tagline || service.description}
-        illustrationContent={
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="text-white text-6xl font-bold">🚀</div>
-          </div>
-        }
+        subtitle={service.description}
       />
 
       {/* Core Capabilities */}
@@ -153,48 +135,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
       )}
 
       {/* Case Study */}
-      {caseStudy && (
-        <section className="py-16 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[400px]">
-                {caseStudy.image ? (
-                  <img src={caseStudy.image} alt={caseStudy.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-teal-800 via-teal-700 to-teal-900">
-                    <div className="absolute inset-0 opacity-30">
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-teal-400 rounded-full blur-3xl"></div>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <div>
-                <span className="text-sm text-blue-600 font-semibold uppercase tracking-wider">{caseStudy.label}</span>
-                <h2 className="text-3xl font-bold text-gray-900 mt-2 mb-4">{caseStudy.title}</h2>
-                <p className="text-gray-600 mb-6 leading-relaxed italic">"{caseStudy.description}"</p>
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  {caseStudy.metrics.map((metric: any, index: number) => (
-                    <div key={index}>
-                      <div className="text-3xl font-bold text-blue-600">{metric.value}</div>
-                      <div className="text-sm text-gray-600 uppercase tracking-wider mt-1">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
-                <a href={caseStudy.ctaLink} className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:gap-3 transition-all">
-                  {caseStudy.ctaText}
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Contact Form */}
-      <section className="py-16 bg-gray-900">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">

@@ -13,9 +13,10 @@ export default function InsightsAdmin() {
   const loadInsights = async () => {
     try {
       const data = await apiClient.getInsights();
-      setInsights(data);
+      setInsights(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading insights:", error);
+      setInsights([]);
     } finally {
       setLoading(false);
     }

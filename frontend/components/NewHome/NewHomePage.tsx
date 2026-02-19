@@ -257,12 +257,12 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
             { title: "Nepal-to-Japan Pipeline", subtitle: "Seamless recruitment and placement services", img: "/images/digital-bg.jpg" }
           ].map((card, i) => (
             <div key={i} className="relative h-[300px] rounded-lg overflow-hidden group">
-              <div className="absolute inset-0" style={{
+              <div className="absolute inset-0 group-hover:scale-105" style={{
                 backgroundImage: `url(${card.img})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 transition: 'transform 0.5s'
-              }} className="group-hover:scale-105"></div>
+              }}></div>
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
                 <h3 className="text-2xl font-bold mb-2">{card.title}</h3>

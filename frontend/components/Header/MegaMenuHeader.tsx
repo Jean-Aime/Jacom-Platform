@@ -19,21 +19,21 @@ export default function MegaMenuHeader() {
     window.addEventListener("scroll", handleScroll);
     
     // Fetch industries and services
-    apiClient.getIndustries().then(setIndustries).catch(err => {
+    apiClient.getIndustries().then((data: any) => setIndustries(data || [])).catch(err => {
       console.error('Failed to load industries:', err);
       setIndustries([]);
     });
-    apiClient.getServices().then(setServices).catch(err => {
+    apiClient.getServices().then((data: any) => setServices(data || [])).catch(err => {
       console.error('Failed to load services:', err);
       setServices([]);
     });
-    apiClient.getSolutions().then(setSolutions).catch(err => {
+    apiClient.getSolutions().then((data: any) => setSolutions(data || [])).catch(err => {
       console.error('Failed to load solutions:', err);
       setSolutions([]);
     });
-    apiClient.getCommunityCategories().then(data => {
+    apiClient.getCommunityCategories().then((data: any) => {
       console.log('Community categories loaded:', data);
-      setCommunityCategories(data || []);
+      setCommunityCategories(Array.isArray(data) ? data : []);
     }).catch(err => {
       console.error('Failed to load community categories:', err);
       setCommunityCategories([]);

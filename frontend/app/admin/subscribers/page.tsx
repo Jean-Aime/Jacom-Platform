@@ -13,9 +13,10 @@ export default function SubscribersPage() {
   const fetchSubscribers = async () => {
     try {
       const data = await apiClient.getSubscribers();
-      setSubscribers(data);
+      setSubscribers(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error fetching subscribers:", error);
+      setSubscribers([]);
     } finally {
       setLoading(false);
     }

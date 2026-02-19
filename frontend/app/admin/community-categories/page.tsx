@@ -25,9 +25,10 @@ export default function CommunityCategoriesAdmin() {
   const loadCategories = async () => {
     try {
       const data = await apiClient.getCommunityCategories();
-      setCategories(data);
+      setCategories(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading categories:", error);
+      setCategories([]);
     } finally {
       setLoading(false);
     }

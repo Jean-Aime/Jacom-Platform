@@ -18,6 +18,11 @@ export async function sendApplicationNotification(application: {
   email: string;
   jobTitle: string;
 }) {
+  if (!resend) {
+    console.log('Email disabled - configure RESEND_API_KEY to enable');
+    return;
+  }
+  
   try {
     await resend.emails.send({
       from: 'JAS.COM <noreply@jas.com>',

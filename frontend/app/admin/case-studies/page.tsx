@@ -29,9 +29,10 @@ export default function CaseStudiesAdmin() {
   const loadCaseStudies = async () => {
     try {
       const data = await apiClient.getCaseStudies();
-      setCaseStudies(data);
+      setCaseStudies(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading case studies:", error);
+      setCaseStudies([]);
     } finally {
       setLoading(false);
     }

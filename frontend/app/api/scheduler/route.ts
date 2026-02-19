@@ -19,7 +19,6 @@ export async function POST(request: NextRequest) {
     const result = await publishScheduledContent();
     
     return NextResponse.json({
-      success: true,
       message: `Published ${result.insights} insights and ${result.mediaItems} media items`,
       ...result
     });

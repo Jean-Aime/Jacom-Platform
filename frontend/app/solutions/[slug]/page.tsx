@@ -8,8 +8,9 @@ async function getSolution(slug: string) {
   return res.json();
 }
 
-export default async function SolutionDetailPage({ params }: { params: { slug: string } }) {
-  const solution = await getSolution(params.slug);
+export default async function SolutionDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const solution = await getSolution(slug);
   
   if (!solution) {
     notFound();

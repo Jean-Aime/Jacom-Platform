@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import NewHomePage from "@/components/NewHome/NewHomePage";
 
 export default async function Home() {
-  let insights = [];
+  let insights: any[] = [];
   try {
     insights = await prisma.insight.findMany({
       where: {

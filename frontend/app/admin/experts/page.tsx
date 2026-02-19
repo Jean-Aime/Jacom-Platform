@@ -7,6 +7,7 @@ interface Expert {
   name: string;
   slug: string;
   role: string;
+  title?: string;
   bio: string;
   expertise: string;
   image?: string;
