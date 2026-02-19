@@ -50,7 +50,7 @@ export const dataFetcher = {
 
   async getExperts() {
     if (USE_BACKEND) return apiClient.getExperts();
-    return prisma.expert.findMany({ where: { status: 'published' } });
+    return prisma.expert.findMany();
   },
 
   async getExpertBySlug(slug: string) {

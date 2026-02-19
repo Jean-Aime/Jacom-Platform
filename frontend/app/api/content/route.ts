@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
 export async function GET(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   const { searchParams } = new URL(request.url);
   const page = searchParams.get('page');
   const section = searchParams.get('section');
@@ -23,6 +27,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const data = await request.json();
     const block = await prisma.contentBlock.create({ data });
@@ -33,6 +40,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
@@ -47,6 +57,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

@@ -12,15 +12,32 @@ export default function MegaMenuHeader() {
   const [industries, setIndustries] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
   const [solutions, setSolutions] = useState<any[]>([]);
+  const [communityCategories, setCommunityCategories] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     
     // Fetch industries and services
-    apiClient.getIndustries().then(setIndustries).catch(console.error);
-    apiClient.getServices().then(setServices).catch(console.error);
-    apiClient.getSolutions().then(setSolutions).catch(console.error);
+    apiClient.getIndustries().then(setIndustries).catch(err => {
+      console.error('Failed to load industries:', err);
+      setIndustries([]);
+    });
+    apiClient.getServices().then(setServices).catch(err => {
+      console.error('Failed to load services:', err);
+      setServices([]);
+    });
+    apiClient.getSolutions().then(setSolutions).catch(err => {
+      console.error('Failed to load solutions:', err);
+      setSolutions([]);
+    });
+    apiClient.getCommunityCategories().then(data => {
+      console.log('Community categories loaded:', data);
+      setCommunityCategories(data || []);
+    }).catch(err => {
+      console.error('Failed to load community categories:', err);
+      setCommunityCategories([]);
+    });
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -58,7 +75,7 @@ export default function MegaMenuHeader() {
             <span className={`text-base font-bold tracking-wider transition-colors ${
               scrolled ? "text-gray-900" : "text-white"
             }`}>
-              JACOM
+              JAS.COME
             </span>
           </a>
           
@@ -172,42 +189,25 @@ export default function MegaMenuHeader() {
               <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "community" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6 grid grid-cols-4 gap-6">
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Resources & Insights</h4>
-                    <div className="space-y-2">
-                      <a href="/insights?topic=job-market" className="block text-xs text-gray-600 hover:text-blue-600">Job Market Trends</a>
-                      <a href="/insights?topic=visa" className="block text-xs text-gray-600 hover:text-blue-600">Visa & Immigration Guides</a>
-                      <a href="/insights?topic=industry" className="block text-xs text-gray-600 hover:text-blue-600">Industry Analysis</a>
-                      <a href="/insights?topic=technology" className="block text-xs text-gray-600 hover:text-blue-600">Technology Trends</a>
-                      <a href="/insights?topic=economic" className="block text-xs text-gray-600 hover:text-blue-600">Economic Reports</a>
+                <div className="p-6">
+                  {communityCategories.length === 0 ? (
+                    <div className="text-center py-8 text-gray-500">
+                      <p className="mb-2">No community categories available yet.</p>
+                      <a href="/community" className="text-blue-600 hover:underline text-sm">Visit Community Page</a>
                     </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Knowledge Hub</h4>
-                    <div className="space-y-2">
-                      <a href="/insights?type=whitepaper" className="block text-xs text-gray-600 hover:text-blue-600">Whitepapers & Research</a>
-                      <a href="/insights?type=webinar" className="block text-xs text-gray-600 hover:text-blue-600">Webinars & Events</a>
-                      <a href="/insights?type=training" className="block text-xs text-gray-600 hover:text-blue-600">Training Materials</a>
-                      <a href="/insights?topic=sdg" className="block text-xs text-gray-600 hover:text-blue-600">SDGs & Social Impact</a>
+                  ) : (
+                    <div className="grid grid-cols-3 gap-6">
+                      {communityCategories.map((category: any) => (
+                        <div key={category.id}>
+                          <a href={`/community/${category.slug}`} className="block mb-3">
+                            <h4 className="font-bold text-gray-900 text-sm hover:text-blue-600 transition">{category.name}</h4>
+                          </a>
+                          <p className="text-xs text-gray-600 mb-2">{category.description}</p>
+                          <a href={`/community/${category.slug}`} className="text-xs text-blue-600 hover:text-blue-700 font-semibold">Explore →</a>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Success Stories</h4>
-                    <div className="space-y-2">
-                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-blue-600">Client Case Studies</a>
-                      <a href="/case-studies#portfolio" className="block text-xs text-gray-600 hover:text-blue-600">Project Portfolios</a>
-                      <a href="/case-studies#alumni" className="block text-xs text-gray-600 hover:text-blue-600">Alumni Network</a>
-                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-blue-600">Testimonials</a>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Quick Links</h4>
-                    <div className="space-y-2">
-                      <a href="/insights" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold">View All Insights →</a>
-                      <a href="/case-studies" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold">Browse Case Studies →</a>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>

@@ -17,13 +17,13 @@ class ServicesController {
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT e.id) as expertIds,
                    GROUP_CONCAT(DISTINCT ins.id) as insightIds
-            FROM Service s
+            FROM service s
             LEFT JOIN _IndustryToService its ON s.id = its.B
-            LEFT JOIN Industry i ON its.A = i.id
+            LEFT JOIN industry i ON its.A = i.id
             LEFT JOIN _ExpertToService ets ON s.id = ets.B
-            LEFT JOIN Expert e ON ets.A = e.id
+            LEFT JOIN expert e ON ets.A = e.id
             LEFT JOIN _InsightToService inss ON s.id = inss.B
-            LEFT JOIN Insight ins ON inss.A = ins.id
+            LEFT JOIN insight ins ON inss.A = ins.id
             WHERE s.status = 'published'
             GROUP BY s.id
             ORDER BY s.name ASC
@@ -54,49 +54,55 @@ class ServicesController {
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Service WHERE slug = ?");
-        $stmt->execute([$slug]);
-        $service = $stmt->fetch();
-        
-        if (!$service) {
-            http_response_code(404);
-            echo json_encode(['error' => 'Not found']);
-            return;
+        try {
+            $stmt = $this->conn->prepare("SELECT * FROM service WHERE slug = ?");
+            $stmt->execute([$slug]);
+            $service = $stmt->fetch();
+            
+            if (!$service) {
+                http_response_code(404);
+                echo json_encode(['error' => 'Service not found']);
+                return;
+            }
+            
+            // Fetch related data
+            $service['serviceCapabilities'] = $this->getServiceCapabilities($service['id']);
+            $service['serviceProcessSteps'] = $this->getServiceProcessSteps($service['id']);
+            $service['serviceMetrics'] = $this->getServiceMetrics($service['id']);
+            $service['subServices'] = [];
+            $service['industries'] = $this->getServiceIndustries($service['id']);
+            $service['insights'] = $this->getServiceInsights($service['id']);
+            $service['experts'] = $this->getServiceExperts($service['id']);
+            
+            echo json_encode($service);
+        } catch (PDOException $e) {
+            error_log("Service getBySlug error: " . $e->getMessage());
+            http_response_code(500);
+            echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
         }
-        
-        // Fetch related data
-        $service['serviceCapabilities'] = $this->getServiceCapabilities($service['id']);
-        $service['serviceProcessSteps'] = $this->getServiceProcessSteps($service['id']);
-        $service['serviceMetrics'] = $this->getServiceMetrics($service['id']);
-        $service['subServices'] = [];
-        $service['industries'] = $this->getServiceIndustries($service['id']);
-        $service['insights'] = $this->getServiceInsights($service['id']);
-        $service['experts'] = $this->getServiceExperts($service['id']);
-        
-        echo json_encode($service);
     }
     
     private function getServiceCapabilities($serviceId) {
-        $stmt = $this->conn->prepare("SELECT * FROM ServiceCapability WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt = $this->conn->prepare("SELECT * FROM servicecapability WHERE serviceId = ? ORDER BY `order` ASC");
         $stmt->execute([$serviceId]);
         return $stmt->fetchAll() ?: [];
     }
     
     private function getServiceProcessSteps($serviceId) {
-        $stmt = $this->conn->prepare("SELECT * FROM ServiceProcessStep WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt = $this->conn->prepare("SELECT * FROM serviceprocessstep WHERE serviceId = ? ORDER BY `order` ASC");
         $stmt->execute([$serviceId]);
         return $stmt->fetchAll() ?: [];
     }
     
     private function getServiceMetrics($serviceId) {
-        $stmt = $this->conn->prepare("SELECT * FROM ServiceMetric WHERE serviceId = ? ORDER BY `order` ASC");
+        $stmt = $this->conn->prepare("SELECT * FROM servicemetric WHERE serviceId = ? ORDER BY `order` ASC");
         $stmt->execute([$serviceId]);
         return $stmt->fetchAll() ?: [];
     }
     
     private function getServiceIndustries($serviceId) {
         $stmt = $this->conn->prepare("
-            SELECT i.* FROM Industry i
+            SELECT i.* FROM industry i
             JOIN _IndustryToService its ON i.id = its.A
             WHERE its.B = ?
         ");
@@ -106,7 +112,7 @@ class ServicesController {
     
     private function getServiceInsights($serviceId) {
         $stmt = $this->conn->prepare("
-            SELECT ins.* FROM Insight ins
+            SELECT ins.* FROM insight ins
             JOIN _InsightToService inss ON ins.id = inss.A
             WHERE inss.B = ?
             ORDER BY ins.publishedAt DESC
@@ -118,7 +124,7 @@ class ServicesController {
     
     private function getServiceExperts($serviceId) {
         $stmt = $this->conn->prepare("
-            SELECT e.* FROM Expert e
+            SELECT e.* FROM expert e
             JOIN _ExpertToService ets ON e.id = ets.A
             WHERE ets.B = ?
         ");
@@ -131,7 +137,7 @@ class ServicesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Service (id, name, slug, description, overview, methodologies, tools, featured, image, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO service (id, name, slug, description, overview, methodologies, tools, featured, image, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'c' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -171,7 +177,7 @@ class ServicesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Service SET name = ?, slug = ?, description = ?, overview = ?, methodologies = ?, tools = ?, featured = ?, image = ?, status = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE service SET name = ?, slug = ?, description = ?, overview = ?, methodologies = ?, tools = ?, featured = ?, image = ?, status = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'], $data['slug'], $data['description'], $data['overview'] ?? '',
@@ -210,7 +216,7 @@ class ServicesController {
     
     public function delete($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("DELETE FROM Service WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM service WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }

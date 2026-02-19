@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
+import EventsList from "@/components/EventsList";
 
 export const revalidate = 60;
 
@@ -23,6 +24,18 @@ export default async function CommunityPage() {
     },
     orderBy: { publishedAt: 'desc' },
     take: 20
+  });
+
+  const experts = await prisma.expert.findMany({
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      bio: true,
+      image: true,
+      linkedin: true
+    },
+    take: 3
   });
 
   const featuredInsights = insights.filter(i => i.featured).slice(0, 3);
@@ -300,26 +313,23 @@ export default async function CommunityPage() {
           <h2 className="text-3xl font-bold text-gray-900 text-center mb-12">Meet Our Expert Contributors</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: "Akihiro Tanaka", role: "Tech Consultant", image: "/images/expert1.jpg", articles: 45, linkedin: "#" },
-              { name: "Sarah Chen", role: "Senior Economist", image: "/images/expert2.jpg", articles: 38, linkedin: "#" },
-              { name: "Yuki Yamamoto", role: "Strategy Director", image: "/images/expert3.jpg", articles: 52, linkedin: "#" }
-            ].map((expert, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-shadow">
+            {experts.map((expert) => (
+              <div key={expert.id} className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-shadow">
                 <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                  {expert.image ? (
+                    <img src={expert.image} alt={expert.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                  )}
                 </div>
                 <h3 className="font-bold text-gray-900 mb-1">{expert.name}</h3>
                 <p className="text-sm text-blue-600 font-semibold mb-4">{expert.role}</p>
-                <p className="text-sm text-gray-600 mb-4">
-                  Specializing in {expert.role.toLowerCase()} with deep expertise in Japanese market dynamics and global business strategy.
-                </p>
-                <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4">
-                  <span>{expert.articles} Articles</span>
-                </div>
-                <a href={expert.linkedin} className="text-blue-600 hover:underline text-sm font-semibold">
-                  View Profile →
-                </a>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-3">{expert.bio}</p>
+                {expert.linkedin && (
+                  <a href={expert.linkedin} className="text-blue-600 hover:underline text-sm font-semibold">
+                    View Profile →
+                  </a>
+                )}
               </div>
             ))}
           </div>
@@ -327,32 +337,7 @@ export default async function CommunityPage() {
       </section>
 
       {/* Upcoming Webinars & Virtual Events */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Upcoming Webinars & Virtual Events</h2>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            {[
-              { date: "24", month: "JAN", title: "Mastering AI-Prep: Step-by-Step for Japan", time: "2:00 PM JST", register: "#" },
-              { date: "08", month: "FEB", title: "2025 Manufacturing Tech Roundtable", time: "10:00 AM JST", register: "#" }
-            ].map((event, i) => (
-              <div key={i} className="flex gap-6 bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="flex-shrink-0 w-20 h-20 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center">
-                  <div className="text-2xl font-bold">{event.date}</div>
-                  <div className="text-xs uppercase">{event.month}</div>
-                </div>
-                <div className="flex-1">
-                  <h3 className="font-bold text-gray-900 mb-2">{event.title}</h3>
-                  <p className="text-sm text-gray-600 mb-3">{event.time}</p>
-                  <a href={event.register} className="text-blue-600 text-sm font-semibold hover:underline">
-                    Register Now →
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <EventsList />
 
       {/* Consultant Toolkits & Guides */}
       <section className="py-20 bg-gray-50">

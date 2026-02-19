@@ -1,7 +1,11 @@
 import { prisma } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
-export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const user = await validateSession(req);
+  if (!user) return unauthorizedResponse();
+  
   const { id } = await params;
   const body = await req.json();
   

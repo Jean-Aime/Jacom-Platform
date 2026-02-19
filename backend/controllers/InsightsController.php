@@ -17,12 +17,12 @@ class InsightsController {
                    e.name as authorName, e.slug as authorSlug,
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT s.id) as serviceIds
-            FROM Insight ins
-            LEFT JOIN Expert e ON ins.authorId = e.id
+            FROM insight ins
+            LEFT JOIN expert e ON ins.authorId = e.id
             LEFT JOIN _IndustryToInsight iti ON ins.id = iti.B
-            LEFT JOIN Industry i ON iti.A = i.id
+            LEFT JOIN industry i ON iti.A = i.id
             LEFT JOIN _InsightToService inss ON ins.id = inss.A
-            LEFT JOIN Service s ON inss.B = s.id
+            LEFT JOIN service s ON inss.B = s.id
             WHERE ins.status = 'published' OR (ins.status = 'scheduled' AND ins.scheduledAt <= NOW())
             GROUP BY ins.id
             ORDER BY ins.publishedAt DESC
@@ -61,7 +61,7 @@ class InsightsController {
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT i.*, e.name as authorName, e.slug as authorSlug FROM Insight i LEFT JOIN Expert e ON i.authorId = e.id WHERE i.slug = ?");
+        $stmt = $this->conn->prepare("SELECT i.*, e.name as authorName, e.slug as authorSlug FROM insight i LEFT JOIN expert e ON i.authorId = e.id WHERE i.slug = ?");
         $stmt->execute([$slug]);
         $insight = $stmt->fetch();
         
@@ -79,7 +79,7 @@ class InsightsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Insight (id, title, slug, type, content, excerpt, featured, trending, gated, downloadUrl, image, readTime, status, scheduledAt, publishedAt, authorId, topics, regions, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO insight (id, title, slug, type, content, excerpt, featured, trending, gated, downloadUrl, image, readTime, status, scheduledAt, publishedAt, authorId, topics, regions, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'i' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -115,7 +115,7 @@ class InsightsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Insight SET title = ?, slug = ?, type = ?, content = ?, excerpt = ?, featured = ?, trending = ?, gated = ?, downloadUrl = ?, image = ?, readTime = ?, status = ?, scheduledAt = ?, publishedAt = ?, authorId = ?, topics = ?, regions = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE insight SET title = ?, slug = ?, type = ?, content = ?, excerpt = ?, featured = ?, trending = ?, gated = ?, downloadUrl = ?, image = ?, readTime = ?, status = ?, scheduledAt = ?, publishedAt = ?, authorId = ?, topics = ?, regions = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['title'], $data['slug'], $data['type'], $data['content'], $data['excerpt'] ?? '',
@@ -149,7 +149,7 @@ class InsightsController {
     
     public function delete($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("DELETE FROM Insight WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM insight WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }

@@ -14,11 +14,11 @@ class SolutionsController {
             SELECT s.*, 
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT srv.id) as serviceIds
-            FROM Solution s
+            FROM solution s
             LEFT JOIN _IndustryToSolution its ON s.id = its.B
-            LEFT JOIN Industry i ON its.A = i.id
+            LEFT JOIN industry i ON its.A = i.id
             LEFT JOIN _ServiceToSolution sts ON s.id = sts.B
-            LEFT JOIN Service srv ON sts.A = srv.id
+            LEFT JOIN service srv ON sts.A = srv.id
             WHERE s.status = 'published'
             GROUP BY s.id
             ORDER BY s.featured DESC, s.createdAt DESC
@@ -40,7 +40,7 @@ class SolutionsController {
 
     // GET /api/solutions/:slug - Get solution by slug
     public function getBySlug($slug) {
-        $stmt = $this->db->prepare("SELECT * FROM Solution WHERE slug = ? AND status = 'published'");
+        $stmt = $this->db->prepare("SELECT * FROM solution WHERE slug = ? AND status = 'published'");
         $stmt->execute([$slug]);
         $solution = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -51,7 +51,7 @@ class SolutionsController {
 
         // Get related industries
         $stmt = $this->db->prepare("
-            SELECT i.* FROM Industry i
+            SELECT i.* FROM industry i
             JOIN _IndustryToSolution its ON i.id = its.A
             WHERE its.B = ?
         ");
@@ -60,7 +60,7 @@ class SolutionsController {
 
         // Get related services
         $stmt = $this->db->prepare("
-            SELECT s.* FROM Service s
+            SELECT s.* FROM service s
             JOIN _ServiceToSolution sts ON s.id = sts.A
             WHERE sts.B = ?
         ");
@@ -79,10 +79,11 @@ class SolutionsController {
 
     // POST /api/solutions - Create solution
     public function create($data) {
+        Security::validateSession();
         $id = 'sol' . uniqid();
         
         $stmt = $this->db->prepare("
-            INSERT INTO Solution (id, name, slug, tagline, description, challenge, approach, outcomes, image, featured, status, benefits, implementationSteps)
+            INSERT INTO solution (id, name, slug, tagline, description, challenge, approach, outcomes, image, featured, status, benefits, implementationSteps)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
@@ -122,8 +123,9 @@ class SolutionsController {
 
     // PUT /api/solutions/:id - Update solution
     public function update($id, $data) {
+        Security::validateSession();
         $stmt = $this->db->prepare("
-            UPDATE Solution 
+            UPDATE solution 
             SET name = ?, slug = ?, tagline = ?, description = ?, challenge = ?, approach = ?, outcomes = ?, image = ?, featured = ?, status = ?, benefits = ?, implementationSteps = ?
             WHERE id = ?
         ");
@@ -167,7 +169,8 @@ class SolutionsController {
 
     // DELETE /api/solutions/:id - Delete solution
     public function delete($id) {
-        $stmt = $this->db->prepare("DELETE FROM Solution WHERE id = ?");
+        Security::validateSession();
+        $stmt = $this->db->prepare("DELETE FROM solution WHERE id = ?");
         $stmt->execute([$id]);
         return ['message' => 'Solution deleted successfully'];
     }

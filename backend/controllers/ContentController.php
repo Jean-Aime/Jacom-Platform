@@ -15,7 +15,7 @@ class ContentController {
         $page = $_GET['page'] ?? null;
         $section = $_GET['section'] ?? null;
         
-        $sql = "SELECT * FROM ContentBlock WHERE active = 1";
+        $sql = "SELECT * FROM contentblock WHERE active = 1";
         $params = [];
         
         if ($page) {
@@ -36,7 +36,7 @@ class ContentController {
     }
     
     public function getByKey($key) {
-        $stmt = $this->conn->prepare("SELECT * FROM ContentBlock WHERE `key` = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM contentblock WHERE `key` = ?");
         $stmt->execute([$key]);
         $block = $stmt->fetch();
         
@@ -55,7 +55,7 @@ class ContentController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO ContentBlock (id, `key`, page, section, type, content, image, `order`, active, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO contentblock (id, `key`, page, section, type, content, image, `order`, active, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'cb' . uniqid() . bin2hex(random_bytes(4));
         $stmt->execute([
@@ -80,7 +80,7 @@ class ContentController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE ContentBlock SET page = ?, section = ?, type = ?, content = ?, image = ?, `order` = ?, active = ?, updatedAt = NOW() WHERE `key` = ?");
+        $stmt = $this->conn->prepare("UPDATE contentblock SET page = ?, section = ?, type = ?, content = ?, image = ?, `order` = ?, active = ?, updatedAt = NOW() WHERE `key` = ?");
         
         $stmt->execute([
             $data['page'],
@@ -99,7 +99,7 @@ class ContentController {
     public function delete($key) {
         Security::validateSession();
         
-        $stmt = $this->conn->prepare("DELETE FROM ContentBlock WHERE `key` = ?");
+        $stmt = $this->conn->prepare("DELETE FROM contentblock WHERE `key` = ?");
         $stmt->execute([$key]);
         
         echo json_encode(['success' => true]);

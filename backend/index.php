@@ -3,7 +3,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', 0);
 
 require_once __DIR__ . '/config/config.php';
+require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/middleware/Security.php';
+
+// Get database connection
+$db = Database::getInstance()->getConnection();
 
 // Apply security
 Security::headers();
@@ -229,15 +233,95 @@ try {
             }
             break;
             
+        case 'events':
+            require_once __DIR__ . '/controllers/EventsController.php';
+            $controller = new EventsController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getBySlug($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'community-categories':
+            require_once __DIR__ . '/controllers/CommunityCategoriesController.php';
+            $controller = new CommunityCategoriesController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getBySlug($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'case-studies':
+            require_once __DIR__ . '/controllers/CaseStudiesController.php';
+            $controller = new CaseStudiesController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getBySlug($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'subscribers':
+            require_once __DIR__ . '/controllers/SubscribersController.php';
+            $controller = new SubscribersController($db);
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'POST') {
+                $data = json_decode(file_get_contents('php://input'), true);
+                $controller->create($data);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
         default:
             http_response_code(404);
             echo json_encode(['error' => 'Endpoint not found']);
     }
     
 } catch (Exception $e) {
-    if (DEBUG) {
-        error_log($e->getMessage());
-    }
+    error_log($e->getMessage());
+    error_log($e->getTraceAsString());
     http_response_code(500);
-    echo json_encode(['error' => 'Internal server error']);
+    if (DEBUG) {
+        echo json_encode(['error' => 'Internal server error', 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+    } else {
+        echo json_encode(['error' => 'Internal server error']);
+    }
 }

@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
 export async function POST(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const { insightId, subject, preview } = await request.json();
     

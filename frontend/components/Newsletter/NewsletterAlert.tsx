@@ -5,6 +5,9 @@ export default function NewsletterAlert() {
   const [showAlert, setShowAlert] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
 
   useEffect(() => {
     const cookieConsent = localStorage.getItem('cookie-consent');
@@ -20,6 +23,9 @@ export default function NewsletterAlert() {
     e.preventDefault();
     if (!email) return;
 
+    setLoading(true);
+    setMessage("");
+    
     try {
       const response = await fetch('/api/newsletter', {
         method: 'POST',
@@ -27,12 +33,22 @@ export default function NewsletterAlert() {
         body: JSON.stringify({ email })
       });
 
+      const data = await response.json();
+
       if (response.ok) {
+        setIsSuccess(true);
+        setMessage('Successfully subscribed! Check your email.');
         localStorage.setItem('newsletter-subscribed', 'true');
-        setShowAlert(false);
+        setTimeout(() => setShowAlert(false), 3000);
+      } else {
+        setIsSuccess(false);
+        setMessage(data.error || 'Subscription failed. Please try again.');
       }
     } catch (error) {
-      console.error('Newsletter subscription failed:', error);
+      setIsSuccess(false);
+      setMessage('Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,50 +60,74 @@ export default function NewsletterAlert() {
   if (!showAlert) return null;
 
   return (
-    <div className={`fixed right-6 top-1/2 transform -translate-y-1/2 z-40 transition-all duration-500 ${
+    <div className={`fixed right-6 bottom-6 z-40 transition-all duration-500 ${
       isMinimized ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
     }`}>
-      <div className="bg-white rounded-lg shadow-2xl max-w-sm w-80 overflow-hidden border">
+      <div className="bg-white rounded-xl shadow-2xl w-96 overflow-hidden border-2 border-gray-100">
         <button
           onClick={handleMinimize}
-          className="absolute top-3 right-3 text-gray-400 hover:text-gray-600 z-10"
+          className="absolute top-4 right-4 text-white hover:text-gray-200 z-10"
         >
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"/>
           </svg>
         </button>
         
-        <div className="flex">
-          <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
-            <svg className="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 20 20">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
+          <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
               <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"/>
             </svg>
           </div>
+          <h3 className="text-2xl font-bold text-white mb-2">Stay Updated</h3>
+          <p className="text-blue-100 text-sm">
+            Get exclusive insights and updates delivered to your inbox
+          </p>
+        </div>
+        
+        <div className="p-6">
+          <form onSubmit={handleSubscribe} className="space-y-4">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email address"
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:bg-gray-50"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? 'Subscribing...' : 'Subscribe Now'}
+            </button>
+          </form>
           
-          <div className="flex-1 p-4">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Stay Updated</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Get exclusive insights and updates delivered to your inbox
-            </p>
-            
-            <form onSubmit={handleSubscribe} className="space-y-3">
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:border-primary focus:outline-none"
-              />
-              <button
-                type="submit"
-                className="w-full bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition-colors text-sm"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
+          {message && (
+            <div className={`mt-4 px-4 py-3 rounded-lg text-sm font-medium flex items-center gap-2 ${
+              isSuccess 
+                ? 'bg-green-50 border-2 border-green-200 text-green-700' 
+                : 'bg-red-50 border-2 border-red-200 text-red-700'
+            }`}>
+              {isSuccess ? (
+                <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd"/>
+                </svg>
+              )}
+              <span>{message}</span>
+            </div>
+          )}
+          
+          <p className="text-xs text-gray-500 text-center mt-4">
+            By subscribing, you agree to our Privacy Policy
+          </p>
         </div>
       </div>
     </div>

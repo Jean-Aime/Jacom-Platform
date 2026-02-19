@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,7 +26,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const applications = await prisma.application.findMany({
       include: {
@@ -41,6 +45,9 @@ export async function GET() {
 }
 
 export async function PUT(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const body = await request.json();
     const { id, status } = body;

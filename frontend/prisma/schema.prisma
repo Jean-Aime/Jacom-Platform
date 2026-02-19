@@ -62,6 +62,8 @@ model Industry {
   insights    Insight[]
   experts     Expert[]
   testimonials Testimonial[]
+  
+  @@map("industry")
 }
 
 model Service {
@@ -94,6 +96,8 @@ model Service {
   serviceCapabilities ServiceCapability[]
   serviceProcessSteps ServiceProcessStep[]
   serviceMetrics ServiceMetric[]
+  
+  @@map("service")
 }
 
 model ServiceCapability {
@@ -185,12 +189,31 @@ model Expert {
   email      String?
   linkedin   String?
   featured   Boolean  @default(false)
+  status     String   @default("published")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   
   industries Industry[]
   services   Service[]
   insights   Insight[]
+}
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  date        DateTime @db.Date
+  time        String
+  type        String   @default("webinar")
+  description String?  @db.Text
+  image       String?
+  registerUrl String?
+  featured    Boolean  @default(false)
+  status      String   @default("published")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@map("event")
 }
 
 model Office {

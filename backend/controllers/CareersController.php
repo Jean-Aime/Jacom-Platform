@@ -12,13 +12,13 @@ class CareersController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("SELECT * FROM Career ORDER BY featured DESC, createdAt DESC");
+        $stmt = $this->conn->query("SELECT * FROM career ORDER BY featured DESC, createdAt DESC");
         $careers = $stmt->fetchAll();
         echo json_encode($careers);
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Career WHERE slug = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM career WHERE slug = ?");
         $stmt->execute([$slug]);
         $career = $stmt->fetch();
         
@@ -37,7 +37,7 @@ class CareersController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Career (id, title, slug, department, location, type, description, requirements, responsibilities, featured, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO career (id, title, slug, department, location, type, description, requirements, responsibilities, featured, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'c' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -63,7 +63,7 @@ class CareersController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Career SET title = ?, slug = ?, department = ?, location = ?, type = ?, description = ?, requirements = ?, responsibilities = ?, featured = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE career SET title = ?, slug = ?, department = ?, location = ?, type = ?, description = ?, requirements = ?, responsibilities = ?, featured = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['title'],
@@ -84,7 +84,7 @@ class CareersController {
     public function delete($id) {
         Security::validateSession();
         
-        $stmt = $this->conn->prepare("DELETE FROM Career WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM career WHERE id = ?");
         $stmt->execute([$id]);
         
         echo json_encode(['success' => true]);

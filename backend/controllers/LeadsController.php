@@ -21,7 +21,7 @@ class LeadsController {
             return;
         }
         
-        $stmt = $this->conn->prepare("INSERT INTO Lead (id, name, email, company, phone, message, source, metadata, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO lead (id, name, email, company, phone, message, source, metadata, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())");
         
         $id = 'c' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -41,13 +41,13 @@ class LeadsController {
     
     public function getAll() {
         Security::validateSession();
-        $stmt = $this->conn->query("SELECT * FROM Lead ORDER BY createdAt DESC");
+        $stmt = $this->conn->query("SELECT * FROM lead ORDER BY createdAt DESC");
         echo json_encode($stmt->fetchAll());
     }
     
     public function getById($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("SELECT * FROM Lead WHERE id = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM lead WHERE id = ?");
         $stmt->execute([$id]);
         $lead = $stmt->fetch();
         
@@ -66,13 +66,21 @@ class LeadsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
+        // If only status is provided, update only status
+        if (isset($data['status']) && count($data) === 1) {
+            $stmt = $this->conn->prepare("UPDATE lead SET source = ? WHERE id = ?");
+            $stmt->execute([$data['status'], $id]);
+            echo json_encode(['success' => true]);
+            return;
+        }
+        
         if (isset($data['email']) && !filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             http_response_code(400);
             echo json_encode(['error' => 'Invalid email']);
             return;
         }
         
-        $stmt = $this->conn->prepare("UPDATE Lead SET name = ?, email = ?, company = ?, phone = ?, message = ?, source = ?, metadata = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE lead SET name = ?, email = ?, company = ?, phone = ?, message = ?, source = ?, metadata = ? WHERE id = ?");
         
         $stmt->execute([
             $data['name'],
@@ -91,7 +99,7 @@ class LeadsController {
     public function delete($id) {
         Security::validateSession();
         
-        $stmt = $this->conn->prepare("DELETE FROM Lead WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM lead WHERE id = ?");
         $stmt->execute([$id]);
         
         echo json_encode(['success' => true]);

@@ -81,10 +81,10 @@ class Security {
         }
         
         require_once __DIR__ . '/../config/database.php';
-        $db = new Database();
+        $db = Database::getInstance();
         $conn = $db->getConnection();
         
-        $stmt = $conn->prepare("SELECT * FROM Session WHERE token = ? AND expiresAt > NOW()");
+        $stmt = $conn->prepare("SELECT * FROM session WHERE token = ? AND expiresAt > NOW()");
         $stmt->execute([$token]);
         $session = $stmt->fetch();
         

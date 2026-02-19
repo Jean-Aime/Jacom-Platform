@@ -3,24 +3,67 @@ import { useEffect, useState } from "react";
 import { apiClient } from "@/lib/api-client";
 
 interface Expert {
-  id: number;
+  id: string;
   name: string;
-  title: string;
-  expertise: string;
+  slug: string;
+  role: string;
   bio: string;
-  image: string;
+  expertise: string;
+  image?: string;
+  linkedin?: string;
+  status?: string;
 }
 
 export default function ExpertsPage() {
   const [experts, setExperts] = useState<Expert[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [editingExpert, setEditingExpert] = useState<Expert | null>(null);
+  const [formData, setFormData] = useState<Partial<Expert>>({});
 
-  useEffect(() => {
+  const loadExperts = () => {
     apiClient.getExperts()
       .then((data: any) => setExperts(data))
       .catch(err => console.error(err))
       .finally(() => setLoading(false));
-  }, []);
+  };
+
+  useEffect(() => { loadExperts(); }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      if (editingExpert) {
+        await apiClient.updateExpert(editingExpert.id, formData);
+      } else {
+        await apiClient.createExpert(formData);
+      }
+      setShowModal(false);
+      setFormData({});
+      setEditingExpert(null);
+      loadExperts();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (confirm('Delete this expert?')) {
+      await apiClient.deleteExpert(id);
+      loadExperts();
+    }
+  };
+
+  const openModal = (expert?: Expert) => {
+    if (expert) {
+      setEditingExpert(expert);
+      setFormData(expert);
+    } else {
+      setEditingExpert(null);
+      setFormData({});
+    }
+    setShowModal(true);
+  };
 
   return (
     <div className="p-8 space-y-8 max-w-7xl mx-auto w-full bg-white min-h-screen">
@@ -29,7 +72,7 @@ export default function ExpertsPage() {
           <h2 className="text-3xl font-bold tracking-tight ">Expert Directory</h2>
           <p className="text-gray-500">Manage and assign your global network of professional consultants.</p>
         </div>
-        <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-lg">
+        <button onClick={() => openModal()} className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-lg">
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Add Expert
         </button>
@@ -60,13 +103,14 @@ export default function ExpertsPage() {
                 <th className="px-6 py-4">Expert Profile</th>
                 <th className="px-6 py-4">Title</th>
                 <th className="px-6 py-4">Primary Expertise</th>
+                <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100  text-sm">
               {experts.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-12 text-center text-gray-500">No experts found</td>
+                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">No experts found</td>
                 </tr>
               ) : (
                 experts.map((expert) => (
@@ -82,13 +126,19 @@ export default function ExpertsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4 font-semibold ">{expert.title}</td>
+                    <td className="px-6 py-4 font-semibold ">{expert.role}</td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 text-xs font-bold rounded uppercase">{expert.expertise}</span>
                     </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-1 text-xs font-bold rounded uppercase ${expert.status === 'published' ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'}`}>{expert.status || 'draft'}</span>
+                    </td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-blue-600 hover:bg-blue-50  p-1 rounded-lg">
+                      <button onClick={() => openModal(expert)} className="text-blue-600 hover:bg-blue-50 p-1 rounded-lg mr-2">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                      </button>
+                      <button onClick={() => handleDelete(expert.id)} className="text-red-600 hover:bg-red-50 p-1 rounded-lg">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                       </button>
                     </td>
                   </tr>
@@ -98,6 +148,55 @@ export default function ExpertsPage() {
           </table>
         )}
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-2xl font-bold mb-6">{editingExpert ? 'Edit Expert' : 'Add Expert'}</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-bold mb-2">Name</label>
+                <input type="text" required value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Slug</label>
+                <input type="text" required value={formData.slug || ''} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Role</label>
+                <input type="text" required value={formData.role || ''} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Bio</label>
+                <textarea required value={formData.bio || ''} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full px-4 py-2 border rounded-lg" rows={3} />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Expertise</label>
+                <input type="text" required value={formData.expertise || ''} onChange={e => setFormData({...formData, expertise: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Image URL</label>
+                <input type="text" value={formData.image || ''} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">LinkedIn</label>
+                <input type="text" value={formData.linkedin || ''} onChange={e => setFormData({...formData, linkedin: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Status</label>
+                <select value={formData.status || 'published'} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full px-4 py-2 border rounded-lg">
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+              </div>
+              <div className="flex gap-4 pt-4">
+                <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold">Save</button>
+                <button type="button" onClick={() => setShowModal(false)} className="bg-gray-200 px-6 py-2 rounded-lg font-bold">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

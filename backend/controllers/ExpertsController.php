@@ -16,11 +16,11 @@ class ExpertsController {
             SELECT e.*, 
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT s.id) as serviceIds
-            FROM Expert e
+            FROM expert e
             LEFT JOIN _ExpertToIndustry eti ON e.id = eti.A
-            LEFT JOIN Industry i ON eti.B = i.id
+            LEFT JOIN industry i ON eti.B = i.id
             LEFT JOIN _ExpertToService ets ON e.id = ets.A
-            LEFT JOIN Service s ON ets.B = s.id
+            LEFT JOIN service s ON ets.B = s.id
             GROUP BY e.id
             ORDER BY e.name ASC
         ");
@@ -39,6 +39,7 @@ class ExpertsController {
                 'email' => $expert['email'],
                 'linkedin' => $expert['linkedin'],
                 'featured' => (bool)$expert['featured'],
+                'status' => $expert['status'] ?? 'published',
                 'createdAt' => $expert['createdAt'],
                 'updatedAt' => $expert['updatedAt'],
                 'industries' => $expert['industryIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $expert['industryIds'])) : [],
@@ -50,7 +51,7 @@ class ExpertsController {
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Expert WHERE slug = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM expert WHERE slug = ?");
         $stmt->execute([$slug]);
         $expert = $stmt->fetch();
         
@@ -68,13 +69,14 @@ class ExpertsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Expert (id, name, slug, role, bio, expertise, locations, image, email, linkedin, featured, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO expert (id, name, slug, role, bio, expertise, locations, image, email, linkedin, featured, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'e' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
             $id, $data['name'], $data['slug'], $data['role'], $data['bio'] ?? '',
             $data['expertise'] ?? '', $data['locations'] ?? '', $data['image'] ?? null,
-            $data['email'] ?? null, $data['linkedin'] ?? null, $data['featured'] ?? 0
+            $data['email'] ?? null, $data['linkedin'] ?? null, $data['featured'] ?? 0,
+            $data['status'] ?? 'published'
         ]);
         
         // Handle relations
@@ -101,12 +103,12 @@ class ExpertsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Expert SET name = ?, slug = ?, role = ?, bio = ?, expertise = ?, locations = ?, image = ?, email = ?, linkedin = ?, featured = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE expert SET name = ?, slug = ?, role = ?, bio = ?, expertise = ?, locations = ?, image = ?, email = ?, linkedin = ?, featured = ?, status = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'], $data['slug'], $data['role'], $data['bio'] ?? '', $data['expertise'] ?? '',
             $data['locations'] ?? '', $data['image'] ?? null, $data['email'] ?? null,
-            $data['linkedin'] ?? null, $data['featured'] ?? 0, $id
+            $data['linkedin'] ?? null, $data['featured'] ?? 0, $data['status'] ?? 'published', $id
         ]);
         
         // Update relations
@@ -132,7 +134,7 @@ class ExpertsController {
     
     public function delete($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("DELETE FROM Expert WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM expert WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }

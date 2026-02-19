@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 60;
@@ -26,6 +27,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const data = await request.json();
     const service = await prisma.service.create({
@@ -50,6 +54,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const data = await request.json();
     const service = await prisma.service.update({
@@ -75,6 +82,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');

@@ -19,13 +19,16 @@ class ApiClient {
       const response = await fetch(url, config);
       if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        console.error(`API Error [${options.method || 'GET'}] ${url}:`, error);
         throw new Error(error.error || `HTTP ${response.status}`);
       }
       return await response.json();
     } catch (error: any) {
       if (error.message === 'Failed to fetch') {
+        console.error(`Network Error: ${url}`);
         throw new Error('Backend not reachable. Check XAMPP Apache is running.');
       }
+      console.error(`Request Error [${options.method || 'GET'}] ${url}:`, error);
       throw error;
     }
   }
@@ -93,12 +96,37 @@ class ApiClient {
   updateCareer(id: string, data: any) { return this.request(`/careers/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
   deleteCareer(id: string) { return this.request(`/careers/${id}`, { method: 'DELETE' }); }
 
+  // Events
+  getEvents() { return this.request('/events', { method: 'GET' }); }
+  getEventBySlug(slug: string) { return this.request(`/events/${slug}`, { method: 'GET' }); }
+  createEvent(data: any) { return this.request('/events', { method: 'POST', body: JSON.stringify(data) }); }
+  updateEvent(id: string, data: any) { return this.request(`/events/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteEvent(id: string) { return this.request(`/events/${id}`, { method: 'DELETE' }); }
+
   // Solutions
   getSolutions() { return this.request('/solutions', { method: 'GET' }); }
   getSolutionBySlug(slug: string) { return this.request(`/solutions/${slug}`, { method: 'GET' }); }
   createSolution(data: any) { return this.request('/solutions', { method: 'POST', body: JSON.stringify(data) }); }
   updateSolution(id: string, data: any) { return this.request(`/solutions/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
   deleteSolution(id: string) { return this.request(`/solutions/${id}`, { method: 'DELETE' }); }
+
+  // Community Categories
+  getCommunityCategories() { return this.request('/community-categories', { method: 'GET' }); }
+  getCommunityCategoryBySlug(slug: string) { return this.request(`/community-categories/${slug}`, { method: 'GET' }); }
+  createCommunityCategory(data: any) { return this.request('/community-categories', { method: 'POST', body: JSON.stringify(data) }); }
+  updateCommunityCategory(id: string, data: any) { return this.request(`/community-categories/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteCommunityCategory(id: string) { return this.request(`/community-categories/${id}`, { method: 'DELETE' }); }
+
+  // Case Studies
+  getCaseStudies() { return this.request('/case-studies', { method: 'GET' }); }
+  getCaseStudyBySlug(slug: string) { return this.request(`/case-studies/${slug}`, { method: 'GET' }); }
+  createCaseStudy(data: any) { return this.request('/case-studies', { method: 'POST', body: JSON.stringify(data) }); }
+  updateCaseStudy(id: string, data: any) { return this.request(`/case-studies/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteCaseStudy(id: string) { return this.request(`/case-studies/${id}`, { method: 'DELETE' }); }
+
+  // Subscribers
+  getSubscribers() { return this.request('/subscribers', { method: 'GET' }); }
+  deleteSubscriber(id: string) { return this.request(`/subscribers/${id}`, { method: 'DELETE' }); }
 }
 
 export const apiClient = new ApiClient();

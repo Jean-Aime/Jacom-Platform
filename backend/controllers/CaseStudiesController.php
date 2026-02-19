@@ -11,7 +11,7 @@ class CaseStudiesController {
     public function getAll() {
         $stmt = $this->db->query("
             SELECT cs.* 
-            FROM CaseStudy cs
+            FROM casestudy cs
             WHERE cs.status = 'published'
             ORDER BY cs.featured DESC, cs.createdAt DESC
         ");
@@ -26,7 +26,7 @@ class CaseStudiesController {
     }
 
     public function getBySlug($slug) {
-        $stmt = $this->db->prepare("SELECT * FROM CaseStudy WHERE slug = ? AND status = 'published'");
+        $stmt = $this->db->prepare("SELECT * FROM casestudy WHERE slug = ? AND status = 'published'");
         $stmt->execute([$slug]);
         $caseStudy = $stmt->fetch(PDO::FETCH_ASSOC);
         
@@ -41,31 +41,14 @@ class CaseStudiesController {
         echo json_encode($caseStudy);
     }
 
-    public function getBySolution($solutionId) {
-        $stmt = $this->db->prepare("
-            SELECT cs.* 
-            FROM CaseStudy cs
-            JOIN _CaseStudyToSolution cts ON cs.id = cts.A
-            WHERE cts.B = ? AND cs.status = 'published'
-            ORDER BY cs.featured DESC, cs.createdAt DESC
-        ");
-        $stmt->execute([$solutionId]);
-        $caseStudies = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        foreach ($caseStudies as &$cs) {
-            $cs['featured'] = (bool)$cs['featured'];
-        }
-        
-        echo json_encode($caseStudies);
-    }
-
     public function create() {
+        Security::validateSession();
         $data = json_decode(file_get_contents('php://input'), true);
         
         $id = 'cs' . uniqid();
         
         $stmt = $this->db->prepare("
-            INSERT INTO CaseStudy (id, title, slug, company, industry, challenge, solution, results, quote, author, authorRole, image, featured, status)
+            INSERT INTO casestudy (id, title, slug, company, industry, challenge, solution, results, quote, author, authorRole, image, featured, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
@@ -86,22 +69,16 @@ class CaseStudiesController {
             $data['status'] ?? 'published'
         ]);
 
-        if (!empty($data['solutionIds'])) {
-            $stmt = $this->db->prepare("INSERT INTO _CaseStudyToSolution (A, B) VALUES (?, ?)");
-            foreach ($data['solutionIds'] as $solutionId) {
-                $stmt->execute([$id, $solutionId]);
-            }
-        }
-
         http_response_code(201);
         echo json_encode(['id' => $id, 'message' => 'Case study created successfully']);
     }
 
     public function update($id) {
+        Security::validateSession();
         $data = json_decode(file_get_contents('php://input'), true);
         
         $stmt = $this->db->prepare("
-            UPDATE CaseStudy 
+            UPDATE casestudy 
             SET title = ?, slug = ?, company = ?, industry = ?, challenge = ?, solution = ?, results = ?, quote = ?, author = ?, authorRole = ?, image = ?, featured = ?, status = ?
             WHERE id = ?
         ");
@@ -123,19 +100,12 @@ class CaseStudiesController {
             $id
         ]);
 
-        $this->db->prepare("DELETE FROM _CaseStudyToSolution WHERE A = ?")->execute([$id]);
-        if (!empty($data['solutionIds'])) {
-            $stmt = $this->db->prepare("INSERT INTO _CaseStudyToSolution (A, B) VALUES (?, ?)");
-            foreach ($data['solutionIds'] as $solutionId) {
-                $stmt->execute([$id, $solutionId]);
-            }
-        }
-
         echo json_encode(['message' => 'Case study updated successfully']);
     }
 
     public function delete($id) {
-        $stmt = $this->db->prepare("DELETE FROM CaseStudy WHERE id = ?");
+        Security::validateSession();
+        $stmt = $this->db->prepare("DELETE FROM casestudy WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['message' => 'Case study deleted successfully']);
     }

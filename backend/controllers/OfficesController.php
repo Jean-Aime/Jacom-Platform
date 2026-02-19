@@ -12,12 +12,12 @@ class OfficesController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("SELECT * FROM Office ORDER BY name ASC");
+        $stmt = $this->conn->query("SELECT * FROM office ORDER BY name ASC");
         echo json_encode($stmt->fetchAll());
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Office WHERE slug = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM office WHERE slug = ?");
         $stmt->execute([$slug]);
         $office = $stmt->fetch();
         
@@ -35,7 +35,7 @@ class OfficesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Office (id, name, slug, region, country, city, address, phone, email, lat, lng, image, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO office (id, name, slug, region, country, city, address, phone, email, lat, lng, image, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'o' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -53,7 +53,7 @@ class OfficesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Office SET name = ?, slug = ?, region = ?, country = ?, city = ?, address = ?, phone = ?, email = ?, lat = ?, lng = ?, image = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE office SET name = ?, slug = ?, region = ?, country = ?, city = ?, address = ?, phone = ?, email = ?, lat = ?, lng = ?, image = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'], $data['slug'], $data['region'] ?? '', $data['country'] ?? '', $data['city'] ?? '',
@@ -66,7 +66,7 @@ class OfficesController {
     
     public function delete($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("DELETE FROM Office WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM office WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }

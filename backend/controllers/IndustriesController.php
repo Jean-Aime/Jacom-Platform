@@ -17,13 +17,13 @@ class IndustriesController {
                    GROUP_CONCAT(DISTINCT s.id) as serviceIds,
                    GROUP_CONCAT(DISTINCT e.id) as expertIds,
                    GROUP_CONCAT(DISTINCT ins.id) as insightIds
-            FROM Industry i
+            FROM industry i
             LEFT JOIN _IndustryToService its ON i.id = its.A
-            LEFT JOIN Service s ON its.B = s.id
+            LEFT JOIN service s ON its.B = s.id
             LEFT JOIN _ExpertToIndustry eti ON i.id = eti.B
-            LEFT JOIN Expert e ON eti.A = e.id
+            LEFT JOIN expert e ON eti.A = e.id
             LEFT JOIN _IndustryToInsight iti ON i.id = iti.A
-            LEFT JOIN Insight ins ON iti.B = ins.id
+            LEFT JOIN insight ins ON iti.B = ins.id
             GROUP BY i.id
             ORDER BY i.name ASC
         ");
@@ -68,13 +68,13 @@ class IndustriesController {
                    GROUP_CONCAT(DISTINCT ins.excerpt SEPARATOR '|||') as insightExcerpts,
                    GROUP_CONCAT(DISTINCT ins.type) as insightTypes,
                    GROUP_CONCAT(DISTINCT ins.authorId) as insightAuthorIds
-            FROM Industry i
+            FROM industry i
             LEFT JOIN _IndustryToService its ON i.id = its.A
-            LEFT JOIN Service s ON its.B = s.id AND s.status = 'published'
+            LEFT JOIN service s ON its.B = s.id AND s.status = 'published'
             LEFT JOIN _ExpertToIndustry eti ON i.id = eti.B
-            LEFT JOIN Expert e ON eti.A = e.id
+            LEFT JOIN expert e ON eti.A = e.id
             LEFT JOIN _IndustryToInsight iti ON i.id = iti.A
-            LEFT JOIN Insight ins ON iti.B = ins.id AND ins.status = 'published'
+            LEFT JOIN insight ins ON iti.B = ins.id AND ins.status = 'published'
             WHERE i.slug = ?
             GROUP BY i.id
         ");
@@ -147,7 +147,7 @@ class IndustriesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO Industry (id, name, slug, description, overview, challenges, trends, featured, image, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO industry (id, name, slug, description, overview, challenges, trends, featured, image, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'c' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
@@ -194,7 +194,7 @@ class IndustriesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Industry SET name = ?, slug = ?, description = ?, overview = ?, challenges = ?, trends = ?, featured = ?, image = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE industry SET name = ?, slug = ?, description = ?, overview = ?, challenges = ?, trends = ?, featured = ?, image = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'],
@@ -240,7 +240,7 @@ class IndustriesController {
     public function delete($id) {
         Security::validateSession();
         
-        $stmt = $this->conn->prepare("DELETE FROM Industry WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM industry WHERE id = ?");
         $stmt->execute([$id]);
         
         echo json_encode(['success' => true]);

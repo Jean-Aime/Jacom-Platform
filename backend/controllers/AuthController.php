@@ -26,7 +26,7 @@ class AuthController {
         $ip = $_SERVER['REMOTE_ADDR'];
         Security::rateLimit($ip . '_login', 5, 900);
         
-        $stmt = $this->conn->prepare("SELECT * FROM User WHERE email = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM user WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch();
         
@@ -40,7 +40,7 @@ class AuthController {
         $token = bin2hex(random_bytes(32));
         $expiresAt = date('Y-m-d H:i:s', time() + 86400);
         
-        $stmt = $this->conn->prepare("INSERT INTO Session (id, token, userId, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO session (id, token, userId, expiresAt, createdAt) VALUES (?, ?, ?, ?, NOW())");
         $sessionId = $this->generateCuid();
         $stmt->execute([$sessionId, $token, $user['id'], $expiresAt]);
         
@@ -59,7 +59,7 @@ class AuthController {
         $token = $_COOKIE['session-token'] ?? null;
         
         if ($token) {
-            $stmt = $this->conn->prepare("DELETE FROM Session WHERE token = ?");
+            $stmt = $this->conn->prepare("DELETE FROM session WHERE token = ?");
             $stmt->execute([$token]);
         }
         
@@ -76,7 +76,7 @@ class AuthController {
             return;
         }
         
-        $stmt = $this->conn->prepare("SELECT s.*, u.email, u.name FROM Session s JOIN User u ON s.userId = u.id WHERE s.token = ? AND s.expiresAt > NOW()");
+        $stmt = $this->conn->prepare("SELECT s.*, u.email, u.name FROM session s JOIN user u ON s.userId = u.id WHERE s.token = ? AND s.expiresAt > NOW()");
         $stmt->execute([$token]);
         $session = $stmt->fetch();
         

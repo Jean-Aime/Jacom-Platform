@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { sendLeadNotification } from '@/lib/email';
 import { syncLeadToCRM } from '@/lib/crm';
 import { calculateLeadScore } from '@/lib/scoring';
+import { validateSession, unauthorizedResponse } from '@/lib/auth-middleware';
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,7 +67,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const user = await validateSession(request);
+  if (!user) return unauthorizedResponse();
+  
   try {
     const leads = await prisma.lead.findMany({
       select: {
