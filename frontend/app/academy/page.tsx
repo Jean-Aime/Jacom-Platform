@@ -31,9 +31,10 @@ export default function AcademyPage() {
     try {
       const res = await fetch('/api/services?type=training');
       const data = await res.json();
-      setPrograms(data);
+      setPrograms(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error('Failed to fetch programs:', error);
+      setPrograms([]);
     } finally {
       setLoading(false);
     }

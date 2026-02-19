@@ -1,3 +1,6 @@
+-- Use correct database
+USE jas_consulting;
+
 -- Drop existing if any
 DROP TABLE IF EXISTS `_ExpertToSolution`;
 DROP TABLE IF EXISTS `_ServiceToSolution`;

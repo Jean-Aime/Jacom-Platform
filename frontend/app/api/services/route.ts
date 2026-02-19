@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     
     const where: any = {};
     if (type) {
-      where.type = type;
+      where.type = type.toUpperCase();
     }
     
     const services = await prisma.service.findMany({

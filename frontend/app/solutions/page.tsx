@@ -1,13 +1,30 @@
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
-export default function SolutionsPage() {
+async function getSolutions() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/solutions`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+async function getOffices() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/offices`, { cache: 'no-store' });
+  if (!res.ok) return [];
+  return res.json();
+}
+
+export default async function SolutionsPage() {
+  const solutions = await getSolutions();
+  const offices = await getOffices();
+  const featured = solutions.filter((s: any) => s.featured);
+  const regular = solutions.filter((s: any) => !s.featured);
+
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-56 min-h-[580px]">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-[700px]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
             <p className="text-xs text-blue-200 mb-3 uppercase tracking-widest font-medium">WELCOME TO JACOM CONSULTING SOLUTIONS</p>
@@ -30,7 +47,7 @@ export default function SolutionsPage() {
       </section>
 
       {/* Consulting Solutions */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white -mt-[400px] relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">SERVICES</p>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Consulting Solutions</h2>
@@ -39,78 +56,26 @@ export default function SolutionsPage() {
           </p>
           
           <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                ),
-                title: "Strategy & Planning",
-                items: ["Corporate strategy development", "Business model innovation", "Operational efficiency assessment"]
-              },
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                ),
-                title: "Business IT Consulting",
-                items: ["IT strategy & roadmap", "Digital transformation planning", "Technology assessment & selection"]
-              },
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                  </svg>
-                ),
-                title: "Innovation & Digital Transformation",
-                items: ["Digital transformation strategy", "Innovation workshops & ideation", "Technology adoption planning"]
-              },
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                ),
-                title: "Investment Policy & Advisory",
-                items: ["Policy analysis and design", "Investment strategy development", "Due diligence & feasibility studies"]
-              },
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
-                ),
-                title: "Program Management",
-                items: ["Program planning & setup", "Stakeholder management", "Risk & issue management"]
-              },
-              {
-                icon: (
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                  </svg>
-                ),
-                title: "Leadership & Corporate Governance",
-                items: ["Leadership development programs", "Board effectiveness reviews", "Governance framework design"]
-              }
-            ].map((service, i) => (
-              <div key={i} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+            {featured.map((solution: any) => (
+              <a key={solution.id} href={`/solutions/${solution.slug}`} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow group">
                 <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
-                  {service.icon}
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-4 text-lg">{service.title}</h3>
-                <ul className="space-y-2.5">
-                  {service.items.map((item, j) => (
-                    <li key={j} className="flex items-start gap-2 text-sm text-gray-600">
-                      <svg className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-blue-600 transition">{solution.name}</h3>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{solution.description}</p>
+                {solution.featured && (
+                  <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded mb-3">Featured</span>
+                )}
+                <div className="pt-3 border-t border-gray-100 flex items-center justify-between text-xs">
+                  <div className="flex gap-3 text-gray-500">
+                    <span>{solution.industryIds?.length || 0} Industries</span>
+                    <span>{solution.serviceIds?.length || 0} Services</span>
+                  </div>
+                  <span className="text-blue-600 font-medium group-hover:translate-x-1 transition-transform">Learn More →</span>
+                </div>
+              </a>
             ))}
           </div>
         </div>
@@ -124,53 +89,19 @@ export default function SolutionsPage() {
           
           <div className="grid md:grid-cols-2 gap-8 items-start">
             <div className="space-y-8">
-              {[
-                {
-                  icon: (
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                  ),
-                  title: "IoT Platform & Integration",
-                  desc: "Turn all devices into social infrastructure. Our IoT platform solutions enable seamless connectivity and data exchange across your ecosystem."
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
-                  ),
-                  title: "Smart Factory Solutions",
-                  desc: "Transform manufacturing operations with Industry 4.0 technologies, automation systems, and real-time operational intelligence."
-                },
-                {
-                  icon: (
+              {regular.slice(0, 4).map((solution: any) => (
+                <a key={solution.id} href={`/solutions/${solution.slug}`} className="flex gap-4 group">
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                  ),
-                  title: "Renewable Energy Systems",
-                  desc: "Design and implement sustainable energy solutions including solar, wind, and EV charging infrastructure for a greener future."
-                },
-                {
-                  icon: (
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
-                  ),
-                  title: "Security & Access Control",
-                  desc: "Protect your physical and digital assets with comprehensive security management platforms and access control systems."
-                }
-              ].map((tech, i) => (
-                <div key={i} className="flex gap-4">
-                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    {tech.icon}
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2">{tech.title}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">{tech.desc}</p>
+                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">{solution.name}</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed mb-2">{solution.description}</p>
+                    <span className="text-xs text-blue-600 font-medium group-hover:underline">Learn More →</span>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
             
@@ -192,8 +123,8 @@ export default function SolutionsPage() {
       {/* Financial Solutions */}
       <section className="py-20 bg-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold mb-3">Financial Solutions</h2>
-          <p className="text-gray-300 mb-12 max-w-3xl">
+          <h2 className="text-3xl font-bold mb-3 text-center">Financial Solutions</h2>
+          <p className="text-gray-300 mb-12 max-w-3xl mx-auto text-center">
             Providing a variety of our growth engine for intellectual and accurate capital through consulting, risk modeling, and banking services.
           </p>
           
@@ -252,37 +183,18 @@ export default function SolutionsPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Global Network</h2>
-          <p className="text-gray-600 mb-12">Serving clients across 3 global offices</p>
+          <p className="text-gray-600 mb-12">Serving clients across {offices.length} global offices</p>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                img: "/images/about-bg.jpg",
-                title: "Tokyo, Japan",
-                subtitle: "Headquarters & Asia Pacific",
-                desc: "Our hub for advanced manufacturing & automation, renewable energy systems, and IoT platform development."
-              },
-              {
-                img: "/images/contact-bg.jpg",
-                title: "Addis Ababa, Ethiopia",
-                subtitle: "Africa Regional Hub",
-                desc: "Driving economic development, infrastructure projects, and community development across Africa."
-              },
-              {
-                img: "/images/digital-bg.jpg",
-                title: "Kathmandu, Nepal",
-                subtitle: "Asia Recruitment Center",
-                desc: "Implementing recruitment services, pre-departure training, and skills development programs."
-              }
-            ].map((office, i) => (
-              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
+            {offices.slice(0, 3).map((office: any) => (
+              <div key={office.id} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
                 <div className="h-56 bg-gray-200 overflow-hidden">
-                  <img src={office.img} alt={office.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
+                  <img src={office.image || '/images/about-bg.jpg'} alt={office.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-300" />
                 </div>
                 <div className="p-6">
-                  <h3 className="font-bold text-gray-900 text-xl mb-1">{office.title}</h3>
-                  <p className="text-sm text-blue-600 font-semibold mb-3">{office.subtitle}</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{office.desc}</p>
+                  <h3 className="font-bold text-gray-900 text-xl mb-1">{office.name}</h3>
+                  <p className="text-sm text-blue-600 font-semibold mb-3">{office.region || 'Global Office'}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{office.description}</p>
                 </div>
               </div>
             ))}
@@ -404,3 +316,4 @@ export default function SolutionsPage() {
     </div>
   );
 }
+

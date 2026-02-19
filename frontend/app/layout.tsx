@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   description: "Leading global management consulting firm specializing in digital transformation, strategy, and operations excellence.",
   keywords: ["management consulting", "digital transformation", "strategy consulting", "business consulting"],
   metadataBase: new URL('https://jas.com'),
+  icons: {
+    icon: '/favicon.svg'
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',

@@ -7,7 +7,7 @@ class InsightsController {
     private $conn;
     
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
         $this->conn = $this->db->getConnection();
     }
     

@@ -11,6 +11,7 @@ export default function MegaMenuHeader() {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [industries, setIndustries] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
+  const [solutions, setSolutions] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -19,6 +20,7 @@ export default function MegaMenuHeader() {
     // Fetch industries and services
     apiClient.getIndustries().then(setIndustries).catch(console.error);
     apiClient.getServices().then(setServices).catch(console.error);
+    apiClient.getSolutions().then(setSolutions).catch(console.error);
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -75,50 +77,25 @@ export default function MegaMenuHeader() {
                 </svg>
               </a>
               
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[600px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "solutions" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6 grid grid-cols-4 gap-6">
+                <div className="p-6 grid grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Consulting Solutions</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Featured Solutions</h4>
                     <div className="space-y-2">
-                      <a href="/services/digital-transformation" className="block text-xs text-gray-600 hover:text-blue-600">Digital Transformation</a>
-                      <a href="/services/operational-excellence" className="block text-xs text-gray-600 hover:text-blue-600">Operational Excellence</a>
-                      <a href="/services/financial-advisory" className="block text-xs text-gray-600 hover:text-blue-600">Financial Advisory</a>
-                      <a href="/services/risk-management" className="block text-xs text-gray-600 hover:text-blue-600">Risk Management</a>
-                      <a href="/services/policy-development" className="block text-xs text-gray-600 hover:text-blue-600">Policy Development</a>
-                      <a href="/services/project-delivery" className="block text-xs text-gray-600 hover:text-blue-600">Project Delivery</a>
+                      {solutions.filter((s: any) => s.featured).map((sol: any) => (
+                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{sol.name}</a>
+                      ))}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Technical Solutions</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">All Solutions</h4>
                     <div className="space-y-2">
-                      <a href="/services/iot-solutions" className="block text-xs text-gray-600 hover:text-blue-600">IoT Solutions</a>
-                      <a href="/services/smart-factory" className="block text-xs text-gray-600 hover:text-blue-600">Smart Factory</a>
-                      <a href="/services/renewable-energy" className="block text-xs text-gray-600 hover:text-blue-600">Renewable Energy</a>
-                      <a href="/services/system-integration" className="block text-xs text-gray-600 hover:text-blue-600">System Integration</a>
-                      <a href="/services/software-development" className="block text-xs text-gray-600 hover:text-blue-600">Software Development</a>
-                      <a href="/services/cloud-infrastructure" className="block text-xs text-gray-600 hover:text-blue-600">Cloud & Infrastructure</a>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Specialized Services</h4>
-                    <div className="space-y-2">
-                      <a href="/services/digital-health" className="block text-xs text-gray-600 hover:text-blue-600">Digital Health</a>
-                      <a href="/services/smart-building" className="block text-xs text-gray-600 hover:text-blue-600">Smart Building</a>
-                      <a href="/services/ecommerce-platform" className="block text-xs text-gray-600 hover:text-blue-600">E-commerce Platform</a>
-                      <a href="/services/cybersecurity" className="block text-xs text-gray-600 hover:text-blue-600">Cybersecurity</a>
-                      <a href="/services/talent-acquisition" className="block text-xs text-gray-600 hover:text-blue-600">Talent Acquisition</a>
-                      <a href="/services/training-development" className="block text-xs text-gray-600 hover:text-blue-600">Training & Development</a>
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">By Location</h4>
-                    <div className="space-y-2">
-                      <a href="/offices/tokyo" className="block text-xs text-gray-600 hover:text-blue-600">Tokyo Office (Japan)</a>
-                      <a href="/offices/ethiopia" className="block text-xs text-gray-600 hover:text-blue-600">Ethiopia Office (Africa)</a>
-                      <a href="/offices/nepal" className="block text-xs text-gray-600 hover:text-blue-600">Nepal Office (Asia)</a>
-                      <a href="/offices" className="block text-xs text-gray-600 hover:text-blue-600">Global Services</a>
+                      {solutions.filter((s: any) => !s.featured).map((sol: any) => (
+                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{sol.name}</a>
+                      ))}
+                      <a href="/solutions" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Solutions →</a>
                     </div>
                   </div>
                 </div>

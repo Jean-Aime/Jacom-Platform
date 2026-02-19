@@ -13,15 +13,12 @@ class SolutionsController {
         $stmt = $this->db->query("
             SELECT s.*, 
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
-                   GROUP_CONCAT(DISTINCT srv.id) as serviceIds,
-                   GROUP_CONCAT(DISTINCT e.id) as expertIds
+                   GROUP_CONCAT(DISTINCT srv.id) as serviceIds
             FROM Solution s
             LEFT JOIN _IndustryToSolution its ON s.id = its.B
             LEFT JOIN Industry i ON its.A = i.id
             LEFT JOIN _ServiceToSolution sts ON s.id = sts.B
             LEFT JOIN Service srv ON sts.A = srv.id
-            LEFT JOIN _ExpertToSolution ets ON s.id = ets.B
-            LEFT JOIN Expert e ON ets.A = e.id
             WHERE s.status = 'published'
             GROUP BY s.id
             ORDER BY s.featured DESC, s.createdAt DESC
@@ -32,8 +29,10 @@ class SolutionsController {
         foreach ($solutions as &$solution) {
             $solution['industryIds'] = $solution['industryIds'] ? explode(',', $solution['industryIds']) : [];
             $solution['serviceIds'] = $solution['serviceIds'] ? explode(',', $solution['serviceIds']) : [];
-            $solution['expertIds'] = $solution['expertIds'] ? explode(',', $solution['expertIds']) : [];
+            $solution['expertIds'] = [];
             $solution['featured'] = (bool)$solution['featured'];
+            $solution['benefits'] = $solution['benefits'] ? json_decode($solution['benefits'], true) : [];
+            $solution['implementationSteps'] = $solution['implementationSteps'] ? json_decode($solution['implementationSteps'], true) : [];
         }
         
         return $solutions;
@@ -68,16 +67,12 @@ class SolutionsController {
         $stmt->execute([$solution['id']]);
         $solution['services'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Get related experts
-        $stmt = $this->db->prepare("
-            SELECT e.* FROM Expert e
-            JOIN _ExpertToSolution ets ON e.id = ets.A
-            WHERE ets.B = ?
-        ");
-        $stmt->execute([$solution['id']]);
-        $solution['experts'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Get related experts (table not yet created)
+        $solution['experts'] = [];
 
         $solution['featured'] = (bool)$solution['featured'];
+        $solution['benefits'] = $solution['benefits'] ? json_decode($solution['benefits'], true) : [];
+        $solution['implementationSteps'] = $solution['implementationSteps'] ? json_decode($solution['implementationSteps'], true) : [];
         
         return $solution;
     }
@@ -87,8 +82,8 @@ class SolutionsController {
         $id = 'sol' . uniqid();
         
         $stmt = $this->db->prepare("
-            INSERT INTO Solution (id, name, slug, tagline, description, challenge, approach, outcomes, image, featured, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO Solution (id, name, slug, tagline, description, challenge, approach, outcomes, image, featured, status, benefits, implementationSteps)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         
         $stmt->execute([
@@ -102,7 +97,9 @@ class SolutionsController {
             $data['outcomes'] ?? null,
             $data['image'] ?? null,
             isset($data['featured']) ? (int)$data['featured'] : 0,
-            $data['status'] ?? 'published'
+            $data['status'] ?? 'published',
+            isset($data['benefits']) ? json_encode($data['benefits']) : null,
+            isset($data['implementationSteps']) ? json_encode($data['implementationSteps']) : null
         ]);
 
         // Link industries
@@ -115,10 +112,10 @@ class SolutionsController {
             $this->linkServices($id, $data['serviceIds']);
         }
 
-        // Link experts
-        if (!empty($data['expertIds'])) {
-            $this->linkExperts($id, $data['expertIds']);
-        }
+        // Link experts (skip for now)
+        // if (!empty($data['expertIds'])) {
+        //     $this->linkExperts($id, $data['expertIds']);
+        // }
 
         return ['id' => $id, 'message' => 'Solution created successfully'];
     }
@@ -127,7 +124,7 @@ class SolutionsController {
     public function update($id, $data) {
         $stmt = $this->db->prepare("
             UPDATE Solution 
-            SET name = ?, slug = ?, tagline = ?, description = ?, challenge = ?, approach = ?, outcomes = ?, image = ?, featured = ?, status = ?
+            SET name = ?, slug = ?, tagline = ?, description = ?, challenge = ?, approach = ?, outcomes = ?, image = ?, featured = ?, status = ?, benefits = ?, implementationSteps = ?
             WHERE id = ?
         ");
         
@@ -142,6 +139,8 @@ class SolutionsController {
             $data['image'] ?? null,
             isset($data['featured']) ? (int)$data['featured'] : 0,
             $data['status'] ?? 'published',
+            isset($data['benefits']) ? json_encode($data['benefits']) : null,
+            isset($data['implementationSteps']) ? json_encode($data['implementationSteps']) : null,
             $id
         ]);
 
@@ -157,11 +156,11 @@ class SolutionsController {
             $this->linkServices($id, $data['serviceIds']);
         }
 
-        // Update experts
-        $this->db->prepare("DELETE FROM _ExpertToSolution WHERE B = ?")->execute([$id]);
-        if (!empty($data['expertIds'])) {
-            $this->linkExperts($id, $data['expertIds']);
-        }
+        // Update experts (skip for now)
+        // $this->db->prepare("DELETE FROM _ExpertToSolution WHERE B = ?")->execute([$id]);
+        // if (!empty($data['expertIds'])) {
+        //     $this->linkExperts($id, $data['expertIds']);
+        // }
 
         return ['message' => 'Solution updated successfully'];
     }
