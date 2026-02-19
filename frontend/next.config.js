@@ -27,6 +27,12 @@ const nextConfig = {
     optimizeCss: true,
   },
   outputFileTracingRoot: require('path').join(__dirname, '../'),
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals.push('_http_common');
+    }
+    return config;
+  },
 };
 
 module.exports = nextConfig;
