@@ -45,3 +45,4 @@ _UNUSED_FILES/
 .vercel
 
 .vercel
+.env*.local
