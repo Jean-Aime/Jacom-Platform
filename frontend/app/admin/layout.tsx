@@ -1,7 +1,6 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { apiClient } from "@/lib/api-client";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -9,7 +8,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     if (pathname === "/admin/login") return;
-    apiClient.checkAuth()
+    
+    fetch('/api/auth/check')
+      .then(r => { if (!r.ok) throw new Error(); })
       .catch(() => router.push("/admin/login"));
   }, [pathname, router]);
 

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { apiClient } from "@/lib/api-client";
 
 interface Event {
   id: string;
@@ -16,9 +15,10 @@ export default function EventsList() {
   const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    apiClient.getEvents()
+    fetch('/api/events')
+      .then(r => r.json())
       .then((data: any) => setEvents(data.filter((e: any) => e.status === 'published').slice(0, 2)))
-      .catch(err => console.error(err));
+      .catch(() => setEvents([]));
   }, []);
 
   if (events.length === 0) return null;

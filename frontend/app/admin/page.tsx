@@ -1,14 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
-import { apiClient } from "@/lib/api-client";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ totalLeads: 0, activeStudents: 0, regionalOffices: 3, annualRevenue: "¥12.5M" });
 
   useEffect(() => {
-    apiClient.getLeads()
+    fetch('/api/leads')
+      .then(r => r.json())
       .then((data: any) => setStats(prev => ({ ...prev, totalLeads: data.length || 0 })))
-      .catch(err => console.error("Error:", err));
+      .catch(() => {});
   }, []);
 
   return (
