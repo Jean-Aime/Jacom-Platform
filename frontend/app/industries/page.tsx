@@ -2,7 +2,7 @@ import { dataFetcher } from "@/lib/data-fetcher";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
-export const revalidate = 3600;
+export const dynamic = 'force-dynamic';
 
 export default async function IndustriesPage() {
   const industries = await dataFetcher.getIndustries();
