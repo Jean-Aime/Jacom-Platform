@@ -3,7 +3,7 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 import EventsList from "@/components/EventsList";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function CommunityPage() {
   const insights = await prisma.insight.findMany({

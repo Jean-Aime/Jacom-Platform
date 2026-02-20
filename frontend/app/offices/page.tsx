@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
+export const dynamic = 'force-dynamic';
+
 export default async function OfficesPage() {
   const offices = await prisma.office.findMany({
     orderBy: { region: 'asc' }

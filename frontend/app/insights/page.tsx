@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export default async function InsightsPage() {
   const insights = await prisma.insight.findMany({

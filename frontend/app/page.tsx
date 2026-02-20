@@ -3,6 +3,8 @@ import Footer from "@/components/Footer/Footer";
 import { prisma } from "@/lib/prisma";
 import NewHomePage from "@/components/NewHome/NewHomePage";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   let insights: any[] = [];
   try {

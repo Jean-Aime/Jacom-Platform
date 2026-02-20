@@ -5,6 +5,8 @@ import { ExpertCardSkeleton } from "@/components/Skeletons/Skeletons";
 import { Suspense } from "react";
 import Image from "next/image";
 
+export const dynamic = 'force-dynamic';
+
 async function ExpertsContent() {
   const experts = await prisma.expert.findMany({
     orderBy: { featured: 'desc' }

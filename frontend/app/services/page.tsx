@@ -3,6 +3,8 @@ import Footer from "@/components/Footer/Footer";
 import { prisma } from "@/lib/prisma";
 import { ServiceType } from "@prisma/client";
 
+export const dynamic = 'force-dynamic';
+
 export default async function ServicesPage() {
   // Fetch all non-training services from database
   const services = await prisma.service.findMany({
