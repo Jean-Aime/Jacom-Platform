@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/admin/', '/api/']
     },
-    sitemap: 'https://jas.com/sitemap.xml'
+    sitemap: 'https://jacom-platform.vercel.app/sitemap.xml'
   };
 }
