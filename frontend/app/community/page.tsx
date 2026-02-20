@@ -1,3 +1,4 @@
+import { prisma } from "@/lib/prisma";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 import EventsList from "@/components/EventsList";
@@ -5,8 +6,37 @@ import EventsList from "@/components/EventsList";
 export const dynamic = 'force-dynamic';
 
 export default async function CommunityPage() {
-  const insights: any[] = [];
-  const experts: any[] = [];
+  const insights = await prisma.insight.findMany({
+    where: {
+      OR: [
+        { status: 'published' },
+        { status: 'scheduled', scheduledAt: { lte: new Date() } }
+      ]
+    },
+    include: {
+      author: {
+        select: {
+          name: true,
+          role: true,
+          image: true
+        }
+      }
+    },
+    orderBy: { publishedAt: 'desc' },
+    take: 20
+  });
+
+  const experts = await prisma.expert.findMany({
+    select: {
+      id: true,
+      name: true,
+      role: true,
+      bio: true,
+      image: true,
+      linkedin: true
+    },
+    take: 3
+  });
 
   const featuredInsights = insights.filter(i => i.featured).slice(0, 3);
 
