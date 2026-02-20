@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Industry, Service } from "@/lib/types";
-import { apiClient } from "@/lib/api-client";
 
 export default function MegaMenuHeader() {
   const [searchOpen, setSearchOpen] = useState(false);
@@ -18,26 +17,9 @@ export default function MegaMenuHeader() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     
-    // Fetch industries and services
-    apiClient.getIndustries().then((data: any) => setIndustries(data || [])).catch(err => {
-      console.error('Failed to load industries:', err);
-      setIndustries([]);
-    });
-    apiClient.getServices().then((data: any) => setServices(data || [])).catch(err => {
-      console.error('Failed to load services:', err);
-      setServices([]);
-    });
-    apiClient.getSolutions().then((data: any) => setSolutions(data || [])).catch(err => {
-      console.error('Failed to load solutions:', err);
-      setSolutions([]);
-    });
-    apiClient.getCommunityCategories().then((data: any) => {
-      console.log('Community categories loaded:', data);
-      setCommunityCategories(Array.isArray(data) ? data : []);
-    }).catch(err => {
-      console.error('Failed to load community categories:', err);
-      setCommunityCategories([]);
-    });
+    // Fetch from Next.js API routes
+    fetch('/api/industries').then(r => r.json()).then(data => setIndustries(data || [])).catch(() => setIndustries([]));
+    fetch('/api/services').then(r => r.json()).then(data => setServices(data || [])).catch(() => setServices([]));
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
