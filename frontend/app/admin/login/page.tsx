@@ -15,15 +15,22 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+      const response = await fetch(`${BACKEND}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       });
       
       if (!response.ok) {
         const data = await response.json();
         throw new Error(data.error || 'Login failed');
+      }
+      
+      const data = await response.json();
+      if (data.token) {
+        localStorage.setItem('session-token', data.token);
       }
       
       router.push("/admin");
@@ -39,7 +46,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-red-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+          <div className="w-12 h-12 bg-gradient-to-br from-primary to-red-800 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg">
             J
           </div>
           <div>
@@ -88,7 +95,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded text-sm">
+        <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded text-sm">
           <p className="font-semibold mb-1">Default Credentials:</p>
           <p className="text-gray-700">Email: admin@jacom.com</p>
           <p className="text-gray-700">Password: admin123</p>

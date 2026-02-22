@@ -5,7 +5,7 @@ export default function ServiceImage() {
   return (
     <section className="py-20 px-6 md:px-20 bg-gray-50">
       <div className="max-w-6xl mx-auto">
-        <div className="relative h-96 bg-gradient-to-br from-blue-200 to-indigo-100 rounded-lg overflow-hidden shadow-2xl group hover-scale">
+        <div className="relative h-96 bg-gradient-to-br from-red-200 to-red-100 rounded-lg overflow-hidden shadow-2xl group hover-scale">
           <Image
             src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=500&fit=crop"
             alt="Innovation and technology"

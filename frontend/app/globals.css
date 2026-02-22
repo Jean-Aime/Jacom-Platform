@@ -40,14 +40,42 @@ html {
 }
 
 body {
-  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+input,
+textarea,
+select,
+option {
+  background-color: white !important;
+  color: #111827 !important;
+  border: 1px solid #d1d5db;
+}
+
+/* Radio and Checkbox */
+input[type="radio"],
+input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: #2563eb;
+  width: 16px !important;
+  height: 16px !important;
+  min-width: 16px !important;
+  min-height: 16px !important;
+  flex-shrink: 0;
+}
+
+label {
+  color: #1f2937;
+  font-weight: 500;
+  cursor: pointer;
+}
+
 input::placeholder,
 textarea::placeholder {
+  color: #9ca3af;
   font-weight: 400;
   opacity: 0.6;
 }
@@ -118,8 +146,33 @@ p {
   }
 }
 
+@keyframes bounce-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 3s ease-in-out infinite;
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.animation-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animation-delay-600 {
+  animation-delay: 0.6s;
+}
+
+.animation-delay-900 {
+  animation-delay: 0.9s;
 }
 
 .animate-fade-in {
@@ -134,4 +187,380 @@ p {
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ========================================
+   RESPONSIVE DESIGN - ALL DEVICES
+   ======================================== */
+
+/* Base responsive setup */
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  html {
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+  
+  body {
+    overflow-x: hidden;
+    min-width: 320px;
+  }
+}
+
+/* Mobile First - Base Styles (320px+) */
+@layer utilities {
+  /* Container responsive */
+  .container-responsive {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  @media (min-width: 640px) {
+    .container-responsive {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+      max-width: 640px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .container-responsive {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 768px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .container-responsive {
+      max-width: 1024px;
+    }
+  }
+  
+  @media (min-width: 1280px) {
+    .container-responsive {
+      max-width: 1280px;
+    }
+  }
+  
+  @media (min-width: 1536px) {
+    .container-responsive {
+      max-width: 1536px;
+    }
+  }
+}
+
+/* Typography Responsive */
+@media (max-width: 640px) {
+  h1 { font-size: 1.875rem; line-height: 2.25rem; }
+  h2 { font-size: 1.5rem; line-height: 2rem; }
+  h3 { font-size: 1.25rem; line-height: 1.75rem; }
+  h4 { font-size: 1.125rem; line-height: 1.5rem; }
+  p { font-size: 0.875rem; line-height: 1.5rem; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  h1 { font-size: 2.25rem; line-height: 2.5rem; }
+  h2 { font-size: 1.875rem; line-height: 2.25rem; }
+  h3 { font-size: 1.5rem; line-height: 2rem; }
+  h4 { font-size: 1.25rem; line-height: 1.75rem; }
+  p { font-size: 1rem; line-height: 1.625rem; }
+}
+
+@media (min-width: 1025px) {
+  h1 { font-size: 3rem; line-height: 1.2; }
+  h2 { font-size: 2.25rem; line-height: 1.3; }
+  h3 { font-size: 1.875rem; line-height: 1.4; }
+  h4 { font-size: 1.5rem; line-height: 1.5; }
+  p { font-size: 1rem; line-height: 1.6; }
+}
+
+/* Admin Panel Responsive */
+@media (max-width: 1023px) {
+  /* Hide sidebar on mobile/tablet */
+  aside.lg\:flex {
+    display: none !important;
+  }
+  
+  /* Remove left margin on mobile */
+  main.lg\:ml-64 {
+    margin-left: 0 !important;
+  }
+  
+  /* Mobile header adjustments */
+  header {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  /* Admin tables responsive */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Admin cards stack on mobile */
+  .admin-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Form inputs full width */
+  input, select, textarea {
+    width: 100% !important;
+  }
+  
+  /* Button groups stack */
+  .button-group {
+    flex-direction: column !important;
+  }
+  
+  .button-group > * {
+    width: 100% !important;
+  }
+}
+
+/* Tablet specific (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .admin-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* Mobile Navigation */
+@media (max-width: 1023px) {
+  /* Add mobile menu button space */
+  .mobile-menu-toggle {
+    display: block;
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 100;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+}
+
+/* Grid Responsive Utilities */
+.grid-responsive {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .grid-responsive { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+}
+
+@media (min-width: 1280px) {
+  .grid-responsive { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Card Responsive */
+.card-responsive {
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .card-responsive { padding: 1.5rem; border-radius: 0.75rem; }
+}
+
+@media (min-width: 1024px) {
+  .card-responsive { padding: 2rem; border-radius: 1rem; }
+}
+
+/* Spacing Responsive */
+.section-padding {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+  .section-padding { padding-top: 3rem; padding-bottom: 3rem; }
+}
+
+@media (min-width: 1024px) {
+  .section-padding { padding-top: 4rem; padding-bottom: 4rem; }
+}
+
+@media (min-width: 1280px) {
+  .section-padding { padding-top: 5rem; padding-bottom: 5rem; }
+}
+
+/* Image Responsive */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Video Responsive */
+.video-responsive {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+}
+
+.video-responsive iframe,
+.video-responsive video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Touch Targets - Buttons and Links Only */
+button,
+a {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+@media (min-width: 1024px) {
+  button,
+  a {
+    min-height: auto;
+    min-width: auto;
+  }
+}
+
+/* Flex Responsive */
+.flex-responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .flex-responsive { flex-direction: row; gap: 1.5rem; }
+}
+
+@media (min-width: 1024px) {
+  .flex-responsive { gap: 2rem; }
+}
+
+/* Text Alignment Responsive */
+.text-responsive {
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .text-responsive { text-align: left; }
+}
+
+/* Hide/Show Utilities */
+.hide-mobile { display: none; }
+@media (min-width: 768px) { .hide-mobile { display: block; } }
+
+.hide-tablet { display: block; }
+@media (min-width: 768px) and (max-width: 1023px) { .hide-tablet { display: none; } }
+
+.hide-desktop { display: block; }
+@media (min-width: 1024px) { .hide-desktop { display: none; } }
+
+.show-mobile { display: block; }
+@media (min-width: 768px) { .show-mobile { display: none; } }
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Print Styles */
+@media print {
+  aside, header, footer, .no-print {
+    display: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.5;
+    color: #000;
+    background: #fff;
+  }
+  
+  a {
+    text-decoration: underline;
+    color: #000;
+  }
+  
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
+/* Landscape Mobile Optimization */
+@media (max-height: 500px) and (orientation: landscape) {
+  header {
+    height: 48px !important;
+  }
+  
+  .section-padding {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+/* High DPI Screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
 }

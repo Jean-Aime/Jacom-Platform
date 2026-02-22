@@ -28,7 +28,12 @@ export default function LeadsPage() {
   const fetchLeads = () => {
     apiClient.getLeads()
       .then((data: any) => setLeads(data))
-      .catch(err => console.error(err))
+      .catch(err => {
+        // Suppress auth errors during prefetch
+        if (err.message !== 'Invalid session') {
+          console.error(err);
+        }
+      })
       .finally(() => setLoading(false));
   };
 
@@ -50,7 +55,7 @@ export default function LeadsPage() {
 
   const getStatusColor = (status: string) => {
     const colors: any = {
-      new: "bg-blue-100 text-blue-800",
+      new: "bg-red-100 text-red-800",
       in_progress: "bg-yellow-100 text-yellow-800",
       resolved: "bg-green-100 text-green-800",
       closed: "bg-gray-100 text-gray-800"
@@ -74,12 +79,12 @@ export default function LeadsPage() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b">
               <tr>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-left">Name</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-left">Company</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-left">Inquiry Type</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-left">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-left">Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase text-right">Actions</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-left">Name</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-left">Company</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-left">Inquiry Type</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-left">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-left">Date</th>
+                <th className="px-6 py-4 text-xs font-bold text-gray-700 uppercase text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -89,11 +94,11 @@ export default function LeadsPage() {
                 leads.map((lead) => (
                   <tr key={lead.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
-                      <div className="font-bold text-sm">{lead.name}</div>
+                      <div className="font-bold text-sm text-gray-900">{lead.name}</div>
                       {lead.furigana && <div className="text-xs text-gray-500">{lead.furigana}</div>}
                       <div className="text-xs text-gray-500">{lead.email}</div>
                     </td>
-                    <td className="px-6 py-4 text-sm">{lead.company || "N/A"}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{lead.company || "N/A"}</td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold uppercase">
                         {lead.inquiryType || "General"}
@@ -111,9 +116,9 @@ export default function LeadsPage() {
                         <option value="closed">Closed</option>
                       </select>
                     </td>
-                    <td className="px-6 py-4 text-sm">{new Date(lead.createdAt).toLocaleDateString()}</td>
+                    <td className="px-6 py-4 text-sm text-gray-900">{new Date(lead.createdAt).toLocaleDateString()}</td>
                     <td className="px-6 py-4 text-right space-x-2">
-                      <button onClick={() => setSelectedLead(lead)} className="text-blue-600 hover:underline text-sm font-bold">View</button>
+                      <button onClick={() => setSelectedLead(lead)} className="text-primary hover:underline text-sm font-bold">View</button>
                       <button onClick={() => deleteLead(lead.id)} className="text-red-600 hover:underline text-sm font-bold">Delete</button>
                     </td>
                   </tr>
@@ -128,7 +133,7 @@ export default function LeadsPage() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setSelectedLead(null)}>
           <div className="bg-white rounded-xl shadow-2xl w-full max-w-3xl mx-4 max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
             <div className="flex items-center justify-between p-6 border-b">
-              <h3 className="text-xl font-bold">Inquiry Details</h3>
+              <h3 className="text-xl font-bold text-gray-900">Inquiry Details</h3>
               <button onClick={() => setSelectedLead(null)} className="text-gray-400 hover:text-gray-600">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
               </button>
@@ -136,46 +141,46 @@ export default function LeadsPage() {
             <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Name</label>
-                  <p className="font-bold">{selectedLead.name}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Name</label>
+                  <p className="font-bold text-gray-900">{selectedLead.name}</p>
                   {selectedLead.furigana && <p className="text-sm text-gray-500">{selectedLead.furigana}</p>}
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Company</label>
-                  <p className="font-bold">{selectedLead.company || "N/A"}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Company</label>
+                  <p className="font-bold text-gray-900">{selectedLead.company || "N/A"}</p>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Email</label>
-                  <p className="font-bold">{selectedLead.email}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Email</label>
+                  <p className="font-bold text-gray-900">{selectedLead.email}</p>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Phone</label>
-                  <p className="font-bold">{selectedLead.phone || "N/A"}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Phone</label>
+                  <p className="font-bold text-gray-900">{selectedLead.phone || "N/A"}</p>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Inquiry Type</label>
-                  <p className="font-bold">{selectedLead.inquiryType || "General"}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Inquiry Type</label>
+                  <p className="font-bold text-gray-900">{selectedLead.inquiryType || "General"}</p>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-400 uppercase">Source</label>
-                  <p className="font-bold">{selectedLead.source}</p>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Source</label>
+                  <p className="font-bold text-gray-900">{selectedLead.source}</p>
                 </div>
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-400 uppercase">Message</label>
-                <p className="mt-1 p-3 bg-gray-50 rounded">{selectedLead.message || "No message"}</p>
+                <label className="text-xs font-bold text-gray-700 uppercase">Message</label>
+                <p className="mt-1 p-3 bg-gray-50 rounded text-gray-900">{selectedLead.message || "No message"}</p>
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-400 uppercase">Internal Notes</label>
+                <label className="text-xs font-bold text-gray-700 uppercase">Internal Notes</label>
                 <textarea
                   defaultValue={selectedLead.notes || ""}
                   placeholder="Add internal notes..."
-                  className="w-full mt-1 p-3 border rounded"
+                  className="w-full mt-1 p-3 border rounded bg-white text-gray-900"
                   rows={3}
                 />
               </div>
               <div className="flex gap-3 pt-4">
-                <button onClick={() => setSelectedLead(null)} className="flex-1 px-4 py-2 border rounded-lg font-medium hover:bg-gray-50">Close</button>
+                <button onClick={() => setSelectedLead(null)} className="flex-1 px-4 py-2 border rounded-lg font-medium hover:bg-gray-50 text-gray-900">Close</button>
               </div>
             </div>
           </div>

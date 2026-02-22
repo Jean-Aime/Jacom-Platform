@@ -15,7 +15,7 @@ export default function ServiceBanner() {
         </div>
         
         <div className="relative">
-          <div className="bg-gradient-to-br from-blue-500 to-indigo-600 p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-br from-primary to-red-600 p-12 rounded-lg shadow-2xl transform hover:scale-105 transition-transform duration-300">
             <div className="bg-black text-white px-4 py-2 inline-block text-2xl font-bold mb-4">2025</div>
             <h3 className="text-3xl font-bold text-white leading-tight">
               "INDUSTRY 4.0<br/>CERTIFIED<br/>PARTNER"

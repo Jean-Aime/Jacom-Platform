@@ -1,43 +1,23 @@
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
-import { prisma } from "@/lib/prisma";
 import NewHomePage from "@/components/NewHome/NewHomePage";
 
 export const dynamic = 'force-dynamic';
 
-export default async function Home() {
-  let insights: any[] = [];
+async function getInsights() {
   try {
-    insights = await prisma.insight.findMany({
-      where: {
-        OR: [
-          { status: 'published' },
-          { status: 'scheduled', scheduledAt: { lte: new Date() } }
-        ]
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        excerpt: true,
-        image: true,
-        type: true,
-        readTime: true,
-        publishedAt: true,
-        author: {
-          select: {
-            name: true,
-            slug: true
-          }
-        }
-      },
-      orderBy: { publishedAt: 'desc' },
-      take: 3
-    });
+    const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+    const res = await fetch(`${API_BASE}/insights?status=published&limit=3`, { cache: 'no-store' });
+    if (!res.ok) return [];
+    return res.json();
   } catch (error) {
     console.error('Failed to fetch insights:', error);
-    insights = [];
+    return [];
   }
+}
+
+export default async function Home() {
+  const insights = await getInsights();
   
   return (
     <>

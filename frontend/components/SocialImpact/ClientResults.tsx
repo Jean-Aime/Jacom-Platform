@@ -8,7 +8,7 @@ export default function ClientResults() {
     {
       title: "Sea Change: A Bold Partnership to Advance Sustainable Fishing",
       desc: "We played a key behind-the-scenes role in ambitious plans to transform the fishing industry worldwide.",
-      image: "from-blue-600 to-teal-600"
+      image: "from-primary to-red-600"
     },
     {
       title: "Helping Career Connect Washington enroll and inspire 15,000 students",

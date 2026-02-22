@@ -47,12 +47,13 @@ class AuthController {
         setcookie('session-token', $token, [
             'expires' => time() + 86400,
             'path' => '/',
-            'httponly' => true,
+            'httponly' => false,
             'secure' => false,
-            'samesite' => 'Lax'
+            'samesite' => 'Lax',
+            'domain' => ''
         ]);
         
-        echo json_encode(['success' => true]);
+        echo json_encode(['success' => true, 'token' => $token]);
     }
     
     public function logout() {
@@ -68,7 +69,7 @@ class AuthController {
     }
     
     public function check() {
-        $token = $_COOKIE['session-token'] ?? null;
+        $token = $_COOKIE['session-token'] ?? $_SERVER['HTTP_X_SESSION_TOKEN'] ?? null;
         
         if (!$token) {
             http_response_code(401);

@@ -10,7 +10,19 @@ interface IndustryPageProps {
 
 export default async function IndustryPage({ params }: IndustryPageProps) {
   const { slug } = await params;
-  const industry = await dataFetcher.getIndustryBySlug(slug);
+  
+  // Fetch directly from backend
+  const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+  let industry: any = null;
+  
+  try {
+    const response = await fetch(`${BACKEND}/industries/${slug}`, { cache: 'no-store' });
+    if (response.ok) {
+      industry = await response.json();
+    }
+  } catch (error) {
+    console.error('Failed to fetch industry:', error);
+  }
 
   if (!industry) {
     notFound();

@@ -334,3 +334,44 @@ model ContentBlock {
   
   @@index([page, section])
 }
+
+model CaseStudy {
+  id         String   @id @default(cuid())
+  title      String
+  slug       String   @unique
+  company    String
+  industry   String?
+  challenge  String   @db.Text
+  solution   String   @db.Text
+  results    String   @db.Text
+  quote      String?  @db.Text
+  author     String?
+  authorRole String?
+  image      String?
+  featured   Boolean  @default(false)
+  status     String   @default("published")
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  @@map("casestudy")
+}
+
+model Solution {
+  id                   String   @id @default(cuid())
+  name                 String
+  slug                 String   @unique
+  tagline              String?  @db.Text
+  description          String   @db.Text
+  challenge            String?  @db.Text
+  approach             String?  @db.Text
+  outcomes             String?  @db.Text
+  image                String?
+  benefits             String?  @db.Text
+  implementationSteps  String?  @db.Text
+  featured             Boolean  @default(false)
+  status               String   @default("published")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  
+  @@map("solution")
+}

@@ -8,8 +8,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '475px',
+      },
       colors: {
-        primary: "#2563eb",
+        primary: "#c00",
         dark: "#1a1a1a",
       },
       fontFamily: {

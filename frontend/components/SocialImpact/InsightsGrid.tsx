@@ -13,7 +13,7 @@ export default function InsightsGrid() {
     {
       title: "Solving Climate Challenges: Philanthropic Models for Financing Sustainability",
       desc: "Explore innovative funding models that accelerate climate action and environmental sustainability.",
-      image: "from-blue-400 to-cyan-500"
+      image: "from-red-400 to-red-500"
     },
     {
       title: "Transforming Education: Unleashing Equitable Country Outcomes",

@@ -19,7 +19,9 @@
     "test:smoke": "node tests/smoke-api.mjs",
     "test:smoke:json": "set OUTPUT_JSON=1&& node tests/smoke-api.mjs",
     "test:phase6": "node tests/phase6-simple.mjs",
-    "validate:all": "npm run test:smoke && npm run test:phase6"
+    "validate:all": "npm run test:smoke && npm run test:phase6",
+    "monitor:phase7": "node ../monitor-phase7.js",
+    "deploy:phase7": "cd .. && deploy-phase7.bat"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

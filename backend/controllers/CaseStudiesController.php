@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../middleware/Security.php';
 
 class CaseStudiesController {
     private $db;

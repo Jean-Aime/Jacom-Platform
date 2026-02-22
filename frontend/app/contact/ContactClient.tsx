@@ -75,18 +75,18 @@ export default function ContactPage({ content }: { content: any }) {
         </div>
       )}
       
-      <section className="relative bg-gradient-to-br from-blue-900 via-blue-700 to-blue-900 py-20 pt-32 overflow-hidden">
+      <section className="relative bg-gradient-to-br from-red-900 via-red-700 to-red-900 py-20 pt-32 overflow-hidden">
         {/* Animated Circles */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute top-40 right-20 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl animate-bounce" style={{animationDuration: '3s'}}></div>
+          <div className="absolute top-40 right-20 w-96 h-96 bg-red-400/20 rounded-full blur-3xl animate-bounce" style={{animationDuration: '3s'}}></div>
           <div className="absolute bottom-20 left-1/4 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-ping" style={{animationDuration: '4s'}}></div>
-          <div className="absolute top-1/2 right-1/3 w-72 h-72 bg-blue-300/10 rounded-full blur-3xl animate-spin" style={{animationDuration: '20s'}}></div>
+          <div className="absolute top-1/2 right-1/3 w-72 h-72 bg-red-300/10 rounded-full blur-3xl animate-spin" style={{animationDuration: '20s'}}></div>
         </div>
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <h1 className="text-5xl font-bold mb-6 text-white">{heroTitle}</h1>
-          <p className="text-xl text-blue-100 max-w-3xl">{heroSubtitle}</p>
+          <p className="text-xl text-red-100 max-w-3xl">{heroSubtitle}</p>
         </div>
       </section>
 
@@ -98,32 +98,39 @@ export default function ContactPage({ content }: { content: any }) {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Full Name *</label>
-                    <input type="text" value={formData.name} onChange={(e) => {setFormData({...formData, name: e.target.value}); if(errors.name) setErrors({...errors, name: undefined});}} className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors ${errors.name ? 'border-red-500' : ''}`} />
+                    <label className="block text-sm font-bold mb-2 text-gray-900">Full Name *</label>
+                    <input type="text" value={formData.name} onChange={(e) => {setFormData({...formData, name: e.target.value}); if(errors.name) setErrors({...errors, name: undefined});}} className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors bg-white text-gray-900 ${errors.name ? 'border-red-500' : ''}`} />
                     {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email *</label>
-                    <input type="email" value={formData.email} onChange={(e) => {setFormData({...formData, email: e.target.value}); if(errors.email) setErrors({...errors, email: undefined});}} className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors ${errors.email ? 'border-red-500' : ''}`} />
+                    <label className="block text-sm font-bold mb-2 text-gray-900">Email *</label>
+                    <input type="email" value={formData.email} onChange={(e) => {setFormData({...formData, email: e.target.value}); if(errors.email) setErrors({...errors, email: undefined});}} className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors bg-white text-gray-900 ${errors.email ? 'border-red-500' : ''}`} />
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Type of Inquiry</label>
-                  <select value={formData.inquiry} onChange={(e) => setFormData({...formData, inquiry: e.target.value})} className="w-full p-3 border rounded-lg focus:border-primary focus:outline-none">
-                    <option value="">Select Inquiry Type</option>
-                    <option value="consulting">Consulting Services</option>
-                    <option value="digital">Digital Transformation</option>
-                    <option value="partnership">Partnership Opportunities</option>
-                    <option value="careers">Career Opportunities</option>
-                    <option value="media">Media Inquiry</option>
-                  </select>
+                  <label className="block text-sm font-bold mb-2 text-gray-900">Inquiry Type</label>
+                  <div className="grid grid-cols-3 gap-3">
+                    {['general', 'project', 'recruitment', 'training', 'partnership', 'investment'].map((type) => (
+                      <label key={type} className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="radio"
+                          name="inquiry"
+                          value={type}
+                          checked={formData.inquiry === type}
+                          onChange={(e) => setFormData({...formData, inquiry: e.target.value})}
+                          className="w-4 h-4 flex-shrink-0 text-primary border-gray-300 focus:ring-primary"
+                        />
+                        <span className="text-sm text-gray-900 capitalize">{type}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium mb-2">Message *</label>
-                  <textarea rows={6} value={formData.message} onChange={(e) => {setFormData({...formData, message: e.target.value}); if(errors.message) setErrors({...errors, message: undefined});}} placeholder="Tell us about your challenges and how we can help..." className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors ${errors.message ? 'border-red-500' : ''}`} />
+                  <label className="block text-sm font-bold mb-2 text-gray-900">Message *</label>
+                  <textarea rows={6} value={formData.message} onChange={(e) => {setFormData({...formData, message: e.target.value}); if(errors.message) setErrors({...errors, message: undefined});}} placeholder="Tell us about your challenges and how we can help..." className={`w-full p-3 border rounded-lg focus:border-primary focus:outline-none transition-colors bg-white text-gray-900 placeholder:text-gray-500 ${errors.message ? 'border-red-500' : ''}`} />
                   {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
                 </div>
 

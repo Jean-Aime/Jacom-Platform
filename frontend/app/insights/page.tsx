@@ -32,21 +32,21 @@ export default async function InsightsPage() {
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-56 min-h-[580px]">
+      <section className="bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-56 min-h-[580px]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
-            <p className="text-xs text-blue-200 mb-3 uppercase tracking-widest font-medium">KNOWLEDGE CENTER</p>
+            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium">KNOWLEDGE CENTER</p>
             <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-              Stay Informed with <span className="text-blue-100">Industry Insights</span> & Thought Leadership
+              Stay Informed with <span className="text-red-100">Industry Insights</span> & Thought Leadership
             </h1>
-            <p className="text-blue-100 text-base mb-8 leading-relaxed">
+            <p className="text-red-100 text-base mb-8 leading-relaxed">
               Navigate the complexities of the Japanese market with JAS360's expert analysis, data-driven research, and strategic community insights.
             </p>
             <div className="flex gap-4">
-              <a href="#newsletter" className="bg-white hover:bg-gray-100 text-blue-600 px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
+              <a href="#newsletter" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
                 Subscribe to Newsletter
               </a>
-              <a href="#insights" className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-6 py-3 rounded-md font-medium text-sm transition">
+              <a href="#insights" className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition">
                 Latest Insights
               </a>
             </div>
@@ -62,7 +62,7 @@ export default async function InsightsPage() {
               <h2 className="text-3xl font-bold text-gray-900">Featured Insights</h2>
               <p className="text-gray-600 mt-2">In-depth analysis and expert perspectives on key industry trends</p>
             </div>
-            <a href="#all" className="text-blue-600 font-semibold hover:underline text-sm">View Archive →</a>
+            <a href="#all" className="text-primary font-semibold hover:underline text-sm">View Archive →</a>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
@@ -73,13 +73,13 @@ export default async function InsightsPage() {
                     <img src={insight.image} alt={insight.title} className="w-full h-full object-cover" />
                   )}
                   <div className="absolute top-4 left-4">
-                    <span className="bg-blue-600 text-white text-xs font-semibold px-3 py-1 rounded-full">{insight.type}</span>
+                    <span className="bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full">{insight.type}</span>
                   </div>
                 </div>
                 <div className="p-6">
                   <h3 className="font-bold text-gray-900 mb-3 text-lg line-clamp-2">{insight.title}</h3>
                   <p className="text-sm text-gray-600 mb-4 line-clamp-3">{insight.excerpt}</p>
-                  <a href={`/insights/${insight.slug}`} className="text-blue-600 text-sm font-semibold hover:underline">Read More</a>
+                  <a href={`/insights/${insight.slug}`} className="text-primary text-sm font-semibold hover:underline">Read More</a>
                 </div>
               </div>
             ))}
@@ -96,7 +96,7 @@ export default async function InsightsPage() {
             {[
               {
                 icon: (
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
                   </svg>
                 ),
@@ -110,7 +110,7 @@ export default async function InsightsPage() {
               },
               {
                 icon: (
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 ),
@@ -124,7 +124,7 @@ export default async function InsightsPage() {
               },
               {
                 icon: (
-                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 ),
@@ -138,11 +138,11 @@ export default async function InsightsPage() {
               }
             ].map((story, i) => (
               <div key={i} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow border border-gray-100">
-                <div className="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
+                <div className="w-14 h-14 bg-red-50 rounded-lg flex items-center justify-center mb-4">
                   {story.icon}
                 </div>
                 <h3 className="font-bold text-gray-900 mb-2 text-lg">{story.title}</h3>
-                <p className="text-sm text-blue-600 font-semibold mb-4">{story.location}</p>
+                <p className="text-sm text-primary font-semibold mb-4">{story.location}</p>
                 
                 <div className="space-y-3 mb-6">
                   <div>
@@ -161,15 +161,15 @@ export default async function InsightsPage() {
 
                 <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                   <div>
-                    <div className="text-3xl font-bold text-blue-600">{story.metric}</div>
+                    <div className="text-3xl font-bold text-primary">{story.metric}</div>
                     <div className="text-xs text-gray-500">Impact Metric</div>
                   </div>
                   {story.chart === "bar" && (
                     <div className="flex items-end gap-1 h-16">
-                      <div className="w-3 bg-blue-200 rounded-t" style={{height: "40%"}}></div>
-                      <div className="w-3 bg-blue-300 rounded-t" style={{height: "60%"}}></div>
-                      <div className="w-3 bg-blue-400 rounded-t" style={{height: "80%"}}></div>
-                      <div className="w-3 bg-blue-600 rounded-t" style={{height: "100%"}}></div>
+                      <div className="w-3 bg-red-200 rounded-t" style={{height: "40%"}}></div>
+                      <div className="w-3 bg-red-300 rounded-t" style={{height: "60%"}}></div>
+                      <div className="w-3 bg-red-400 rounded-t" style={{height: "80%"}}></div>
+                      <div className="w-3 bg-primary rounded-t" style={{height: "100%"}}></div>
                     </div>
                   )}
                   {story.chart === "donut" && (
@@ -182,10 +182,10 @@ export default async function InsightsPage() {
                   )}
                   {story.chart === "line" && (
                     <div className="flex items-end gap-1 h-16">
-                      <div className="w-3 bg-blue-600 rounded-t" style={{height: "50%"}}></div>
-                      <div className="w-3 bg-blue-600 rounded-t" style={{height: "70%"}}></div>
-                      <div className="w-3 bg-blue-600 rounded-t" style={{height: "60%"}}></div>
-                      <div className="w-3 bg-blue-600 rounded-t" style={{height: "90%"}}></div>
+                      <div className="w-3 bg-primary rounded-t" style={{height: "50%"}}></div>
+                      <div className="w-3 bg-primary rounded-t" style={{height: "70%"}}></div>
+                      <div className="w-3 bg-primary rounded-t" style={{height: "60%"}}></div>
+                      <div className="w-3 bg-primary rounded-t" style={{height: "90%"}}></div>
                     </div>
                   )}
                 </div>
@@ -215,7 +215,7 @@ export default async function InsightsPage() {
                       <h4 className="font-bold mb-1">{paper.title}</h4>
                       <p className="text-sm text-gray-400">{paper.subtitle}</p>
                     </div>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm font-semibold transition">
+                    <button className="bg-primary hover:bg-red-700 text-white px-4 py-2 rounded text-sm font-semibold transition">
                       Download
                     </button>
                   </div>
@@ -267,7 +267,7 @@ export default async function InsightsPage() {
                 <ul className="space-y-2">
                   {category.items.map((item, j) => (
                     <li key={j}>
-                      <a href="#" className="text-sm text-blue-600 hover:underline flex items-center gap-2">
+                      <a href="#" className="text-sm text-primary hover:underline flex items-center gap-2">
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                         </svg>
@@ -295,17 +295,17 @@ export default async function InsightsPage() {
             ].map((expert, i) => (
               <div key={i} className="bg-white rounded-xl p-6 text-center shadow-md hover:shadow-xl transition-shadow">
                 <div className="w-24 h-24 bg-gray-200 rounded-full mx-auto mb-4 overflow-hidden">
-                  <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600"></div>
+                  <div className="w-full h-full bg-gradient-to-br from-red-400 to-primary"></div>
                 </div>
                 <h3 className="font-bold text-gray-900 mb-1">{expert.name}</h3>
-                <p className="text-sm text-blue-600 font-semibold mb-4">{expert.role}</p>
+                <p className="text-sm text-primary font-semibold mb-4">{expert.role}</p>
                 <p className="text-sm text-gray-600 mb-4">
                   Specializing in {expert.role.toLowerCase()} with deep expertise in Japanese market dynamics and global business strategy.
                 </p>
                 <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-4">
                   <span>{expert.articles} Articles</span>
                 </div>
-                <a href={expert.linkedin} className="text-blue-600 hover:underline text-sm font-semibold">
+                <a href={expert.linkedin} className="text-primary hover:underline text-sm font-semibold">
                   View Profile →
                 </a>
               </div>
@@ -325,14 +325,14 @@ export default async function InsightsPage() {
               { date: "08", month: "FEB", title: "2025 Manufacturing Tech Roundtable", time: "10:00 AM JST", register: "#" }
             ].map((event, i) => (
               <div key={i} className="flex gap-6 bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="flex-shrink-0 w-20 h-20 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center">
+                <div className="flex-shrink-0 w-20 h-20 bg-primary text-white rounded-lg flex flex-col items-center justify-center">
                   <div className="text-2xl font-bold">{event.date}</div>
                   <div className="text-xs uppercase">{event.month}</div>
                 </div>
                 <div className="flex-1">
                   <h3 className="font-bold text-gray-900 mb-2">{event.title}</h3>
                   <p className="text-sm text-gray-600 mb-3">{event.time}</p>
-                  <a href={event.register} className="text-blue-600 text-sm font-semibold hover:underline">
+                  <a href={event.register} className="text-primary text-sm font-semibold hover:underline">
                     Register Now →
                   </a>
                 </div>
@@ -364,7 +364,7 @@ export default async function InsightsPage() {
       </section>
 
       {/* Newsletter Signup */}
-      <section id="newsletter" className="py-20 bg-gradient-to-br from-blue-50 to-blue-100">
+      <section id="newsletter" className="py-20 bg-gradient-to-br from-red-50 to-red-100">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Never Miss a Strategic Update</h2>
           <p className="text-gray-600 mb-8">
@@ -374,9 +374,9 @@ export default async function InsightsPage() {
             <input 
               type="email" 
               placeholder="Enter your email address" 
-              className="flex-1 px-6 py-3 rounded-lg border border-gray-300 focus:border-blue-600 focus:outline-none"
+              className="flex-1 px-6 py-3 rounded-lg border border-gray-300 focus:border-primary focus:outline-none"
             />
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition">
+            <button className="bg-primary hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold transition">
               Subscribe
             </button>
           </form>

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../middleware/Security.php';
 
 class SolutionsController {
     private $db;
@@ -15,9 +16,9 @@ class SolutionsController {
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT srv.id) as serviceIds
             FROM solution s
-            LEFT JOIN _IndustryToSolution its ON s.id = its.B
+            LEFT JOIN _industrytosolution its ON s.id = its.B
             LEFT JOIN industry i ON its.A = i.id
-            LEFT JOIN _ServiceToSolution sts ON s.id = sts.B
+            LEFT JOIN _servicetosolution sts ON s.id = sts.B
             LEFT JOIN service srv ON sts.A = srv.id
             WHERE s.status = 'published'
             GROUP BY s.id
@@ -52,7 +53,7 @@ class SolutionsController {
         // Get related industries
         $stmt = $this->db->prepare("
             SELECT i.* FROM industry i
-            JOIN _IndustryToSolution its ON i.id = its.A
+            JOIN _industrytosolution its ON i.id = its.A
             WHERE its.B = ?
         ");
         $stmt->execute([$solution['id']]);
@@ -61,7 +62,7 @@ class SolutionsController {
         // Get related services
         $stmt = $this->db->prepare("
             SELECT s.* FROM service s
-            JOIN _ServiceToSolution sts ON s.id = sts.A
+            JOIN _servicetosolution sts ON s.id = sts.A
             WHERE sts.B = ?
         ");
         $stmt->execute([$solution['id']]);
@@ -147,13 +148,13 @@ class SolutionsController {
         ]);
 
         // Update industries
-        $this->db->prepare("DELETE FROM _IndustryToSolution WHERE B = ?")->execute([$id]);
+        $this->db->prepare("DELETE FROM _industrytosolution WHERE B = ?")->execute([$id]);
         if (!empty($data['industryIds'])) {
             $this->linkIndustries($id, $data['industryIds']);
         }
 
         // Update services
-        $this->db->prepare("DELETE FROM _ServiceToSolution WHERE B = ?")->execute([$id]);
+        $this->db->prepare("DELETE FROM _servicetosolution WHERE B = ?")->execute([$id]);
         if (!empty($data['serviceIds'])) {
             $this->linkServices($id, $data['serviceIds']);
         }
@@ -177,7 +178,7 @@ class SolutionsController {
 
     // Helper: Link industries
     private function linkIndustries($solutionId, $industryIds) {
-        $stmt = $this->db->prepare("INSERT INTO _IndustryToSolution (A, B) VALUES (?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO _industrytosolution (A, B) VALUES (?, ?)");
         foreach ($industryIds as $industryId) {
             $stmt->execute([$industryId, $solutionId]);
         }
@@ -185,7 +186,7 @@ class SolutionsController {
 
     // Helper: Link services
     private function linkServices($solutionId, $serviceIds) {
-        $stmt = $this->db->prepare("INSERT INTO _ServiceToSolution (A, B) VALUES (?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO _servicetosolution (A, B) VALUES (?, ?)");
         foreach ($serviceIds as $serviceId) {
             $stmt->execute([$serviceId, $solutionId]);
         }
@@ -193,7 +194,7 @@ class SolutionsController {
 
     // Helper: Link experts
     private function linkExperts($solutionId, $expertIds) {
-        $stmt = $this->db->prepare("INSERT INTO _ExpertToSolution (A, B) VALUES (?, ?)");
+        $stmt = $this->db->prepare("INSERT INTO _experttosolution (A, B) VALUES (?, ?)");
         foreach ($expertIds as $expertId) {
             $stmt->execute([$expertId, $solutionId]);
         }

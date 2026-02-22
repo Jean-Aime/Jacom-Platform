@@ -135,29 +135,29 @@ export default async function ServicePage({ params }: ServicePageProps) {
       )}
 
       {/* Case Study */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-gradient-to-br from-blue-600 to-blue-700">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              <h2 className="text-4xl font-bold mb-6">Ready to transform your operations?</h2>
-              <p className="text-gray-300 text-lg mb-8 leading-relaxed">
+              <h2 className="text-4xl font-bold mb-6 text-white">Ready to transform your operations?</h2>
+              <p className="text-blue-100 text-lg mb-8 leading-relaxed">
                 Schedule a consultation with our Industry 4.0 experts today and discover how our solutions can scale your production to new heights.
               </p>
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="flex items-center gap-3 text-white">
+                  <svg className="w-5 h-5 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                   </svg>
                   <span>Complimentary infrastructure audit</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="flex items-center gap-3 text-white">
+                  <svg className="w-5 h-5 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                   </svg>
                   <span>ROI projection dashboard</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="flex items-center gap-3 text-white">
+                  <svg className="w-5 h-5 text-blue-200" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
                   </svg>
                   <span>Custom solution architecture</span>
@@ -170,26 +170,26 @@ export default async function ServicePage({ params }: ServicePageProps) {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
-                    <input type="text" placeholder="John" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                    <input type="text" placeholder="John" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-gray-900" />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
-                    <input type="text" placeholder="Doe" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                    <input type="text" placeholder="Doe" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-gray-900" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Work Email</label>
-                  <input type="email" placeholder="john@company.com" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                  <input type="email" placeholder="john@company.com" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-gray-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Company Name</label>
-                  <input type="text" placeholder="Acme Manufacturing" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent" />
+                  <input type="text" placeholder="Acme Manufacturing" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-gray-900" />
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Message (Optional)</label>
-                  <textarea rows={3} placeholder="How can we help you?" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent"></textarea>
+                  <textarea rows={3} placeholder="How can we help you?" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-600 focus:border-transparent bg-white text-gray-900 placeholder:text-gray-500"></textarea>
                 </div>
-                <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all">
+                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition-all">
                   Schedule My Consultation
                 </button>
                 <p className="text-xs text-gray-500 text-center">

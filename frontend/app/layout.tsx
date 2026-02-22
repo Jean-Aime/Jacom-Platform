@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./animations.css";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import CookieConsent from "@/components/CookieConsent/CookieConsent";
 import NewsletterAlert from "@/components/Newsletter/NewsletterAlert";
 
-const roboto = Roboto({
-  weight: ["400", "700"],
+const inter = Inter({
   subsets: ["latin"],
   display: 'swap',
   preload: true,
@@ -36,7 +35,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
-      <body className={roboto.className}>
+      <body className={inter.className}>
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>

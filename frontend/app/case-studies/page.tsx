@@ -27,13 +27,13 @@ export default async function CaseStudiesPage() {
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-20">
+      <section className="bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-xs text-blue-200 mb-3 uppercase tracking-widest font-medium">Success Stories</p>
+          <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium">Success Stories</p>
           <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-            Client <span className="text-blue-100">Success Stories</span>
+            Client <span className="text-red-100">Success Stories</span>
           </h1>
-          <p className="text-blue-100 text-lg mb-8 leading-relaxed max-w-2xl">
+          <p className="text-red-100 text-lg mb-8 leading-relaxed max-w-2xl">
             Discover how we've helped organizations across industries achieve extraordinary results through innovative solutions and strategic consulting.
           </p>
         </div>
@@ -58,7 +58,7 @@ export default async function CaseStudiesPage() {
                   
                   <div className="p-6">
                     <div className="flex items-center gap-2 mb-3">
-                      <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+                      <span className="bg-red-50 text-primary px-3 py-1 rounded-full text-xs font-semibold">
                         {cs.industry || 'Case Study'}
                       </span>
                       {cs.featured && (
@@ -68,7 +68,7 @@ export default async function CaseStudiesPage() {
                       )}
                     </div>
                     
-                    <h2 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <h2 className="text-xl font-bold mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                       {cs.title}
                     </h2>
                     
@@ -80,7 +80,7 @@ export default async function CaseStudiesPage() {
                     
                     <a
                       href={`/case-studies/${cs.slug}`}
-                      className="text-blue-600 hover:text-blue-700 text-sm font-semibold inline-flex items-center gap-1"
+                      className="text-primary hover:text-red-700 text-sm font-semibold inline-flex items-center gap-1"
                     >
                       Read Full Story
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -104,7 +104,7 @@ export default async function CaseStudiesPage() {
               </p>
               <a
                 href="/contact"
-                className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
+                className="inline-block bg-primary text-white px-8 py-3 rounded-lg hover:bg-red-700 transition font-semibold"
               >
                 Discuss Your Project
               </a>
@@ -114,7 +114,7 @@ export default async function CaseStudiesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-100">
+      <section className="py-20 bg-gradient-to-br from-red-50 to-red-100">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-4 text-gray-900">
             Ready to Create Your Success Story?
@@ -125,13 +125,13 @@ export default async function CaseStudiesPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href="/contact"
-              className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition font-semibold shadow-lg"
+              className="bg-primary text-white px-8 py-3 rounded-lg hover:bg-red-700 transition font-semibold shadow-lg"
             >
               Start Your Project
             </a>
             <a
               href="/insights"
-              className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg hover:bg-blue-600 hover:text-white transition font-semibold"
+              className="border-2 border-primary text-primary px-8 py-3 rounded-lg hover:bg-primary hover:text-white transition font-semibold"
             >
               View All Insights
             </a>

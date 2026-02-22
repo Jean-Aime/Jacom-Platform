@@ -9,17 +9,25 @@ class ApiClient {
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
+    const token = typeof window !== 'undefined' ? localStorage.getItem('session-token') : null;
     const config: RequestInit = {
       ...options,
       credentials: 'include',
-      headers: { 'Content-Type': 'application/json', ...options.headers },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'X-Session-Token': token } : {}),
+        ...options.headers 
+      },
     };
 
     try {
       const response = await fetch(url, config);
       if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Request failed' }));
-        console.error(`API Error [${options.method || 'GET'}] ${url}:`, error);
+        // Only log non-auth errors to avoid prefetch noise
+        if (error.error !== 'Invalid session' && response.status !== 401) {
+          console.error(`API Error [${options.method || 'GET'}] ${url}:`, error);
+        }
         throw new Error(error.error || `HTTP ${response.status}`);
       }
       return await response.json();
@@ -28,7 +36,10 @@ class ApiClient {
         console.error(`Network Error: ${url}`);
         throw new Error('Backend not reachable. Check XAMPP Apache is running.');
       }
-      console.error(`Request Error [${options.method || 'GET'}] ${url}:`, error);
+      // Only log non-auth errors
+      if (error.message !== 'Invalid session') {
+        console.error(`Request Error [${options.method || 'GET'}] ${url}:`, error);
+      }
       throw error;
     }
   }

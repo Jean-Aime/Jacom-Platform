@@ -59,7 +59,7 @@ export default function InsightsAdmin() {
                   <div className="text-sm text-gray-500">/insights/{insight.slug}</div>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="px-2 py-1 text-xs rounded bg-blue-100 text-blue-800">
+                  <span className="px-2 py-1 text-xs rounded bg-red-100 text-red-800">
                     {insight.type}
                   </span>
                 </td>
@@ -78,7 +78,7 @@ export default function InsightsAdmin() {
                     <a
                       href={`/insights/${insight.slug}`}
                       target="_blank"
-                      className="text-blue-600 hover:underline text-sm"
+                      className="text-primary hover:underline text-sm"
                     >
                       View
                     </a>

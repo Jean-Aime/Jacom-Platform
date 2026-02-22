@@ -14,8 +14,11 @@ export default function SubscribersPage() {
     try {
       const data = await apiClient.getSubscribers();
       setSubscribers(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Error fetching subscribers:", error);
+    } catch (error: any) {
+      // Suppress auth errors during prefetch
+      if (error.message !== 'Invalid session') {
+        console.error("Error fetching subscribers:", error);
+      }
       setSubscribers([]);
     } finally {
       setLoading(false);

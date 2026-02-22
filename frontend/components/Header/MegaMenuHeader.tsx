@@ -8,6 +8,7 @@ export default function MegaMenuHeader() {
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [industries, setIndustries] = useState<any[]>([]);
   const [services, setServices] = useState<any[]>([]);
   const [solutions, setSolutions] = useState<any[]>([]);
@@ -17,9 +18,14 @@ export default function MegaMenuHeader() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     
-    // Fetch from Next.js API routes
-    fetch('/api/industries').then(r => r.json()).then(data => setIndustries(data || [])).catch(() => setIndustries([]));
-    fetch('/api/services').then(r => r.json()).then(data => setServices(data || [])).catch(() => setServices([]));
+    const API_BASE = process.env.NEXT_PUBLIC_USE_BACKEND === 'true' 
+      ? (process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend')
+      : '/api';
+    
+    fetch(`${API_BASE}/industries`).then(r => r.json()).then(data => setIndustries(Array.isArray(data) ? data : [])).catch(() => setIndustries([]));
+    fetch(`${API_BASE}/services`).then(r => r.json()).then(data => setServices(Array.isArray(data) ? data : [])).catch(() => setServices([]));
+    fetch(`${API_BASE}/solutions`).then(r => r.json()).then(data => setSolutions(Array.isArray(data) ? data : [])).catch(() => setSolutions([]));
+    fetch(`${API_BASE}/community-categories?status=published`).then(r => r.json()).then(data => setCommunityCategories(Array.isArray(data) ? data : [])).catch(() => setCommunityCategories([]));
     
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -49,7 +55,7 @@ export default function MegaMenuHeader() {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 group">
             <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center text-white text-sm font-bold group-hover:scale-110 transition-all shadow-lg">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-red-800 rounded-lg flex items-center justify-center text-white text-sm font-bold group-hover:scale-110 transition-all shadow-lg">
                 J
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
@@ -68,7 +74,7 @@ export default function MegaMenuHeader() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <a href="/solutions" className={`text-sm font-medium transition-all flex items-center gap-1 ${
-                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+                scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
               }`}>
                 Solutions
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -84,7 +90,7 @@ export default function MegaMenuHeader() {
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Featured Solutions</h4>
                     <div className="space-y-2">
                       {solutions.filter((s: any) => s.featured).map((sol: any) => (
-                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{sol.name}</a>
+                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-primary">{sol.name}</a>
                       ))}
                     </div>
                   </div>
@@ -92,9 +98,9 @@ export default function MegaMenuHeader() {
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">All Solutions</h4>
                     <div className="space-y-2">
                       {solutions.filter((s: any) => !s.featured).map((sol: any) => (
-                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{sol.name}</a>
+                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-xs text-gray-600 hover:text-primary">{sol.name}</a>
                       ))}
-                      <a href="/solutions" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Solutions →</a>
+                      <a href="/solutions" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Solutions →</a>
                     </div>
                   </div>
                 </div>
@@ -107,7 +113,7 @@ export default function MegaMenuHeader() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <a href="/services" className={`text-sm font-medium transition-all flex items-center gap-1 ${
-                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+                scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
               }`}>
                 Services
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -123,10 +129,10 @@ export default function MegaMenuHeader() {
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Industries We Serve</h4>
                     <div className="space-y-2">
                       {industries.slice(0, 10).map((ind: any) => (
-                        <a key={ind.id} href={`/industries/${ind.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{ind.name}</a>
+                        <a key={ind.id} href={`/industries/${ind.slug}`} className="block text-xs text-gray-600 hover:text-primary">{ind.name}</a>
                       ))}
                       {industries.length > 10 && (
-                        <a href="/industries" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Industries →</a>
+                        <a href="/industries" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Industries →</a>
                       )}
                     </div>
                   </div>
@@ -134,20 +140,20 @@ export default function MegaMenuHeader() {
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Our Services</h4>
                     <div className="space-y-2">
                       {services.slice(0, 10).map((svc: any) => (
-                        <a key={svc.id} href={`/services/${svc.slug}`} className="block text-xs text-gray-600 hover:text-blue-600">{svc.name}</a>
+                        <a key={svc.id} href={`/services/${svc.slug}`} className="block text-xs text-gray-600 hover:text-primary">{svc.name}</a>
                       ))}
                       {services.length > 10 && (
-                        <a href="/services" className="block text-xs text-blue-600 hover:text-blue-700 font-semibold pt-2">View All Services →</a>
+                        <a href="/services" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Services →</a>
                       )}
                     </div>
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 mb-3 text-sm">Featured Work</h4>
                     <div className="space-y-2">
-                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-blue-600">Case Studies</a>
-                      <a href="/case-studies#success" className="block text-xs text-gray-600 hover:text-blue-600">Success Stories</a>
-                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-blue-600">Client Testimonials</a>
-                      <a href="/insights" className="block text-xs text-gray-600 hover:text-blue-600">Insights & Research</a>
+                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-primary">Case Studies</a>
+                      <a href="/case-studies#success" className="block text-xs text-gray-600 hover:text-primary">Success Stories</a>
+                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-primary">Client Testimonials</a>
+                      <a href="/insights" className="block text-xs text-gray-600 hover:text-primary">Insights & Research</a>
                     </div>
                   </div>
                 </div>
@@ -160,7 +166,7 @@ export default function MegaMenuHeader() {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <a href="/community" className={`text-sm font-medium transition-all flex items-center gap-1 ${
-                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+                scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
               }`}>
                 Community
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -175,17 +181,17 @@ export default function MegaMenuHeader() {
                   {communityCategories.length === 0 ? (
                     <div className="text-center py-8 text-gray-500">
                       <p className="mb-2">No community categories available yet.</p>
-                      <a href="/community" className="text-blue-600 hover:underline text-sm">Visit Community Page</a>
+                      <a href="/community" className="text-primary hover:underline text-sm">Visit Community Page</a>
                     </div>
                   ) : (
                     <div className="grid grid-cols-3 gap-6">
                       {communityCategories.map((category: any) => (
                         <div key={category.id}>
                           <a href={`/community/${category.slug}`} className="block mb-3">
-                            <h4 className="font-bold text-gray-900 text-sm hover:text-blue-600 transition">{category.name}</h4>
+                            <h4 className="font-bold text-gray-900 text-sm hover:text-primary transition">{category.name}</h4>
                           </a>
                           <p className="text-xs text-gray-600 mb-2">{category.description}</p>
-                          <a href={`/community/${category.slug}`} className="text-xs text-blue-600 hover:text-blue-700 font-semibold">Explore →</a>
+                          <a href={`/community/${category.slug}`} className="text-xs text-primary hover:text-red-700 font-semibold">Explore →</a>
                         </div>
                       ))}
                     </div>
@@ -195,27 +201,38 @@ export default function MegaMenuHeader() {
             </div>
             
             <a href="/academy" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
             }`}>Academy</a>
             
             <a href="/about" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
             }`}>About Us</a>
             
             <a href="/contact" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
             }`}>Contact</a>
           </nav>
 
           <div className="flex items-center gap-4">
-            <a href="/admin/login" className={`text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className={`lg:hidden transition-all ${
+                scrolled ? "text-gray-700" : "text-white"
+              }`}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            
+            <a href="/admin/login" className={`hidden md:block text-sm font-medium transition-all ${
+              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
             }`}>Login</a>
             
             <button
               onClick={() => setSearchOpen(true)}
-              className={`transition-all ${
-                scrolled ? "text-gray-700 hover:text-blue-600" : "text-white hover:text-blue-200"
+              className={`hidden md:block transition-all ${
+                scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
               }`}
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -223,12 +240,46 @@ export default function MegaMenuHeader() {
               </svg>
             </button>
             
-            <a href="/contact?type=consultation" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded font-semibold text-sm transition">
+            <a href="/contact?type=consultation" className="hidden md:block bg-primary hover:bg-red-700 text-white px-6 py-2 rounded font-semibold text-sm transition">
               Book Consultation
             </a>
           </div>
         </div>
       </header>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setMobileMenuOpen(false)} />
+          <div className="fixed inset-y-0 left-0 w-80 bg-white shadow-xl overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-8">
+                <span className="text-xl font-bold text-gray-900">Menu</span>
+                <button onClick={() => setMobileMenuOpen(false)} className="text-gray-500 hover:text-gray-700">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <nav className="space-y-4">
+                <a href="/solutions" className="block text-gray-700 hover:text-primary font-medium py-2">Solutions</a>
+                <a href="/services" className="block text-gray-700 hover:text-primary font-medium py-2">Services</a>
+                <a href="/industries" className="block text-gray-700 hover:text-primary font-medium py-2">Industries</a>
+                <a href="/community" className="block text-gray-700 hover:text-primary font-medium py-2">Community</a>
+                <a href="/academy" className="block text-gray-700 hover:text-primary font-medium py-2">Academy</a>
+                <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-2">About Us</a>
+                <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-2">Contact</a>
+                <hr className="my-4" />
+                <a href="/admin/login" className="block text-gray-700 hover:text-primary font-medium py-2">Login</a>
+                <a href="/contact?type=consultation" className="block bg-primary hover:bg-red-700 text-white px-6 py-3 rounded font-semibold text-center">
+                  Book Consultation
+                </a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      )}
 
       {searchOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-start justify-center pt-32 px-6" onClick={() => setSearchOpen(false)}>
@@ -251,9 +302,9 @@ export default function MegaMenuHeader() {
                     onChange={(e) => handleSearch(e.target.value)}
                     placeholder="Search for insights, services, industries..."
                     autoFocus
-                    className="w-full px-5 py-3 pr-24 border-2 border-gray-200 rounded-lg focus:border-blue-600 focus:outline-none"
+                    className="w-full px-5 py-3 pr-24 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none"
                   />
-                  <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700">
+                  <button type="submit" className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary text-white px-5 py-2 rounded-lg hover:bg-red-700">
                     Search
                   </button>
                 </div>
@@ -269,7 +320,7 @@ export default function MegaMenuHeader() {
                       onClick={() => setSearchOpen(false)}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="px-2 py-1 bg-blue-50 text-blue-600 text-xs rounded uppercase">
+                        <span className="px-2 py-1 bg-red-50 text-primary text-xs rounded uppercase">
                           {result.type}
                         </span>
                         <div className="flex-1">
@@ -293,11 +344,11 @@ export default function MegaMenuHeader() {
               {searchQuery.length < 2 && (
                 <div className="flex flex-wrap items-center gap-2 pt-2 border-t">
                   <span className="text-sm text-gray-500">Popular:</span>
-                  <a href="/search?q=digital+transformation" className="text-sm text-blue-600 hover:underline">Digital Transformation</a>
+                  <a href="/search?q=digital+transformation" className="text-sm text-primary hover:underline">Digital Transformation</a>
                   <span className="text-gray-300">•</span>
-                  <a href="/search?q=consulting" className="text-sm text-blue-600 hover:underline">Consulting</a>
+                  <a href="/search?q=consulting" className="text-sm text-primary hover:underline">Consulting</a>
                   <span className="text-gray-300">•</span>
-                  <a href="/search?q=AI" className="text-sm text-blue-600 hover:underline">AI</a>
+                  <a href="/search?q=AI" className="text-sm text-primary hover:underline">AI</a>
                 </div>
               )}
             </div>

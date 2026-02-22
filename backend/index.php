@@ -310,6 +310,99 @@ try {
             }
             break;
             
+        case 'courses':
+            require_once __DIR__ . '/controllers/CoursesController.php';
+            $controller = new CoursesController();
+            $action = $id ?? '';
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $action === 'featured') {
+                $controller->getFeatured();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getBySlug($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'academy-settings':
+            require_once __DIR__ . '/controllers/AcademySettingsController.php';
+            $controller = new AcademySettingsController();
+            
+            if ($method === 'GET') {
+                $controller->get();
+            } elseif ($method === 'PUT') {
+                $controller->update();
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'registrations':
+            require_once __DIR__ . '/controllers/RegistrationController.php';
+            $controller = new RegistrationController();
+            
+            if ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'GET') {
+                $controller->getAll();
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'course-phases':
+            require_once __DIR__ . '/controllers/CoursePhasesController.php';
+            $controller = new CoursePhasesController();
+            
+            if ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'course-pricing':
+            require_once __DIR__ . '/controllers/CoursePricingController.php';
+            $controller = new CoursePricingController();
+            
+            if ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'class-schedule':
+            require_once __DIR__ . '/controllers/ClassScheduleController.php';
+            $controller = new ClassScheduleController();
+            
+            if ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
         default:
             http_response_code(404);
             echo json_encode(['error' => 'Endpoint not found']);

@@ -167,7 +167,7 @@ a, button {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px -5px rgba(220, 0, 50, 0.3);
+  box-shadow: 0 10px 20px -5px rgba(204, 0, 0, 0.3);
 }
 
 .btn-primary:active {
@@ -175,7 +175,7 @@ a, button {
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid #DC0032;
+  outline: 2px solid #c00;
   outline-offset: 2px;
 }
 

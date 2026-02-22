@@ -15,7 +15,7 @@ export default function PartnershipsPage() {
           <h2 className="text-3xl font-black text-gray-900  tracking-tight">Partnership Management</h2>
           <p className="text-gray-500">Oversee global and local institutional relationships and MOUs.</p>
         </div>
-        <button className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-bold shadow-lg">
+        <button className="bg-primary text-white px-5 py-2.5 rounded-lg font-bold shadow-lg">
           Add New Partner
         </button>
       </div>
@@ -32,7 +32,7 @@ export default function PartnershipsPage() {
           </thead>
           <tbody className="divide-y divide-gray-100  text-sm">
             {partners.map((partner) => (
-              <tr key={partner.id} className="hover:bg-blue-50  transition-colors">
+              <tr key={partner.id} className="hover:bg-red-50  transition-colors">
                 <td className="px-6 py-4">
                   <p className="font-bold ">{partner.name}</p>
                   <p className="text-xs text-gray-500">{partner.type} Partner</p>
@@ -43,7 +43,7 @@ export default function PartnershipsPage() {
                     {partner.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 text-right"><button className="text-blue-600 font-bold">Details</button></td>
+                <td className="px-6 py-4 text-right"><button className="text-primary font-bold">Details</button></td>
               </tr>
             ))}
           </tbody>

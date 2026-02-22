@@ -18,7 +18,7 @@ export default function ContactForm() {
               <select 
                 value={industry}
                 onChange={(e) => setIndustry(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-3 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-primary"
+                className="w-full border border-gray-300 px-4 py-3 rounded mb-6 focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-900"
               >
                 <option value="">Select an industry</option>
                 <option value="manufacturing">Advanced Manufacturing & Services</option>

@@ -73,7 +73,7 @@ export default function NewsletterAlert() {
           </svg>
         </button>
         
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-8 text-center">
+        <div className="bg-gradient-to-r from-primary to-red-700 px-6 py-8 text-center">
           <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
               <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"/>
@@ -81,7 +81,7 @@ export default function NewsletterAlert() {
             </svg>
           </div>
           <h3 className="text-2xl font-bold text-white mb-2">Stay Updated</h3>
-          <p className="text-blue-100 text-sm">
+          <p className="text-red-100 text-sm">
             Get exclusive insights and updates delivered to your inbox
           </p>
         </div>
@@ -95,12 +95,12 @@ export default function NewsletterAlert() {
               placeholder="Enter your email address"
               required
               disabled={loading}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:outline-none disabled:opacity-50 disabled:bg-gray-50"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg text-sm focus:border-primary focus:outline-none disabled:opacity-50 disabled:bg-gray-50"
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Subscribing...' : 'Subscribe Now'}
             </button>

@@ -39,7 +39,7 @@ export default function EventsList() {
                   </div>
                 )}
                 <div className="flex gap-6 p-6">
-                  <div className="flex-shrink-0 w-20 h-20 bg-blue-600 text-white rounded-lg flex flex-col items-center justify-center">
+                  <div className="flex-shrink-0 w-20 h-20 bg-primary text-white rounded-lg flex flex-col items-center justify-center">
                     <div className="text-2xl font-bold">{eventDate.getDate()}</div>
                     <div className="text-xs uppercase">{eventDate.toLocaleString('en', { month: 'short' }).toUpperCase()}</div>
                   </div>
@@ -47,7 +47,7 @@ export default function EventsList() {
                     <h3 className="font-bold text-gray-900 mb-2">{event.title}</h3>
                     <p className="text-sm text-gray-600 mb-3">{event.time}</p>
                     {event.description && <p className="text-sm text-gray-600 mb-3">{event.description}</p>}
-                    <a href={event.registerUrl || '#'} className="text-blue-600 text-sm font-semibold hover:underline">
+                    <a href={event.registerUrl || '#'} className="text-primary text-sm font-semibold hover:underline">
                       Register Now →
                     </a>
                   </div>

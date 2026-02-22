@@ -210,7 +210,7 @@ export default function CommunityCategoriesAdmin() {
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+                className="bg-primary text-white px-6 py-2 rounded hover:bg-red-700"
               >
                 {editingId ? "Update" : "Create"}
               </button>
@@ -240,7 +240,7 @@ export default function CommunityCategoriesAdmin() {
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleEdit(category)}
-                      className="text-blue-600 hover:underline text-sm"
+                      className="text-primary hover:underline text-sm"
                     >
                       Edit
                     </button>
@@ -260,7 +260,7 @@ export default function CommunityCategoriesAdmin() {
                   <span className={`px-2 py-1 rounded ${category.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                     {category.status}
                   </span>
-                  <span className="px-2 py-1 rounded bg-blue-100 text-blue-800">
+                  <span className="px-2 py-1 rounded bg-red-100 text-red-800">
                     Order: {category.order}
                   </span>
                 </div>

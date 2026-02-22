@@ -76,10 +76,10 @@ export default function SearchPage() {
       <MegaMenuHeader />
       
       {/* Blue Hero Section */}
-      <section className="bg-gradient-to-br from-blue-900 via-blue-700 to-blue-900 py-20 pt-32 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-red-900 via-red-700 to-red-900 py-20 pt-32 relative overflow-hidden">
         {/* Decorative Circles */}
-        <div className="absolute top-10 right-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 left-10 w-96 h-96 bg-blue-400/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 left-10 w-96 h-96 bg-red-400/10 rounded-full blur-3xl"></div>
         <div className="absolute top-1/2 left-1/3 w-48 h-48 bg-white/5 rounded-full blur-2xl"></div>
         <div className="absolute top-20 left-1/4 w-32 h-32 border-2 border-white/10 rounded-full"></div>
         <div className="absolute bottom-20 right-1/4 w-24 h-24 border-2 border-white/10 rounded-full"></div>

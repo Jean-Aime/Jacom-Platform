@@ -68,18 +68,18 @@ export default async function CommunityCategoryPage({ params }: { params: Promis
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-20">
+      <section className="bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-20">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-white">
               {iconMap[category.icon] || iconMap.briefcase}
             </div>
-            <p className="text-xs text-blue-200 uppercase tracking-widest font-medium">Community Insights</p>
+            <p className="text-xs text-red-200 uppercase tracking-widest font-medium">Community Insights</p>
           </div>
           <h1 className="text-5xl font-bold text-white mb-6 leading-tight max-w-3xl">
             {category.name}
           </h1>
-          <p className="text-blue-100 text-lg mb-8 leading-relaxed max-w-2xl">
+          <p className="text-red-100 text-lg mb-8 leading-relaxed max-w-2xl">
             {category.description}
           </p>
         </div>
@@ -105,7 +105,7 @@ export default async function CommunityCategoryPage({ params }: { params: Promis
             {articles.map((article: any, index: number) => (
               <div key={index} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow border border-gray-100">
                 <div className="flex items-start gap-3 mb-4">
-                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 flex-shrink-0">
+                  <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center text-primary flex-shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
@@ -115,7 +115,7 @@ export default async function CommunityCategoryPage({ params }: { params: Promis
                   </div>
                 </div>
                 <p className="text-sm text-gray-600 mb-4 leading-relaxed">{article.description}</p>
-                <a href="/insights" className="text-blue-600 text-sm font-semibold hover:underline inline-flex items-center gap-1">
+                <a href="/insights" className="text-primary text-sm font-semibold hover:underline inline-flex items-center gap-1">
                   Read More
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -128,17 +128,17 @@ export default async function CommunityCategoryPage({ params }: { params: Promis
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-blue-100">
+      <section className="py-20 bg-gradient-to-br from-red-50 to-red-100">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">Want to Learn More?</h2>
           <p className="text-gray-600 mb-8 text-lg">
             Subscribe to our newsletter for the latest insights and expert analysis in {category.name.toLowerCase()}.
           </p>
           <div className="flex gap-4 justify-center">
-            <a href="/community#newsletter" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg">
+            <a href="/community#newsletter" className="bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg">
               Subscribe Now
             </a>
-            <a href="/community" className="border-2 border-blue-600 hover:bg-blue-600 hover:text-white text-blue-600 px-8 py-3 rounded-lg font-semibold transition">
+            <a href="/community" className="border-2 border-primary hover:bg-primary hover:text-white text-primary px-8 py-3 rounded-lg font-semibold transition">
               Explore All Topics
             </a>
           </div>

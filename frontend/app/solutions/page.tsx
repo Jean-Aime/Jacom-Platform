@@ -24,21 +24,32 @@ export default async function SolutionsPage() {
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 pt-32 pb-[700px]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="relative bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-[700px] overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80" 
+            alt="Business Solutions" 
+            className="w-full h-full object-cover opacity-20"
+          />
+        </div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-red-700/80 to-red-800/70"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-6">
           <div className="max-w-2xl">
-            <p className="text-xs text-blue-200 mb-3 uppercase tracking-widest font-medium">WELCOME TO JACOM CONSULTING SOLUTIONS</p>
+            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium">WELCOME TO JACOM CONSULTING SOLUTIONS</p>
             <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-              Comprehensive Solutions for Every <span className="text-blue-100">Business Challenge</span>
+              Comprehensive Solutions for Every <span className="text-red-100">Business Challenge</span>
             </h1>
-            <p className="text-blue-100 text-base mb-8 leading-relaxed">
+            <p className="text-red-100 text-base mb-8 leading-relaxed">
               Driving global transformation through strategic consulting, technical innovation, and financial expertise. We bridge the gap between vision and execution.
             </p>
             <div className="flex gap-4">
-              <a href="/contact" className="bg-white hover:bg-gray-100 text-blue-600 px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
+              <a href="/contact" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
                 Get Started Now
               </a>
-              <button className="border-2 border-white hover:bg-white hover:text-blue-600 text-white px-6 py-3 rounded-md font-medium text-sm transition">
+              <button className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition">
                 Download Brochure
               </button>
             </div>
@@ -58,12 +69,12 @@ export default async function SolutionsPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {featured.map((solution: any) => (
               <a key={solution.id} href={`/solutions/${solution.slug}`} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow group">
-                <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-blue-600 transition">{solution.name}</h3>
+                <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-primary transition">{solution.name}</h3>
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">{solution.description}</p>
                 {solution.featured && (
                   <span className="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded mb-3">Featured</span>
@@ -73,7 +84,7 @@ export default async function SolutionsPage() {
                     <span>{solution.industryIds?.length || 0} Industries</span>
                     <span>{solution.serviceIds?.length || 0} Services</span>
                   </div>
-                  <span className="text-blue-600 font-medium group-hover:translate-x-1 transition-transform">Learn More →</span>
+                  <span className="text-primary font-medium group-hover:translate-x-1 transition-transform">Learn More →</span>
                 </div>
               </a>
             ))}
@@ -91,15 +102,15 @@ export default async function SolutionsPage() {
             <div className="space-y-8">
               {regular.slice(0, 4).map((solution: any) => (
                 <a key={solution.id} href={`/solutions/${solution.slug}`} className="flex gap-4 group">
-                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition">{solution.name}</h3>
+                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-primary transition">{solution.name}</h3>
                     <p className="text-sm text-gray-600 leading-relaxed mb-2">{solution.description}</p>
-                    <span className="text-xs text-blue-600 font-medium group-hover:underline">Learn More →</span>
+                    <span className="text-xs text-primary font-medium group-hover:underline">Learn More →</span>
                   </div>
                 </a>
               ))}
@@ -111,7 +122,7 @@ export default async function SolutionsPage() {
                 alt="Smart Factory" 
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-8 left-8 bg-blue-600 text-white px-6 py-4 rounded-lg shadow-lg">
+              <div className="absolute bottom-8 left-8 bg-primary text-white px-6 py-4 rounded-lg shadow-lg">
                 <div className="text-3xl font-bold">15+</div>
                 <div className="text-sm font-medium">Years Experience</div>
               </div>
@@ -168,7 +179,7 @@ export default async function SolutionsPage() {
               }
             ].map((financial, i) => (
               <div key={i} className="bg-slate-800 rounded-lg p-6 hover:bg-slate-700 transition-colors">
-                <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center mb-4 text-blue-400">
+                <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center mb-4 text-red-400">
                   {financial.icon}
                 </div>
                 <h3 className="font-bold mb-3 text-lg">{financial.title}</h3>
@@ -193,7 +204,7 @@ export default async function SolutionsPage() {
                 </div>
                 <div className="p-6">
                   <h3 className="font-bold text-gray-900 text-xl mb-1">{office.name}</h3>
-                  <p className="text-sm text-blue-600 font-semibold mb-3">{office.region || 'Global Office'}</p>
+                  <p className="text-sm text-primary font-semibold mb-3">{office.region || 'Global Office'}</p>
                   <p className="text-sm text-gray-600 leading-relaxed">{office.description}</p>
                 </div>
               </div>
@@ -231,7 +242,7 @@ export default async function SolutionsPage() {
               }
             ].map((step, i) => (
               <div key={i} className="text-center">
-                <div className="w-20 h-20 bg-blue-600 text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">
+                <div className="w-20 h-20 bg-primary text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg">
                   {step.num}
                 </div>
                 <h3 className="font-bold text-gray-900 mb-3 text-lg">{step.title}</h3>
@@ -264,7 +275,7 @@ export default async function SolutionsPage() {
                 }
               ].map((why, i) => (
                 <div key={i} className="flex gap-4">
-                  <div className="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-1">
+                  <div className="w-6 h-6 bg-primary text-white rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm mt-1">
                     ✓
                   </div>
                   <div>
@@ -282,8 +293,8 @@ export default async function SolutionsPage() {
                 { value: "20+", label: "Industry Experts" },
                 { value: "24/7", label: "Support Available" }
               ].map((stat, i) => (
-                <div key={i} className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
-                  <div className="text-5xl font-bold text-blue-600 mb-3">{stat.value}</div>
+                <div key={i} className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-8 text-center hover:shadow-lg transition-shadow">
+                  <div className="text-5xl font-bold text-primary mb-3">{stat.value}</div>
                   <div className="text-sm text-gray-700 font-medium">{stat.label}</div>
                 </div>
               ))}
@@ -293,19 +304,19 @@ export default async function SolutionsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-blue-700">
+      <section className="py-24 bg-gradient-to-r from-primary to-red-700">
         <div className="max-w-4xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">
             Ready to Transform Your Business?
           </h2>
-          <p className="text-blue-100 text-lg mb-10 leading-relaxed">
+          <p className="text-red-100 text-lg mb-10 leading-relaxed">
             Join hundreds of global enterprises that trust JACOM for their consulting, technology, and financial advisory needs.
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
-            <a href="/contact" className="bg-white text-blue-600 px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg text-base">
+            <a href="/contact" className="bg-white text-primary px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg text-base">
               Book a Consultation
             </a>
-            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition text-base">
+            <button className="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary transition text-base">
               Download Brochure
             </button>
           </div>
