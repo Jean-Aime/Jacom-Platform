@@ -4,6 +4,24 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import PageHero from "@/components/Hero/PageHero";
 import Footer from "@/components/Footer/Footer";
 
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+}
+
+interface Insight {
+  id: string;
+  title: string;
+  excerpt: string;
+  slug: string;
+  type: string;
+  author: {
+    name: string;
+  };
+}
+
 interface IndustryPageProps {
   params: Promise<{ slug: string }>;
 }
@@ -66,7 +84,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {industry.services.slice(0, 4).map((service, i) => {
+            {industry.services.slice(0, 4).map((service: Service, i: number) => {
               const icons = [
                 <svg key="1" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>,
                 <svg key="2" className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/></svg>,
@@ -258,7 +276,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
             <div className="mb-6">
               <label className="block text-sm font-semibold text-gray-700 mb-3">Services You're Interested In *</label>
               <div className="grid md:grid-cols-2 gap-3">
-                {industry.services.map((service: any) => (
+                {industry.services.map((service: Service) => (
                   <label key={service.id} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-gray-50 cursor-pointer">
                     <input type="checkbox" name="services" value={service.id} className="mt-1" />
                     <div>
@@ -290,7 +308,7 @@ export default async function IndustryPage({ params }: IndustryPageProps) {
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-2xl font-bold mb-8">Latest Insights</h2>
             <div className="grid md:grid-cols-3 gap-6">
-              {industry.insights.map((insight) => (
+              {industry.insights.map((insight: Insight) => (
                 <a
                   key={insight.id}
                   href={`/insights/${insight.slug}`}

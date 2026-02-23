@@ -4,11 +4,38 @@ import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 import EventsList from "@/components/EventsList";
 
+interface Insight {
+  id: string;
+  title: string;
+  excerpt: string;
+  image?: string;
+  type: string;
+  slug: string;
+  featured: boolean;
+}
+
+interface Expert {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  image?: string;
+  linkedin?: string;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+  image?: string;
+}
+
 export default function CommunityPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [insights, setInsights] = useState([]);
-  const [experts, setExperts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [insights, setInsights] = useState<Insight[]>([]);
+  const [experts, setExperts] = useState<Expert[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const heroImages = [
     "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
@@ -42,7 +69,7 @@ export default function CommunityPage() {
     fetchData();
   }, []);
 
-  const featuredInsights = insights.filter((i: any) => i.featured).slice(0, 3);
+  const featuredInsights = insights.filter((i) => i.featured).slice(0, 3);
 
   return (
     <div className="min-h-screen">
@@ -279,7 +306,7 @@ export default function CommunityPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-12">Insights by Category</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {categories.map((category: any) => {
+            {categories.map((category) => {
               const imageUrl = category.image?.startsWith('http') ? category.image : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${category.image}`;
               return (
               <a key={category.id} href={`/community/${category.slug}`} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">

@@ -2,6 +2,24 @@
 import { useState, useEffect } from "react";
 import { Target, Users, Handshake, Award, TrendingUp, Star, Factory, Zap, Link2, Building2, Heart, Hotel, Laptop, DollarSign, MapPin, Play } from "lucide-react";
 
+interface CaseStudy {
+  id: string;
+  title: string;
+  challenge: string;
+  industry: string;
+  company: string;
+  slug: string;
+  image?: string;
+}
+
+interface Solution {
+  id: string;
+  name: string;
+  description: string;
+  slug: string;
+  image?: string;
+}
+
 function AnimatedCounter({ end, suffix = "", duration = 2000 }: { end: number; suffix?: string; duration?: number }) {
   const [count, setCount] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
@@ -31,8 +49,8 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   const [activeTab, setActiveTab] = useState("SmartFactory");
   const [currentPage, setCurrentPage] = useState(1);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [solutions, setSolutions] = useState([]);
-  const [caseStudies, setCaseStudies] = useState([]);
+  const [solutions, setSolutions] = useState<Solution[]>([]);
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
 
   const heroImages = [
     "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
@@ -86,17 +104,17 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   };
 
   const categorizedSolutions = {
-    SmartFactory: solutions.filter((sol: any) => 
+    SmartFactory: solutions.filter((sol: Solution) => 
       sol.name.toLowerCase().includes('manufacturing') || 
       sol.name.toLowerCase().includes('factory') || 
       sol.name.toLowerCase().includes('smart')
     ),
-    Financial: solutions.filter((sol: any) => 
+    Financial: solutions.filter((sol: Solution) => 
       sol.name.toLowerCase().includes('financial') || 
       sol.name.toLowerCase().includes('banking') || 
       sol.name.toLowerCase().includes('risk')
     ),
-    General: solutions.filter((sol: any) => 
+    General: solutions.filter((sol: Solution) => 
       !sol.name.toLowerCase().includes('manufacturing') && 
       !sol.name.toLowerCase().includes('factory') && 
       !sol.name.toLowerCase().includes('smart') &&
@@ -276,7 +294,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
             </div>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {currentSolutions.length > 0 ? currentSolutions.slice(0, 3).map((solution: any) => {
+            {currentSolutions.length > 0 ? currentSolutions.slice(0, 3).map((solution: Solution) => {
               const IconComponent = getCategoryIcon(activeTab);
               return (
                 <div key={solution.id} className="bg-white rounded-lg shadow hover:shadow-xl transition overflow-hidden">
@@ -417,7 +435,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
             
             {/* Right Side - Two Parallel Case Studies */}
             <div className="space-y-6">
-              {caseStudies.length > 1 ? caseStudies.slice(1, 3).map((story: any) => (
+              {caseStudies.length > 1 ? caseStudies.slice(1, 3).map((story: CaseStudy) => (
                 <div key={story.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
                   <div className="flex">
                     <div className="w-32 h-32 bg-gray-200 flex-shrink-0">
