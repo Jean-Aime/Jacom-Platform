@@ -26,6 +26,7 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
   },
+  // Force deployment: 2024-01-15
   outputFileTracingRoot: require('path').join(__dirname, '../'),
   webpack: (config, { isServer }) => {
     if (isServer) {
