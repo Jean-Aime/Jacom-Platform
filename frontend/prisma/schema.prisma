@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -50,7 +50,7 @@ model Industry {
   name        String
   slug        String   @unique
   description String
-  overview    String   @db.LongText
+  overview    String   @db.Text
   challenges  String   @db.Text
   trends      String   @db.Text
   featured    Boolean  @default(false)
@@ -155,7 +155,7 @@ model Insight {
   title       String
   slug        String   @unique
   type        String
-  content     String   @db.LongText
+  content     String   @db.Text
   excerpt     String   @db.Text
   featured    Boolean  @default(false)
   trending    Boolean  @default(false)
@@ -202,7 +202,7 @@ model Event {
   id          String   @id @default(cuid())
   title       String
   slug        String   @unique
-  date        DateTime @db.Date
+  date        DateTime
   time        String
   type        String   @default("webinar")
   description String?  @db.Text
