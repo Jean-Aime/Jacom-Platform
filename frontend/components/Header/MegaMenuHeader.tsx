@@ -262,17 +262,71 @@ export default function MegaMenuHeader() {
                 </button>
               </div>
               
-              <nav className="space-y-4">
-                <a href="/solutions" className="block text-gray-700 hover:text-primary font-medium py-2">Solutions</a>
-                <a href="/services" className="block text-gray-700 hover:text-primary font-medium py-2">Services</a>
-                <a href="/industries" className="block text-gray-700 hover:text-primary font-medium py-2">Industries</a>
-                <a href="/community" className="block text-gray-700 hover:text-primary font-medium py-2">Community</a>
-                <a href="/academy" className="block text-gray-700 hover:text-primary font-medium py-2">Academy</a>
-                <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-2">About Us</a>
-                <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-2">Contact</a>
+              <nav className="space-y-2">
+                <div>
+                  <button 
+                    onClick={() => setActiveDropdown(activeDropdown === "solutions" ? null : "solutions")}
+                    className="w-full flex items-center justify-between text-gray-700 hover:text-primary font-medium py-3">
+                    <span>Solutions</span>
+                    <svg className={`w-4 h-4 transition-transform ${activeDropdown === "solutions" ? "rotate-180" : ""}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {activeDropdown === "solutions" && (
+                    <div className="pl-4 pb-2 space-y-1">
+                      {solutions.map((sol: any) => (
+                        <a key={sol.id} href={`/solutions/${sol.slug}`} className="block text-sm text-gray-600 hover:text-primary py-1">{sol.name}</a>
+                      ))}
+                      <a href="/solutions" className="block text-sm text-primary font-semibold py-1">View All →</a>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <button 
+                    onClick={() => setActiveDropdown(activeDropdown === "services" ? null : "services")}
+                    className="w-full flex items-center justify-between text-gray-700 hover:text-primary font-medium py-3">
+                    <span>Services</span>
+                    <svg className={`w-4 h-4 transition-transform ${activeDropdown === "services" ? "rotate-180" : ""}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {activeDropdown === "services" && (
+                    <div className="pl-4 pb-2 space-y-1">
+                      {services.slice(0, 10).map((svc: any) => (
+                        <a key={svc.id} href={`/services/${svc.slug}`} className="block text-sm text-gray-600 hover:text-primary py-1">{svc.name}</a>
+                      ))}
+                      <a href="/services" className="block text-sm text-primary font-semibold py-1">View All →</a>
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <button 
+                    onClick={() => setActiveDropdown(activeDropdown === "community" ? null : "community")}
+                    className="w-full flex items-center justify-between text-gray-700 hover:text-primary font-medium py-3">
+                    <span>Community</span>
+                    <svg className={`w-4 h-4 transition-transform ${activeDropdown === "community" ? "rotate-180" : ""}`} fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                  {activeDropdown === "community" && (
+                    <div className="pl-4 pb-2 space-y-1">
+                      {communityCategories.map((cat: any) => (
+                        <a key={cat.id} href={`/community/${cat.slug}`} className="block text-sm text-gray-600 hover:text-primary py-1">{cat.name}</a>
+                      ))}
+                      <a href="/community" className="block text-sm text-primary font-semibold py-1">View All →</a>
+                    </div>
+                  )}
+                </div>
+
+                <a href="/industries" className="block text-gray-700 hover:text-primary font-medium py-3">Industries</a>
+                <a href="/academy" className="block text-gray-700 hover:text-primary font-medium py-3">Academy</a>
+                <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-3">About Us</a>
+                <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-3">Contact</a>
                 <hr className="my-4" />
-                <a href="/admin/login" className="block text-gray-700 hover:text-primary font-medium py-2">Login</a>
-                <a href="/contact?type=consultation" className="block bg-primary hover:bg-red-700 text-white px-6 py-3 rounded font-semibold text-center">
+                <a href="/admin/login" className="block text-gray-700 hover:text-primary font-medium py-3">Login</a>
+                <a href="/contact?type=consultation" className="block bg-primary hover:bg-red-700 text-white px-6 py-3 rounded font-semibold text-center mt-4">
                   Book Consultation
                 </a>
               </nav>

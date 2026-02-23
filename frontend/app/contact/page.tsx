@@ -1,8 +1,56 @@
 "use client";
+import { useState } from "react";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    furigana: '',
+    email: '',
+    phone: '',
+    company: '',
+    inquiryType: '',
+    message: ''
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/leads`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          company: formData.company,
+          message: formData.message,
+          source: 'Contact Form',
+          status: 'new',
+          metadata: {
+            inquiryType: formData.inquiryType,
+            furigana: formData.furigana
+          }
+        })
+      });
+
+      if (res.ok) {
+        setSuccess(true);
+        setFormData({ name: '', furigana: '', email: '', phone: '', company: '', inquiryType: '', message: '' });
+        setTimeout(() => setSuccess(false), 5000);
+      }
+    } catch (error) {
+      console.error('Failed to submit:', error);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       <MegaMenuHeader />
@@ -26,16 +74,21 @@ export default function ContactPage() {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Send us a Message</h2>
               <p className="text-gray-600 text-sm mb-6">Fill out the form below and our specialists will reach out within 24 hours</p>
               
-              <form className="space-y-5">
-                {/* Name & Furigana */}
+              {success && (
+                <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
+                  ✓ Thank you! Your inquiry has been submitted successfully.
+                </div>
+              )}
+              
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">Name</label>
-                    <input type="text" placeholder="John Doe" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
+                    <input type="text" required value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} placeholder="John Doe" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">Furigana (Optional)</label>
-                    <input type="text" placeholder="ジョン ドウ" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
+                    <input type="text" value={formData.furigana || ''} onChange={e => setFormData({...formData, furigana: e.target.value})} placeholder="ジョン ドウ" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
                   </div>
                 </div>
 
@@ -43,24 +96,24 @@ export default function ContactPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">Email Address</label>
-                    <input type="email" placeholder="john@company.com" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
+                    <input type="email" required value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} placeholder="john@company.com" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-900 mb-2">Phone Number</label>
-                    <input type="tel" placeholder="+81-00-0000-0000" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
+                    <input type="tel" value={formData.phone || ''} onChange={e => setFormData({...formData, phone: e.target.value})} placeholder="+81-00-0000-0000" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
                   </div>
                 </div>
 
                 {/* Company */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">Company / Organization</label>
-                  <input type="text" placeholder="JACOM International" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
+                  <input type="text" value={formData.company || ''} onChange={e => setFormData({...formData, company: e.target.value})} placeholder="JACOM International" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900 placeholder:text-gray-400" />
                 </div>
 
                 {/* Inquiry Type */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">Inquiry Type</label>
-                  <select className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900">
+                  <select required value={formData.inquiryType || ''} onChange={e => setFormData({...formData, inquiryType: e.target.value})} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white text-gray-900">
                     <option value="" className="text-gray-900">Select Inquiry Type</option>
                     <option value="general" className="text-gray-900">General</option>
                     <option value="project" className="text-gray-900">Project</option>
@@ -74,12 +127,12 @@ export default function ContactPage() {
                 {/* Message */}
                 <div>
                   <label className="block text-sm font-semibold text-gray-900 mb-2">Your Message</label>
-                  <textarea rows={4} placeholder="How can we help you today?" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none bg-white text-gray-900 placeholder:text-gray-400"></textarea>
+                  <textarea required value={formData.message || ''} onChange={e => setFormData({...formData, message: e.target.value})} rows={4} placeholder="How can we help you today?" className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent resize-none bg-white text-gray-900 placeholder:text-gray-400"></textarea>
                 </div>
 
                 {/* Submit Button */}
-                <button type="submit" className="w-full bg-primary hover:bg-red-700 text-white py-3.5 rounded-lg font-semibold transition flex items-center justify-center gap-2">
-                  <span>▶</span> Submit Inquiry
+                <button type="submit" disabled={submitting} className="w-full bg-primary hover:bg-red-700 text-white py-3.5 rounded-lg font-semibold transition flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                  <span>▶</span> {submitting ? 'Submitting...' : 'Submit Inquiry'}
                 </button>
               </form>
             </div>

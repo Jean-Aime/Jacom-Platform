@@ -1,65 +1,87 @@
-import { prisma } from "@/lib/prisma";
+"use client";
+import { useState, useEffect } from "react";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 import EventsList from "@/components/EventsList";
 
-export const dynamic = 'force-dynamic';
+export default function CommunityPage() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [insights, setInsights] = useState([]);
+  const [experts, setExperts] = useState([]);
+  const [categories, setCategories] = useState([]);
 
-export default async function CommunityPage() {
-  const insights = await prisma.insight.findMany({
-    where: {
-      OR: [
-        { status: 'published' },
-        { status: 'scheduled', scheduledAt: { lte: new Date() } }
-      ]
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-          role: true,
-          image: true
-        }
+  const heroImages = [
+    "https://images.unsplash.com/photo-1515187029135-18ee286d815b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1531482615713-2afd69097998?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80",
+    "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const insightsRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/insights?status=published`);
+        if (insightsRes.ok) setInsights(await insightsRes.json());
+        
+        const expertsRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/experts?type=expert`);
+        if (expertsRes.ok) setExperts(await expertsRes.json());
+        
+        const categoriesRes = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/community-categories?status=published`);
+        if (categoriesRes.ok) setCategories(await categoriesRes.json());
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
       }
-    },
-    orderBy: { publishedAt: 'desc' },
-    take: 20
-  });
+    }
+    fetchData();
+  }, []);
 
-  const experts = await prisma.expert.findMany({
-    select: {
-      id: true,
-      name: true,
-      role: true,
-      bio: true,
-      image: true,
-      linkedin: true
-    },
-    take: 3
-  });
-
-  const featuredInsights = insights.filter(i => i.featured).slice(0, 3);
+  const featuredInsights = insights.filter((i: any) => i.featured).slice(0, 3);
 
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-56 min-h-[580px]">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="relative h-screen overflow-hidden">
+        {heroImages.map((image, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              backgroundImage: `url(${image})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              transform: index === currentImageIndex ? 'scale(1.15)' : 'scale(1.0)',
+              transition: 'transform 4s ease-out, opacity 1s ease-in-out'
+            }}
+          />
+        ))}
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center relative z-10">
           <div className="max-w-2xl">
-            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium">KNOWLEDGE CENTER</p>
-            <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
+            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium animate-fade-in-up">KNOWLEDGE CENTER</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up animation-delay-300">
               Stay Informed with <span className="text-red-100">Industry Insights</span> & Thought Leadership
             </h1>
-            <p className="text-red-100 text-base mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base text-red-100 mb-6 sm:mb-8 leading-relaxed animate-fade-in-up animation-delay-600">
               Navigate the complexities of the Japanese market with JAS360's expert analysis, data-driven research, and strategic community insights.
             </p>
-            <div className="flex gap-4">
-              <a href="#newsletter" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-up animation-delay-900">
+              <a href="#newsletter" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg text-center">
                 Subscribe to Newsletter
               </a>
-              <a href="#insights" className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition">
+              <a href="#insights" className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition text-center">
                 Latest Insights
               </a>
             </div>
@@ -257,52 +279,27 @@ export default async function CommunityPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-12">Insights by Category</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                ),
-                title: "Job Market",
-                items: ["Japan Work Visa Types", "Salary Expectations in Tokyo", "Job Interview Preparation"]
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                ),
-                title: "Technology",
-                items: ["AI in Japanese Healthcare", "5G Network Rollout in Japan", "Cybersecurity Best Practices"]
-              },
-              {
-                icon: (
-                  <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                  </svg>
-                ),
-                title: "Business Strategy",
-                items: ["M&A Trends in APAC", "ESG Investing Strategies", "B2B Consulting Playbook"]
-              }
-            ].map((category, i) => (
-              <div key={i} className="bg-gray-50 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                <div className="w-14 h-14 bg-red-50 rounded-lg flex items-center justify-center mb-4">{category.icon}</div>
-                <h3 className="font-bold text-gray-900 mb-4 text-lg">{category.title}</h3>
-                <ul className="space-y-2">
-                  {category.items.map((item, j) => (
-                    <li key={j}>
-                      <a href="#" className="text-sm text-primary hover:underline flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                        </svg>
-                        {item}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            {categories.map((category: any) => {
+              const imageUrl = category.image?.startsWith('http') ? category.image : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${category.image}`;
+              return (
+              <a key={category.id} href={`/community/${category.slug}`} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
+                {category.image && (
+                  <div className="relative h-48 bg-gray-200 overflow-hidden">
+                    <img 
+                      src={imageUrl}
+                      alt={category.name} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  </div>
+                )}
+                <div className="p-6">
+                  <h3 className="font-bold text-gray-900 mb-2 text-lg group-hover:text-primary transition-colors">{category.name}</h3>
+                  <p className="text-sm text-gray-600 line-clamp-2">{category.description}</p>
+                </div>
+              </a>
+              );
+            })}
           </div>
         </div>
       </section>

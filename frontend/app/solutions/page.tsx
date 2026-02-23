@@ -24,28 +24,28 @@ export default async function SolutionsPage() {
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-[700px] overflow-hidden">
+      <section className="relative h-screen overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1926&q=80" 
+            src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
             alt="Business Solutions" 
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover"
           />
         </div>
         {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-red-700/80 to-red-800/70"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
         
-        <div className="relative max-w-7xl mx-auto px-6">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center">
           <div className="max-w-2xl">
-            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium">WELCOME TO JACOM CONSULTING SOLUTIONS</p>
-            <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
+            <p className="text-xs text-red-200 mb-3 uppercase tracking-widest font-medium animate-fade-in-up">WELCOME TO JACOM CONSULTING SOLUTIONS</p>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up animation-delay-300">
               Comprehensive Solutions for Every <span className="text-red-100">Business Challenge</span>
             </h1>
-            <p className="text-red-100 text-base mb-8 leading-relaxed">
+            <p className="text-sm sm:text-base text-red-100 mb-6 sm:mb-8 leading-relaxed animate-fade-in-up animation-delay-600">
               Driving global transformation through strategic consulting, technical innovation, and financial expertise. We bridge the gap between vision and execution.
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-up animation-delay-900">
               <a href="/contact" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
                 Get Started Now
               </a>
@@ -58,7 +58,7 @@ export default async function SolutionsPage() {
       </section>
 
       {/* Consulting Solutions */}
-      <section className="py-20 bg-white -mt-[400px] relative z-10">
+      <section className="py-12 sm:py-20 bg-white relative z-10">
         <div className="max-w-7xl mx-auto px-6">
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">SERVICES</p>
           <h2 className="text-3xl font-bold text-gray-900 mb-3">Consulting Solutions</h2>
@@ -95,32 +95,37 @@ export default async function SolutionsPage() {
       {/* Technical Solutions */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
-          <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">SPECIAL TECH</p>
-          <h2 className="text-3xl font-bold text-gray-900 mb-12">Technical Solutions</h2>
-          
           <div className="grid md:grid-cols-2 gap-8 items-start">
-            <div className="space-y-8">
-              {regular.slice(0, 4).map((solution: any) => (
-                <a key={solution.id} href={`/solutions/${solution.slug}`} className="flex gap-4 group">
-                  <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 mb-2 group-hover:text-primary transition">{solution.name}</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed mb-2">{solution.description}</p>
-                    <span className="text-xs text-primary font-medium group-hover:underline">Learn More →</span>
-                  </div>
-                </a>
-              ))}
+            <div>
+              <p className="text-xs text-gray-500 mb-2 uppercase tracking-widest font-medium">SPECIAL TECH</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-12">Technical Solutions</h2>
+              
+              <div className="space-y-8">
+                {regular.slice(0, 4).map((solution: any) => (
+                  <a key={solution.id} href={`/solutions/${solution.slug}`} className="flex gap-4 group">
+                    <div className="w-12 h-12 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-2 group-hover:text-primary transition">{solution.name}</h3>
+                      <p className="text-sm text-gray-600 leading-relaxed mb-2">{solution.description}</p>
+                      <span className="text-xs text-primary font-medium group-hover:underline">Learn More →</span>
+                    </div>
+                  </a>
+                ))}
+              </div>
             </div>
             
-            <div className="relative rounded-xl overflow-hidden shadow-xl h-full min-h-[500px]">
-              <img 
-                src="/images/hero-bg.jpg" 
-                alt="Smart Factory" 
-                className="w-full h-full object-cover"
+            <div className="relative rounded-xl overflow-hidden h-full min-h-[500px] bg-gray-50 flex items-center justify-center">
+              <video 
+                src="/tech-company.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-contain mix-blend-multiply"
               />
               <div className="absolute bottom-8 left-8 bg-primary text-white px-6 py-4 rounded-lg shadow-lg">
                 <div className="text-3xl font-bold">15+</div>

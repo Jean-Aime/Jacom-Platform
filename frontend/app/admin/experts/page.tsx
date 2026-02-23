@@ -7,11 +7,15 @@ interface Expert {
   name: string;
   slug: string;
   role: string;
+  type?: string;
   title?: string;
   bio: string;
   expertise: string;
+  locations?: string;
+  email?: string;
   image?: string;
   linkedin?: string;
+  featured?: boolean;
   status?: string;
 }
 
@@ -116,9 +120,10 @@ export default function ExpertsPage() {
           <table className="w-full text-left">
             <thead className="bg-gray-50 /50 border-b border-gray-200 ">
               <tr className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-                <th className="px-6 py-4">Expert Profile</th>
-                <th className="px-6 py-4">Title</th>
-                <th className="px-6 py-4">Primary Expertise</th>
+                <th className="px-6 py-4">Profile</th>
+                <th className="px-6 py-4">Role</th>
+                <th className="px-6 py-4">Type</th>
+                <th className="px-6 py-4">Expertise</th>
                 <th className="px-6 py-4">Status</th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
@@ -138,13 +143,16 @@ export default function ExpertsPage() {
                         </div>
                         <div>
                           <p className="font-bold ">{expert.name}</p>
-                          <p className="text-xs text-gray-500">{expert.title}</p>
+                          <p className="text-xs text-gray-500">{expert.locations}</p>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 font-semibold ">{expert.role}</td>
                     <td className="px-6 py-4">
-                      <span className="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-primary text-xs font-bold rounded uppercase">{expert.expertise}</span>
+                      <span className={`px-2 py-1 text-xs font-bold rounded uppercase ${expert.type === 'team' ? 'bg-blue-50 text-blue-600' : 'bg-purple-50 text-purple-600'}`}>{expert.type || 'expert'}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="px-2 py-1 bg-red-50 dark:bg-red-900/20 text-primary text-xs font-bold rounded uppercase">{expert.expertise?.split(',')[0]}</span>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 text-xs font-bold rounded uppercase ${expert.status === 'published' ? 'bg-green-50 text-green-600' : 'bg-gray-50 text-gray-600'}`}>{expert.status || 'draft'}</span>
@@ -183,12 +191,27 @@ export default function ExpertsPage() {
                 <input type="text" required value={formData.role || ''} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
               </div>
               <div>
+                <label className="block text-sm font-bold mb-2">Type</label>
+                <select value={formData.type || 'expert'} onChange={e => setFormData({...formData, type: e.target.value})} className="w-full px-4 py-2 border rounded-lg">
+                  <option value="expert">Expert</option>
+                  <option value="team">Team Member</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-bold mb-2">Bio</label>
                 <textarea required value={formData.bio || ''} onChange={e => setFormData({...formData, bio: e.target.value})} className="w-full px-4 py-2 border rounded-lg" rows={3} />
               </div>
               <div>
-                <label className="block text-sm font-bold mb-2">Expertise</label>
+                <label className="block text-sm font-bold mb-2">Expertise (comma-separated)</label>
                 <input type="text" required value={formData.expertise || ''} onChange={e => setFormData({...formData, expertise: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Locations</label>
+                <input type="text" value={formData.locations || ''} onChange={e => setFormData({...formData, locations: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
+              </div>
+              <div>
+                <label className="block text-sm font-bold mb-2">Email</label>
+                <input type="email" value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
               </div>
               <div>
                 <label className="block text-sm font-bold mb-2">Image URL</label>
@@ -198,12 +221,21 @@ export default function ExpertsPage() {
                 <label className="block text-sm font-bold mb-2">LinkedIn</label>
                 <input type="text" value={formData.linkedin || ''} onChange={e => setFormData({...formData, linkedin: e.target.value})} className="w-full px-4 py-2 border rounded-lg" />
               </div>
-              <div>
-                <label className="block text-sm font-bold mb-2">Status</label>
-                <select value={formData.status || 'published'} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full px-4 py-2 border rounded-lg">
-                  <option value="published">Published</option>
-                  <option value="draft">Draft</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-bold mb-2">Featured</label>
+                  <select value={formData.featured ? '1' : '0'} onChange={e => setFormData({...formData, featured: e.target.value === '1'})} className="w-full px-4 py-2 border rounded-lg">
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-bold mb-2">Status</label>
+                  <select value={formData.status || 'published'} onChange={e => setFormData({...formData, status: e.target.value})} className="w-full px-4 py-2 border rounded-lg">
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                  </select>
+                </div>
               </div>
               <div className="flex gap-4 pt-4">
                 <button type="submit" className="bg-primary text-white px-6 py-2 rounded-lg font-bold">Save</button>

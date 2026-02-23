@@ -55,6 +55,16 @@ option {
   border: 1px solid #d1d5db;
 }
 
+/* Override browser autofill styles */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+  -webkit-text-fill-color: #111827 !important;
+  box-shadow: 0 0 0 30px white inset !important;
+}
+
 /* Radio and Checkbox */
 input[type="radio"],
 input[type="checkbox"] {

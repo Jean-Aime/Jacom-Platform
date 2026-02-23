@@ -5,13 +5,12 @@ import { apiClient } from "@/lib/api-client";
 interface Lead {
   id: string;
   name: string;
-  furigana?: string;
   email: string;
   company: string;
   phone: string;
   message: string;
-  inquiryType?: string;
   source: string;
+  metadata: string;
   notes?: string;
   createdAt: string;
 }
@@ -95,13 +94,13 @@ export default function LeadsPage() {
                   <tr key={lead.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4">
                       <div className="font-bold text-sm text-gray-900">{lead.name}</div>
-                      {lead.furigana && <div className="text-xs text-gray-500">{lead.furigana}</div>}
+                      {JSON.parse(lead.metadata || '{}').furigana && <div className="text-xs text-gray-500">{JSON.parse(lead.metadata || '{}').furigana}</div>}
                       <div className="text-xs text-gray-500">{lead.email}</div>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-900">{lead.company || "N/A"}</td>
                     <td className="px-6 py-4">
                       <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded text-xs font-bold uppercase">
-                        {lead.inquiryType || "General"}
+                        {JSON.parse(lead.metadata || '{}').inquiryType || "General"}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -143,7 +142,7 @@ export default function LeadsPage() {
                 <div>
                   <label className="text-xs font-bold text-gray-700 uppercase">Name</label>
                   <p className="font-bold text-gray-900">{selectedLead.name}</p>
-                  {selectedLead.furigana && <p className="text-sm text-gray-500">{selectedLead.furigana}</p>}
+                  {JSON.parse(selectedLead.metadata || '{}').furigana && <p className="text-sm text-gray-500">{JSON.parse(selectedLead.metadata || '{}').furigana}</p>}
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-700 uppercase">Company</label>
@@ -159,10 +158,10 @@ export default function LeadsPage() {
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-700 uppercase">Inquiry Type</label>
-                  <p className="font-bold text-gray-900">{selectedLead.inquiryType || "General"}</p>
+                  <p className="font-bold text-gray-900">{JSON.parse(selectedLead.metadata || '{}').inquiryType || "General"}</p>
                 </div>
                 <div>
-                  <label className="text-xs font-bold text-gray-700 uppercase">Source</label>
+                  <label className="text-xs font-bold text-gray-700 uppercase">Status</label>
                   <p className="font-bold text-gray-900">{selectedLead.source}</p>
                 </div>
               </div>

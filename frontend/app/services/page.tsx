@@ -1,48 +1,69 @@
+"use client";
+import { useState, useEffect } from "react";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
-import { prisma } from "@/lib/prisma";
-import { ServiceType } from "@prisma/client";
 
-export const dynamic = 'force-dynamic';
+export default function ServicesPage() {
+  const [services, setServices] = useState([]);
+  const [filter, setFilter] = useState("all");
 
-export default async function ServicesPage() {
-  // Fetch all non-training services from database
-  const services = await prisma.service.findMany({
-    where: {
-      status: 'published',
-      type: { not: ServiceType.TRAINING } // Exclude training (those go to Academy)
-    },
-    orderBy: { featured: 'desc' }
-  });
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/services`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          setServices(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch services:', error);
+      }
+    }
+    fetchServices();
+  }, []);
 
-  // Group services by type
-  const consulting = services.filter(s => s.type === ServiceType.CONSULTING);
-  const technical = services.filter(s => s.type === ServiceType.TECHNICAL);
-  const financial = services.filter(s => s.type === ServiceType.FINANCIAL);
+  const getServiceCategory = (service: any) => {
+    const name = service.name.toLowerCase();
+    if (name.includes('digital') || name.includes('software') || name.includes('cloud') || name.includes('cyber') || name.includes('iot') || name.includes('smart')) return 'technical';
+    if (name.includes('financial') || name.includes('risk') || name.includes('banking') || name.includes('advisory')) return 'financial';
+    return 'consulting';
+  };
+
+  const filteredServices = filter === 'all' ? services : services.filter((s: any) => getServiceCategory(s) === filter);
 
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       {/* Hero Section with Mega Menu */}
-      <section className="relative bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-56 overflow-hidden min-h-[580px]">
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-red-900/30 to-transparent"></div>
+      <section className="relative h-screen overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+            alt="Professional Services" 
+            className="w-full h-full object-cover"
+          />
         </div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
         
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center relative z-10">
           <div className="max-w-xl">
-            <h1 className="text-4xl font-bold text-white mb-4 leading-tight">
-              Our cross-functional teams deliver specialized vertical knowledge to solve your most complex industry challenges through tailored strategies and innovative execution.
+            <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4 leading-tight animate-fade-in-up">
+              Specialized Solutions for Complex Industry Challenges
             </h1>
-            <div className="flex gap-4 mt-8">
-              <a href="/contact" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg flex items-center gap-2">
+            <p className="text-sm sm:text-base text-gray-200 mb-6 sm:mb-8 animate-fade-in-up animation-delay-300">
+              Cross-functional teams delivering tailored strategies and innovative execution across global sectors.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-up animation-delay-600">
+              <a href="/contact" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg flex items-center justify-center gap-2">
                 Explore Industries
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
               </a>
-              <a href="/case-studies" className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition">
+              <a href="/case-studies" className="border-2 border-white hover:bg-white hover:text-primary text-white px-6 py-3 rounded-md font-medium text-sm transition text-center">
                 View Case Studies
               </a>
             </div>
@@ -51,17 +72,40 @@ export default async function ServicesPage() {
       </section>
 
       {/* Specialized Industry Solutions */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Specialized Industry Solutions</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
+      <section className="py-12 sm:py-20 bg-white relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="mb-8 space-y-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900">Specialized Industry Solutions</h2>
+            <p className="text-sm sm:text-base text-gray-600">
               We provide tailored strategies across key sectors, focusing on sustainable growth and operational excellence.
             </p>
+            <div className="flex gap-3 overflow-x-auto py-2">
+              <button 
+                onClick={() => setFilter("consulting")}
+                className={`px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap shadow-md ${
+                  filter === "consulting" ? "bg-primary text-white" : "bg-white text-gray-900 border-2 border-gray-300"
+                }`}>
+                Consulting
+              </button>
+              <button 
+                onClick={() => setFilter("technical")}
+                className={`px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap shadow-md ${
+                  filter === "technical" ? "bg-primary text-white" : "bg-white text-gray-900 border-2 border-gray-300"
+                }`}>
+                Technical
+              </button>
+              <button 
+                onClick={() => setFilter("financial")}
+                className={`px-6 py-3 rounded-full font-semibold text-sm whitespace-nowrap shadow-md ${
+                  filter === "financial" ? "bg-primary text-white" : "bg-white text-gray-900 border-2 border-gray-300"
+                }`}>
+                Financial
+              </button>
+            </div>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {services.map((service, i) => {
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {filteredServices.map((service: any, i: number) => {
               const icons = [
                 <svg key="1" className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>,
                 <svg key="2" className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
@@ -81,7 +125,7 @@ export default async function ServicesPage() {
                     </div>
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-1">{service.name}</h3>
-                  <p className="text-xs text-gray-500 font-semibold mb-4 uppercase tracking-wider">{service.type}</p>
+                  <p className="text-xs text-primary font-semibold mb-4 uppercase tracking-wider">{getServiceCategory(service)}</p>
                   <p className="text-sm text-gray-600 mb-4">{service.description}</p>
                   <div className="text-primary font-medium group-hover:translate-x-1 transition-transform">
                     Learn More →
@@ -94,14 +138,14 @@ export default async function ServicesPage() {
       </section>
 
       {/* Cross-Industry Capabilities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+      <section className="py-12 sm:py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-2">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
                 Cross-Industry <span className="text-primary">Capabilities</span>
               </h2>
-              <p className="text-gray-600 mb-8 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 leading-relaxed">
                 Beyond vertical expertise, our specialized service groups work horizontally across all sectors to ensure inclusive growth and economic resilience.
               </p>
               
@@ -160,7 +204,7 @@ export default async function ServicesPage() {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/images/hero-bg.jpg" 
+                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
                   alt="Team collaboration" 
                   className="w-full h-[400px] object-cover"
                 />

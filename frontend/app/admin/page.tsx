@@ -1,13 +1,38 @@
 "use client";
 import { useEffect, useState } from "react";
+import { apiClient } from "@/lib/api-client";
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState({ totalLeads: 0, activeStudents: 0, regionalOffices: 3, annualRevenue: "¥12.5M" });
+  const [stats, setStats] = useState({ 
+    totalLeads: 0, 
+    totalExperts: 0, 
+    totalInsights: 0, 
+    totalIndustries: 0 
+  });
+  const [recentLeads, setRecentLeads] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('/api/leads')
-      .then(r => r.json())
-      .then((data: any) => setStats(prev => ({ ...prev, totalLeads: data.length || 0 })))
+    // Fetch leads
+    apiClient.getLeads()
+      .then((data: any) => {
+        setStats(prev => ({ ...prev, totalLeads: data.length || 0 }));
+        setRecentLeads(data.slice(0, 5));
+      })
+      .catch(() => {});
+
+    // Fetch experts
+    apiClient.getExperts()
+      .then((data: any) => setStats(prev => ({ ...prev, totalExperts: data.length || 0 })))
+      .catch(() => {});
+
+    // Fetch insights
+    apiClient.getInsights()
+      .then((data: any) => setStats(prev => ({ ...prev, totalInsights: data.length || 0 })))
+      .catch(() => {});
+
+    // Fetch industries
+    apiClient.getIndustries()
+      .then((data: any) => setStats(prev => ({ ...prev, totalIndustries: data.length || 0 })))
       .catch(() => {});
   }, []);
 
@@ -35,7 +60,7 @@ export default function AdminDashboard() {
               <span>↗</span> +12%
             </span>
           </div>
-          <p className="text-gray-600 text-sm font-medium">Total Leads</p>
+          <p className="text-gray-600 text-sm font-medium">Total Inquiries</p>
           <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.totalLeads}</h3>
         </div>
 
@@ -48,8 +73,8 @@ export default function AdminDashboard() {
               <span>↗</span> +5%
             </span>
           </div>
-          <p className="text-gray-600 text-sm font-medium">Active Students</p>
-          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.activeStudents}</h3>
+          <p className="text-gray-600 text-sm font-medium">Total Experts</p>
+          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.totalExperts}</h3>
         </div>
 
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -59,8 +84,8 @@ export default function AdminDashboard() {
             </div>
             <span className="text-gray-400 text-xs font-bold">Global</span>
           </div>
-          <p className="text-gray-600 text-sm font-medium">Regional Offices</p>
-          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.regionalOffices}</h3>
+          <p className="text-gray-600 text-sm font-medium">Total Insights</p>
+          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.totalInsights}</h3>
         </div>
 
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -72,8 +97,8 @@ export default function AdminDashboard() {
               <span>↗</span> +8.1%
             </span>
           </div>
-          <p className="text-gray-600 text-sm font-medium">Annual Revenue</p>
-          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.annualRevenue}</h3>
+          <p className="text-gray-600 text-sm font-medium">Total Industries</p>
+          <h3 className="text-2xl font-bold mt-1 text-gray-900">{stats.totalIndustries}</h3>
         </div>
       </div>
 
@@ -114,30 +139,27 @@ export default function AdminDashboard() {
           <button className="text-primary text-sm font-bold hover:underline">View All</button>
         </div>
         <div className="divide-y divide-gray-200">
-          <div className="p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors">
-            <div className="mt-1 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-primary">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-900">New inquiry from Toyota</p>
-                <span className="text-xs text-gray-400">2 hours ago</span>
-              </div>
-              <p className="text-sm text-gray-600 mt-1">Strategic partnership inquiry for Corporate Academy program.</p>
-            </div>
-          </div>
-          <div className="p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors">
-            <div className="mt-1 w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-semibold text-gray-900">Student 'Taro Yamada' completed Phase 1</p>
-                <span className="text-xs text-gray-400">5 hours ago</span>
-              </div>
-              <p className="text-sm text-gray-600 mt-1">Successfully finished the 'Global Business Foundations' module.</p>
-            </div>
-          </div>
+          {recentLeads.length === 0 ? (
+            <div className="p-6 text-center text-gray-500">No recent inquiries</div>
+          ) : (
+            recentLeads.map((lead) => {
+              const metadata = JSON.parse(lead.metadata || '{}');
+              return (
+                <div key={lead.id} className="p-6 flex items-start gap-4 hover:bg-gray-50 transition-colors">
+                  <div className="mt-1 w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-primary">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-gray-900">{lead.name} - {metadata.inquiryType || 'General'}</p>
+                      <span className="text-xs text-gray-400">{new Date(lead.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{lead.company || lead.email}</p>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
     </div>

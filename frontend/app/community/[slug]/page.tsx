@@ -61,27 +61,42 @@ export default async function CommunityCategoryPage({ params }: { params: Promis
     notFound();
   }
 
-  const articles = category.articles || [];
+  const articles = Array.isArray(category.articles) ? category.articles : [];
 
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-white">
-              {iconMap[category.icon] || iconMap.briefcase}
-            </div>
-            <p className="text-xs text-red-200 uppercase tracking-widest font-medium">Community Insights</p>
+      <section className="relative h-screen overflow-hidden">
+        {/* Background Image */}
+        {category.image && (
+          <div className="absolute inset-0">
+            <img 
+              src={category.image.startsWith('http') ? category.image : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${category.image}`}
+              alt={category.name}
+              className="w-full h-full object-cover"
+            />
           </div>
-          <h1 className="text-5xl font-bold text-white mb-6 leading-tight max-w-3xl">
-            {category.name}
-          </h1>
-          <p className="text-red-100 text-lg mb-8 leading-relaxed max-w-2xl">
-            {category.description}
-          </p>
+        )}
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center relative z-10">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-3 mb-4 animate-fade-in-up">
+              <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-lg flex items-center justify-center text-white">
+                {iconMap[category.icon] || iconMap.briefcase}
+              </div>
+              <p className="text-xs text-red-200 uppercase tracking-widest font-medium">Community Insights</p>
+            </div>
+            <h1 className="text-5xl font-bold text-white mb-6 leading-tight animate-fade-in-up animation-delay-300">
+              {category.name}
+            </h1>
+            <p className="text-red-100 text-lg mb-8 leading-relaxed animate-fade-in-up animation-delay-600">
+              {category.description}
+            </p>
+          </div>
         </div>
       </section>
 

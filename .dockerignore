@@ -1,0 +1,9 @@
+node_modules
+frontend
+_UNUSED_FILES
+docs
+.git
+.env*
+*.md
+*.bat
+*.sql

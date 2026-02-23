@@ -12,7 +12,9 @@ class ExpertsController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("
+        $type = $_GET['type'] ?? null;
+        
+        $sql = "
             SELECT e.*, 
                    GROUP_CONCAT(DISTINCT i.id) as industryIds,
                    GROUP_CONCAT(DISTINCT s.id) as serviceIds
@@ -20,10 +22,21 @@ class ExpertsController {
             LEFT JOIN _ExpertToIndustry eti ON e.id = eti.A
             LEFT JOIN industry i ON eti.B = i.id
             LEFT JOIN _ExpertToService ets ON e.id = ets.A
-            LEFT JOIN service s ON ets.B = s.id
-            GROUP BY e.id
-            ORDER BY e.name ASC
-        ");
+            LEFT JOIN service s ON ets.B = s.id";
+        
+        if ($type) {
+            $sql .= " WHERE e.type = ?";
+        }
+        
+        $sql .= " GROUP BY e.id ORDER BY e.name ASC";
+        
+        if ($type) {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute([$type]);
+        } else {
+            $stmt = $this->conn->query($sql);
+        }
+        
         $experts = $stmt->fetchAll();
         
         $formatted = array_map(function($expert) {
@@ -32,6 +45,7 @@ class ExpertsController {
                 'name' => $expert['name'],
                 'slug' => $expert['slug'],
                 'role' => $expert['role'],
+                'type' => $expert['type'] ?? 'expert',
                 'bio' => $expert['bio'],
                 'expertise' => $expert['expertise'],
                 'locations' => $expert['locations'],
@@ -69,11 +83,11 @@ class ExpertsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("INSERT INTO expert (id, name, slug, role, bio, expertise, locations, image, email, linkedin, featured, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO expert (id, name, slug, role, type, bio, expertise, locations, image, email, linkedin, featured, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $id = 'e' . uniqid() . bin2hex(random_bytes(8));
         $stmt->execute([
-            $id, $data['name'], $data['slug'], $data['role'], $data['bio'] ?? '',
+            $id, $data['name'], $data['slug'], $data['role'], $data['type'] ?? 'expert', $data['bio'] ?? '',
             $data['expertise'] ?? '', $data['locations'] ?? '', $data['image'] ?? null,
             $data['email'] ?? null, $data['linkedin'] ?? null, $data['featured'] ?? 0,
             $data['status'] ?? 'published'
@@ -103,10 +117,10 @@ class ExpertsController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE expert SET name = ?, slug = ?, role = ?, bio = ?, expertise = ?, locations = ?, image = ?, email = ?, linkedin = ?, featured = ?, status = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE expert SET name = ?, slug = ?, role = ?, type = ?, bio = ?, expertise = ?, locations = ?, image = ?, email = ?, linkedin = ?, featured = ?, status = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
-            $data['name'], $data['slug'], $data['role'], $data['bio'] ?? '', $data['expertise'] ?? '',
+            $data['name'], $data['slug'], $data['role'], $data['type'] ?? 'expert', $data['bio'] ?? '', $data['expertise'] ?? '',
             $data['locations'] ?? '', $data['image'] ?? null, $data['email'] ?? null,
             $data['linkedin'] ?? null, $data['featured'] ?? 0, $data['status'] ?? 'published', $id
         ]);

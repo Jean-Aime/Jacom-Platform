@@ -1,22 +1,53 @@
+"use client";
+import { useState, useEffect } from "react";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
 import Footer from "@/components/Footer/Footer";
 
 export default function AboutPage() {
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [selectedMember, setSelectedMember] = useState<any>(null);
+
+  useEffect(() => {
+    async function fetchTeam() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/experts?type=team`);
+        if (res.ok) {
+          const data = await res.json();
+          setTeamMembers(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch team:', error);
+      }
+    }
+    fetchTeam();
+  }, []);
+
   return (
     <div className="min-h-screen">
       <MegaMenuHeader />
       
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-red-700 to-red-800 pt-32 pb-56 min-h-[580px] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <section className="relative h-screen overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <img 
+            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+            alt="About JACOM" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center relative z-10">
           <div className="max-w-2xl">
-            <h1 className="text-5xl font-bold text-white mb-6 leading-tight">
-              About JACOM - Energizing Business Growth Through Innovation
+            <h1 className="text-5xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
+              About JAS.COME - Energizing Business Growth Through Innovation
             </h1>
-            <p className="text-red-100 text-base mb-8 leading-relaxed">
+            <p className="text-red-100 text-base mb-8 leading-relaxed animate-fade-in-up animation-delay-300">
               Driving global technology gaps and empowering businesses through strategic consulting, technical innovation, and financial expertise. We bridge the gap between vision and execution.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 animate-fade-in-up animation-delay-600">
               <a href="#story" className="bg-white hover:bg-gray-100 text-primary px-6 py-3 rounded-md font-medium text-sm transition shadow-lg">
                 Explore Our Work
               </a>
@@ -28,7 +59,7 @@ export default function AboutPage() {
         </div>
 
         {/* Stats Bar */}
-        <div className="absolute bottom-0 left-0 right-0 bg-red-900/50 backdrop-blur-sm">
+        <div className="absolute bottom-0 left-0 right-0 bg-red-900/50 backdrop-blur-sm animate-fade-in-up animation-delay-900">
           <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="grid grid-cols-4 gap-8">
               {[
@@ -57,7 +88,7 @@ export default function AboutPage() {
                 Founded in 2019 to Revolutionize Global Connectivity
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                JACOM was established with a clear vision: to bridge the technology gap and empower businesses through innovative IoT solutions, strategic consulting, and comprehensive digital transformation services. Today, we work in Tokyo and rapidly expanding our reach across Asia and Africa, helping organizations navigate complex technological landscapes and achieve sustainable growth.
+              JACOM was established with a clear vision: to bridge the technology gap and empower businesses through innovative IoT solutions, strategic consulting, and comprehensive digital transformation services. Today, we work in Tokyo and rapidly expanding our reach across Asia and Africa, helping organizations navigate complex technological landscapes and achieve sustainable growth.
               </p>
               <p className="text-gray-600 mb-6 leading-relaxed">
                 Our journey began with a commitment to excellence and a passion for innovation. We've evolved from a startup into a trusted partner for global businesses seeking to leverage cutting-edge technology and strategic insights.
@@ -66,38 +97,46 @@ export default function AboutPage() {
                 View Full Company Timeline →
               </a>
             </div>
-            <div className="relative">
-              <img src="/images/about-bg.jpg" alt="Team" className="rounded-xl shadow-xl w-full" />
+            <div className="relative rounded-xl overflow-hidden shadow-xl bg-white p-4">
+              <video 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover rounded-lg"
+              >
+                <source src="/business-merger.mp4" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>
       </section>
 
       {/* Values */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <p className="text-sm text-primary font-semibold mb-3 uppercase tracking-wider">OUR CORE VALUES</p>
-            <h2 className="text-4xl font-bold text-gray-900">The J-A-C-O-M-E Values</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">The J-A-C-O-M-E Values</h2>
             <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
               Our core values guide every decision we make and every solution we deliver.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-6 gap-6">
+          <div className="flex flex-wrap justify-center items-center gap-8 max-w-5xl mx-auto">
             {[
-              { letter: "J", title: "Justice", desc: "Fair and ethical practices" },
-              { letter: "A", title: "Accountability", desc: "Taking ownership" },
-              { letter: "C", title: "Commitment", desc: "Dedicated to excellence" },
-              { letter: "O", title: "Originality", desc: "Innovative thinking" },
-              { letter: "M", title: "Motivation", desc: "Driving success" },
-              { letter: "E", title: "Excellence", desc: "Uncompromising quality" }
+              { letter: "J", title: "Justice", desc: "Fair and ethical practices", color: "from-red-500 to-red-600" },
+              { letter: "A", title: "Accountability", desc: "Taking ownership", color: "from-orange-500 to-orange-600" },
+              { letter: "C", title: "Commitment", desc: "Dedicated to excellence", color: "from-amber-500 to-amber-600" },
+              { letter: "O", title: "Originality", desc: "Innovative thinking", color: "from-yellow-500 to-yellow-600" },
+              { letter: "M", title: "Motivation", desc: "Driving success", color: "from-red-600 to-red-700" },
+              { letter: "E", title: "Excellence", desc: "Uncompromising quality", color: "from-rose-500 to-rose-600" }
             ].map((value, i) => (
-              <div key={i} className="bg-white rounded-xl p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+              <div key={i} className="bg-white rounded-2xl p-8 text-center hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 w-64 group">
+                <div className={`w-20 h-20 bg-gradient-to-br ${value.color} text-white rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
                   {value.letter}
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{value.title}</h3>
+                <h3 className="font-bold text-xl text-gray-900 mb-2">{value.title}</h3>
                 <p className="text-sm text-gray-600">{value.desc}</p>
               </div>
             ))}
@@ -147,29 +186,113 @@ export default function AboutPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <p className="text-sm text-primary font-semibold mb-3 uppercase tracking-wider">OUR MINDS BEHIND JACOM</p>
+            <p className="text-sm text-primary font-semibold mb-3 uppercase tracking-wider">OUR MINDS BEHIND JAS.COME</p>
             <h2 className="text-4xl font-bold text-gray-900">Leadership & Team</h2>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { name: "AKIHIRO EKUALE TESFAMICHAEL", role: "CEO & Founder", image: "/images/team1.jpg" },
-              { name: "Amanuel", role: "Chief Operations Officer", image: "/images/team2.jpg" },
-              { name: "Lynn", role: "Business Strategy Lead", image: "/images/team3.jpg" }
-            ].map((member, i) => (
-              <div key={i} className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow">
-                <div className="h-96 bg-gray-200">
-                  <img src={member.image} alt={member.name} className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" />
+          <div className="flex flex-wrap justify-center gap-12">
+            {teamMembers.map((member: any) => (
+              <div 
+                key={member.id} 
+                onClick={() => setSelectedMember(member)}
+                className="flex flex-col items-center cursor-pointer group"
+              >
+                <div className="w-40 h-40 rounded-full overflow-hidden mb-4 ring-4 ring-white shadow-xl group-hover:ring-primary transition-all">
+                  {member.image ? (
+                    <img src={member.image.startsWith('http') ? member.image : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${member.image}`} alt={member.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white text-4xl font-bold">
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
                 </div>
-                <div className="p-6 text-center">
-                  <h3 className="font-bold text-gray-900 mb-1 uppercase tracking-wide text-sm">{member.name}</h3>
-                  <p className="text-sm text-primary font-semibold">{member.role}</p>
-                </div>
+                <h3 className="font-bold text-gray-900 text-lg text-center">{member.name}</h3>
+                <p className="text-sm text-primary font-semibold text-center">{member.role}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Team Member Modal */}
+      {selectedMember && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4" onClick={() => setSelectedMember(null)}>
+          <div className="bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <button 
+              onClick={() => setSelectedMember(null)}
+              className="absolute top-6 right-6 bg-gray-100 hover:bg-gray-200 rounded-full p-3 transition z-10"
+            >
+              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            <div className="p-12">
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="flex-shrink-0">
+                  <div className="w-48 h-48 rounded-full overflow-hidden ring-8 ring-red-50 shadow-xl">
+                    {selectedMember.image ? (
+                      <img src={selectedMember.image.startsWith('http') ? selectedMember.image : `${process.env.NEXT_PUBLIC_BACKEND_URL}/${selectedMember.image}`} alt={selectedMember.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white text-6xl font-bold">
+                        {selectedMember.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                <div className="flex-1">
+                  <h3 className="text-4xl font-bold text-gray-900 mb-2">{selectedMember.name}</h3>
+                  <p className="text-primary font-semibold text-lg mb-4">{selectedMember.role}</p>
+                  
+                  <div className="flex items-center gap-2 text-gray-500 mb-6">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span>{selectedMember.locations}</span>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-2xl p-6 mb-6">
+                    <h4 className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">About</h4>
+                    <p className="text-gray-700 leading-relaxed">{selectedMember.bio}</p>
+                  </div>
+                  
+                  <div className="mb-6">
+                    <h4 className="text-sm font-bold text-gray-500 mb-3 uppercase tracking-wider">Areas of Expertise</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedMember.expertise?.split(',').map((skill: string, i: number) => (
+                        <span key={i} className="px-4 py-2 bg-red-50 text-primary text-sm font-semibold rounded-full">
+                          {skill.trim()}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-4">
+                    {selectedMember.email && (
+                      <a href={`mailto:${selectedMember.email}`} className="flex items-center gap-2 px-6 py-3 bg-primary hover:bg-red-700 text-white rounded-xl transition font-medium">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Email
+                      </a>
+                    )}
+                    {selectedMember.linkedin && (
+                      <a href={selectedMember.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition font-medium">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        LinkedIn
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Global Presence */}
       <section className="py-20 bg-slate-900 text-white">
@@ -233,9 +356,9 @@ export default function AboutPage() {
           </div>
 
           <div className="bg-red-50 rounded-xl p-8 text-center">
-            <p className="text-gray-700 italic max-w-3xl mx-auto">
-              "Our partnership with JACOM has been transformative. Their deep technical expertise and strategic vision have helped us navigate complex digital transformation challenges with confidence."
-            </p>
+            <p className="text-gray-600 mb-6 leading-relaxed">
+                Our partnership with JAS.COME has been transformative. Their deep technical expertise and strategic vision have helped us navigate complex digital transformation challenges with confidence.
+              </p>
           </div>
         </div>
       </section>

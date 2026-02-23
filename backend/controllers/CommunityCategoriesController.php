@@ -33,7 +33,9 @@ class CommunityCategoriesController {
         
         // Decode JSON fields
         if ($category['articles']) {
-            $category['articles'] = json_decode($category['articles'], true);
+            $category['articles'] = json_decode($category['articles'], true) ?: [];
+        } else {
+            $category['articles'] = [];
         }
         
         echo json_encode($category);
@@ -47,7 +49,7 @@ class CommunityCategoriesController {
         
         $id = 'cc' . uniqid() . bin2hex(random_bytes(4));
         
-        $stmt = $this->conn->prepare("INSERT INTO communitycategory (id, name, slug, description, icon, content, articles, featured, `order`, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
+        $stmt = $this->conn->prepare("INSERT INTO communitycategory (id, name, slug, description, icon, image, content, articles, featured, `order`, status, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
         
         $stmt->execute([
             $id,
@@ -55,6 +57,7 @@ class CommunityCategoriesController {
             $data['slug'],
             $data['description'] ?? null,
             $data['icon'] ?? null,
+            $data['image'] ?? null,
             $data['content'] ?? null,
             json_encode($data['articles'] ?? []),
             $data['featured'] ?? 0,
@@ -72,13 +75,14 @@ class CommunityCategoriesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE communitycategory SET name = ?, slug = ?, description = ?, icon = ?, content = ?, articles = ?, featured = ?, `order` = ?, status = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE communitycategory SET name = ?, slug = ?, description = ?, icon = ?, image = ?, content = ?, articles = ?, featured = ?, `order` = ?, status = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'],
             $data['slug'],
             $data['description'] ?? null,
             $data['icon'] ?? null,
+            $data['image'] ?? null,
             $data['content'] ?? null,
             json_encode($data['articles'] ?? []),
             $data['featured'] ?? 0,

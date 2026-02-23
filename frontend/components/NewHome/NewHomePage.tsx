@@ -111,7 +111,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative h-[680px] overflow-hidden">
+      <section className="relative h-screen overflow-hidden">
         {heroImages.map((image, index) => (
           <div
             key={index}
