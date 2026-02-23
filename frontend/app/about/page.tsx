@@ -42,7 +42,7 @@ export default function AboutPage() {
         <div className="max-w-7xl mx-auto px-6 h-full flex items-center relative z-10">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold text-white mb-6 leading-tight animate-fade-in-up">
-              About JACOM - Energizing Business Growth Through Innovation
+              UPDATED VERSION - About JACOM - Energizing Business Growth Through Innovation
             </h1>
             <p className="text-red-100 text-base mb-8 leading-relaxed animate-fade-in-up animation-delay-300">
               Driving global technology gaps and empowering businesses through strategic consulting, technical innovation, and financial expertise. We bridge the gap between vision and execution.
