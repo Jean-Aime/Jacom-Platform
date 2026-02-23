@@ -5,13 +5,9 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     envVars:
-      - key: DB_HOST
-        sync: false
-      - key: DB_NAME
-        sync: false
-      - key: DB_USER
-        sync: false
-      - key: DB_PASS
-        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: jacom-db
+          property: connectionString
       - key: ENV
         value: production
