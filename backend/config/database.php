@@ -17,7 +17,13 @@ class Database {
     public function getConnection() {
         if ($this->conn === null) {
             try {
-                $dbUrl = getenv('DATABASE_URL') ?: $_ENV['DATABASE_URL'] ?? null;
+                $dbUrl = $_SERVER['DATABASE_URL'] ?? getenv('DATABASE_URL') ?: $_ENV['DATABASE_URL'] ?? null;
+                
+                error_log("Checking DATABASE_URL...");
+                error_log("_SERVER: " . ($_SERVER['DATABASE_URL'] ?? 'not set'));
+                error_log("getenv: " . (getenv('DATABASE_URL') ?: 'not set'));
+                error_log("_ENV: " . ($_ENV['DATABASE_URL'] ?? 'not set'));
+                
                 if ($dbUrl) {
                     // PostgreSQL URL format: postgresql://user:pass@host:port/dbname
                     $this->conn = new PDO($dbUrl, null, null, [
@@ -26,7 +32,9 @@ class Database {
                         PDO::ATTR_EMULATE_PREPARES => false,
                         PDO::ATTR_TIMEOUT => 5
                     ]);
+                    error_log("PostgreSQL connected successfully");
                 } else {
+                    error_log("No DATABASE_URL found, using MySQL fallback");
                     $this->conn = new PDO(
                         "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME,
                         DB_USER,
@@ -40,7 +48,7 @@ class Database {
                 }
             } catch(PDOException $e) {
                 error_log("Database connection error: " . $e->getMessage());
-                error_log("DATABASE_URL exists: " . (getenv('DATABASE_URL') ? 'yes' : 'no'));
+                error_log("DATABASE_URL exists: " . ($dbUrl ?? 'no'));
                 // Return null instead of throwing to allow CORS headers to be sent
                 return null;
             }
