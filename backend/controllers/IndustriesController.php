@@ -12,42 +12,26 @@ class IndustriesController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("
-            SELECT i.*, 
-                   GROUP_CONCAT(DISTINCT s.id) as serviceIds,
-                   GROUP_CONCAT(DISTINCT e.id) as expertIds,
-                   GROUP_CONCAT(DISTINCT ins.id) as insightIds
-            FROM industry i
-            LEFT JOIN _IndustryToService its ON i.id = its.A
-            LEFT JOIN service s ON its.B = s.id
-            LEFT JOIN _ExpertToIndustry eti ON i.id = eti.B
-            LEFT JOIN expert e ON eti.A = e.id
-            LEFT JOIN _IndustryToInsight iti ON i.id = iti.A
-            LEFT JOIN insight ins ON iti.B = ins.id
-            GROUP BY i.id
-            ORDER BY i.name ASC
-        ");
-        $industries = $stmt->fetchAll();
+        $stmt = $this->conn->query("SELECT * FROM industry ORDER BY name ASC");
+        $industries = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Format response to match frontend API structure
         $formatted = array_map(function($industry) {
             return [
                 'id' => $industry['id'],
                 'name' => $industry['name'],
                 'slug' => $industry['slug'],
-                'description' => $industry['description'],
-                'overview' => $industry['overview'],
-                'challenges' => $industry['challenges'],
-                'trends' => $industry['trends'],
-                'featured' => (bool)$industry['featured'],
-                'image' => $industry['image'],
+                'description' => $industry['description'] ?? '',
+                'overview' => $industry['overview'] ?? '',
+                'challenges' => $industry['challenges'] ?? '[]',
+                'trends' => $industry['trends'] ?? '[]',
+                'featured' => (bool)($industry['featured'] ?? false),
+                'image' => $industry['image'] ?? null,
                 'status' => $industry['status'] ?? 'published',
-                'createdAt' => $industry['createdAt'],
-                'updatedAt' => $industry['updatedAt'],
-                'serviceIds' => $industry['serviceIds'] ? explode(',', $industry['serviceIds']) : [],
-                'services' => $industry['serviceIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['serviceIds'])) : [],
-                'experts' => $industry['expertIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['expertIds'])) : [],
-                'insights' => $industry['insightIds'] ? array_map(fn($id) => ['id' => $id], explode(',', $industry['insightIds'])) : []
+                'createdAt' => $industry['createdAt'] ?? null,
+                'updatedAt' => $industry['updatedAt'] ?? null,
+                'services' => [],
+                'experts' => [],
+                'insights' => []
             ];
         }, $industries);
         
