@@ -41,6 +41,20 @@ try {
         exit();
     }
     
+    // Test industries direct
+    if ($resource === 'test-industries') {
+        try {
+            $db = Database::getInstance();
+            $conn = $db->getConnection();
+            $stmt = $conn->query('SELECT * FROM industry LIMIT 3');
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode(['success' => true, 'count' => count($data), 'data' => $data]);
+        } catch (Exception $e) {
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        }
+        exit();
+    }
+    
     switch ($resource) {
         case 'auth':
             require_once __DIR__ . '/controllers/AuthController.php';
