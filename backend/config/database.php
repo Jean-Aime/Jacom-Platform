@@ -19,10 +19,12 @@ class Database {
             try {
                 $dbUrl = getenv('DATABASE_URL');
                 if ($dbUrl) {
+                    // PostgreSQL URL format: postgresql://user:pass@host:port/dbname
                     $this->conn = new PDO($dbUrl, null, null, [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                        PDO::ATTR_EMULATE_PREPARES => false
+                        PDO::ATTR_EMULATE_PREPARES => false,
+                        PDO::ATTR_TIMEOUT => 5
                     ]);
                 } else {
                     $this->conn = new PDO(
@@ -37,10 +39,9 @@ class Database {
                     );
                 }
             } catch(PDOException $e) {
-                if (DEBUG) {
-                    error_log("Connection error: " . $e->getMessage());
-                }
-                throw $e;
+                error_log("Database connection error: " . $e->getMessage());
+                // Return null instead of throwing to allow CORS headers to be sent
+                return null;
             }
         }
         return $this->conn;
