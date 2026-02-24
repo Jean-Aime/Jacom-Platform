@@ -17,7 +17,7 @@ class Database {
     public function getConnection() {
         if ($this->conn === null) {
             try {
-                $dbUrl = getenv('DATABASE_URL');
+                $dbUrl = getenv('DATABASE_URL') ?: $_ENV['DATABASE_URL'] ?? null;
                 if ($dbUrl) {
                     // PostgreSQL URL format: postgresql://user:pass@host:port/dbname
                     $this->conn = new PDO($dbUrl, null, null, [
@@ -40,6 +40,7 @@ class Database {
                 }
             } catch(PDOException $e) {
                 error_log("Database connection error: " . $e->getMessage());
+                error_log("DATABASE_URL exists: " . (getenv('DATABASE_URL') ? 'yes' : 'no'));
                 // Return null instead of throwing to allow CORS headers to be sent
                 return null;
             }
