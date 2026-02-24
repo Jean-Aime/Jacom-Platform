@@ -12,30 +12,35 @@ class IndustriesController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("SELECT * FROM industry ORDER BY name ASC");
-        $industries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $formatted = array_map(function($industry) {
-            return [
-                'id' => $industry['id'],
-                'name' => $industry['name'],
-                'slug' => $industry['slug'],
-                'description' => $industry['description'] ?? '',
-                'overview' => $industry['overview'] ?? '',
-                'challenges' => $industry['challenges'] ?? '[]',
-                'trends' => $industry['trends'] ?? '[]',
-                'featured' => (bool)($industry['featured'] ?? false),
-                'image' => $industry['image'] ?? null,
-                'status' => $industry['status'] ?? 'published',
-                'createdAt' => $industry['createdAt'] ?? null,
-                'updatedAt' => $industry['updatedAt'] ?? null,
-                'services' => [],
-                'experts' => [],
-                'insights' => []
-            ];
-        }, $industries);
-        
-        echo json_encode($formatted);
+        try {
+            $stmt = $this->conn->query('SELECT * FROM industry ORDER BY name ASC');
+            $industries = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $formatted = array_map(function($industry) {
+                return [
+                    'id' => $industry['id'],
+                    'name' => $industry['name'],
+                    'slug' => $industry['slug'],
+                    'description' => $industry['description'] ?? '',
+                    'overview' => $industry['overview'] ?? '',
+                    'challenges' => $industry['challenges'] ?? '[]',
+                    'trends' => $industry['trends'] ?? '[]',
+                    'featured' => (bool)($industry['featured'] ?? false),
+                    'image' => $industry['image'] ?? null,
+                    'status' => $industry['status'] ?? 'published',
+                    'createdAt' => $industry['createdAt'] ?? $industry['createdat'] ?? null,
+                    'updatedAt' => $industry['updatedAt'] ?? $industry['updatedat'] ?? null,
+                    'services' => [],
+                    'experts' => [],
+                    'insights' => []
+                ];
+            }, $industries);
+            
+            echo json_encode($formatted);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+        }
     }
     
     public function getBySlug($slug) {
