@@ -4,7 +4,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Pass environment variables to PHP
-SetEnv DATABASE_URL ${DATABASE_URL}
+PassEnv DATABASE_URL
 
 # Security headers
 Header set X-Content-Type-Options "nosniff"
