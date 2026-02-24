@@ -13,7 +13,9 @@ define('RATE_WINDOW', 3600);
 // CORS
 define('ALLOWED_ORIGINS', [
     'http://localhost:3000',
-    'https://your-vercel-domain.vercel.app'
+    'https://jacom-platform.vercel.app',
+    'https://jacom-platform-fowhg2rv2-baraime450-gmailcoms-projects.vercel.app',
+    'https://jacom-platform-plsaf1r52-baraime450-gmailcoms-projects.vercel.app'
 ]);
 
 // Environment
