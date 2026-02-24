@@ -31,13 +31,15 @@ try {
     }
     
     $resource = $segments[0] ?? '';
+    $id = $segments[1] ?? null;
     
-    // Handle test-db endpoint
-    if ($resource === 'test-db' || $resource === 'test-db.php') {
-        require_once __DIR__ . '/test-db.php';
+    // Test endpoint
+    if ($resource === 'test') {
+        require_once __DIR__ . '/controllers/TestController.php';
+        $controller = new TestController();
+        $controller->checkDatabase();
         exit();
     }
-    $id = $segments[1] ?? null;
     
     switch ($resource) {
         case 'auth':
