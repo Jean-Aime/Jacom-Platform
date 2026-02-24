@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed-admin": "node prisma/seed-admin.js",
     "db:seed-content": "tsx prisma/seed-content.ts",
