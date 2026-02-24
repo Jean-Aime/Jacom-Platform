@@ -31,6 +31,12 @@ try {
     }
     
     $resource = $segments[0] ?? '';
+    
+    // Handle test-db endpoint
+    if ($resource === 'test-db' || $resource === 'test-db.php') {
+        require_once __DIR__ . '/test-db.php';
+        exit();
+    }
     $id = $segments[1] ?? null;
     
     switch ($resource) {
