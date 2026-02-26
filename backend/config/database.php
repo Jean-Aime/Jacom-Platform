@@ -17,12 +17,22 @@ class Database {
     public function getConnection() {
         if ($this->conn === null) {
             try {
-                $dbUrl = $_SERVER['DATABASE_URL'] ?? getenv('DATABASE_URL') ?: $_ENV['DATABASE_URL'] ?? null;
+                // Try multiple methods to get DATABASE_URL
+                $dbUrl = null;
+                if (function_exists('apache_getenv')) {
+                    $dbUrl = apache_getenv('DATABASE_URL');
+                }
+                if (!$dbUrl) {
+                    $dbUrl = getenv('DATABASE_URL');
+                }
+                if (!$dbUrl && isset($_SERVER['DATABASE_URL'])) {
+                    $dbUrl = $_SERVER['DATABASE_URL'];
+                }
+                if (!$dbUrl && isset($_ENV['DATABASE_URL'])) {
+                    $dbUrl = $_ENV['DATABASE_URL'];
+                }
                 
-                error_log("Checking DATABASE_URL...");
-                error_log("_SERVER: " . ($_SERVER['DATABASE_URL'] ?? 'not set'));
-                error_log("getenv: " . (getenv('DATABASE_URL') ?: 'not set'));
-                error_log("_ENV: " . ($_ENV['DATABASE_URL'] ?? 'not set'));
+                error_log("DATABASE_URL found: " . ($dbUrl ? 'yes' : 'no'));
                 
                 if ($dbUrl) {
                     // PostgreSQL URL format: postgresql://user:pass@host:port/dbname
