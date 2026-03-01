@@ -18,9 +18,7 @@ export default function MegaMenuHeader() {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     
-    const API_BASE = process.env.NEXT_PUBLIC_USE_BACKEND === 'true' 
-      ? (process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend')
-      : '/api';
+    const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
     
     fetch(`${API_BASE}/industries`).then(r => r.json()).then(data => setIndustries(Array.isArray(data) ? data : [])).catch(() => setIndustries([]));
     fetch(`${API_BASE}/services`).then(r => r.json()).then(data => setServices(Array.isArray(data) ? data : [])).catch(() => setServices([]));
@@ -121,39 +119,25 @@ export default function MegaMenuHeader() {
                 </svg>
               </a>
               
-              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[800px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
+              <div className={`absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[600px] bg-white rounded-xl shadow-2xl border transition-all duration-200 ${
                 activeDropdown === "services" ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"
               }`}>
-                <div className="p-6 grid grid-cols-3 gap-6">
+                <div className="p-6 grid grid-cols-2 gap-6">
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Industries We Serve</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Consultancy Services</h4>
                     <div className="space-y-2">
-                      {industries.slice(0, 10).map((ind: any) => (
-                        <a key={ind.id} href={`/industries/${ind.slug}`} className="block text-xs text-gray-600 hover:text-primary">{ind.name}</a>
-                      ))}
-                      {industries.length > 10 && (
-                        <a href="/industries" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Industries →</a>
-                      )}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Our Services</h4>
-                    <div className="space-y-2">
-                      {services.slice(0, 10).map((svc: any) => (
+                      {services.slice(0, 3).map((svc: any) => (
                         <a key={svc.id} href={`/services/${svc.slug}`} className="block text-xs text-gray-600 hover:text-primary">{svc.name}</a>
                       ))}
-                      {services.length > 10 && (
-                        <a href="/services" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Services →</a>
-                      )}
                     </div>
                   </div>
                   <div>
-                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Featured Work</h4>
+                    <h4 className="font-bold text-gray-900 mb-3 text-sm">Advisory Services</h4>
                     <div className="space-y-2">
-                      <a href="/case-studies" className="block text-xs text-gray-600 hover:text-primary">Case Studies</a>
-                      <a href="/case-studies#success" className="block text-xs text-gray-600 hover:text-primary">Success Stories</a>
-                      <a href="/case-studies#testimonials" className="block text-xs text-gray-600 hover:text-primary">Client Testimonials</a>
-                      <a href="/insights" className="block text-xs text-gray-600 hover:text-primary">Insights & Research</a>
+                      {services.slice(3, 6).map((svc: any) => (
+                        <a key={svc.id} href={`/services/${svc.slug}`} className="block text-xs text-gray-600 hover:text-primary">{svc.name}</a>
+                      ))}
+                      <a href="/services" className="block text-xs text-primary hover:text-red-700 font-semibold pt-2">View All Services →</a>
                     </div>
                   </div>
                 </div>
@@ -203,6 +187,10 @@ export default function MegaMenuHeader() {
             <a href="/academy" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
             }`}>Academy</a>
+
+            <a href="/store" className={`text-sm font-medium transition-all ${
+              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
+            }`}>Store</a>
             
             <a href="/about" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
@@ -320,8 +308,8 @@ export default function MegaMenuHeader() {
                   )}
                 </div>
 
-                <a href="/industries" className="block text-gray-700 hover:text-primary font-medium py-3">Industries</a>
                 <a href="/academy" className="block text-gray-700 hover:text-primary font-medium py-3">Academy</a>
+                <a href="/store" className="block text-gray-700 hover:text-primary font-medium py-3">Store</a>
                 <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-3">About Us</a>
                 <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-3">Contact</a>
                 <hr className="my-4" />
@@ -354,7 +342,7 @@ export default function MegaMenuHeader() {
                     name="q"
                     value={searchQuery}
                     onChange={(e) => handleSearch(e.target.value)}
-                    placeholder="Search for insights, services, industries..."
+                    placeholder="Search for insights, services, industries, products..."
                     autoFocus
                     className="w-full px-5 py-3 pr-24 border-2 border-gray-200 rounded-lg focus:border-primary focus:outline-none"
                   />

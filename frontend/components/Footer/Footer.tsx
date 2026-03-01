@@ -64,6 +64,7 @@ export default function Footer() {
             <div className="space-y-2 text-sm text-gray-400">
               <a href="/insights" className="block hover:text-white transition">Insights & Blog</a>
               <a href="/case-studies" className="block hover:text-white transition">Case Studies</a>
+              <a href="/store" className="block hover:text-white transition">Store</a>
               <a href="/community" className="block hover:text-white transition">Community Hub</a>
               <a href="/community#whitepapers" className="block hover:text-white transition">Whitepapers</a>
               <a href="/community#events" className="block hover:text-white transition">Events & Webinars</a>

@@ -461,7 +461,7 @@ export default function AcademyPage() {
             </div>
 
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-              {courses.slice(0, 4).map((course) => (
+              {Array.isArray(courses) && courses.slice(0, 4).map((course) => (
                 <div key={course.id} className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-200 hover:shadow-xl transition-all">
                   <div className="h-48 bg-gradient-to-br from-primary/10 to-red-100 flex items-center justify-center">
                     <div className="w-20 h-20 text-primary">{getCourseIcon(course.category)}</div>

@@ -51,6 +51,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [solutions, setSolutions] = useState<Solution[]>([]);
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([]);
+  const [partners, setPartners] = useState<any[]>([]);
 
   const heroImages = [
     "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
@@ -90,8 +91,21 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
       }
     }
     
+    async function fetchPartners() {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/partners`);
+        if (res.ok) {
+          const data = await res.json();
+          setPartners(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch partners:', error);
+      }
+    }
+    
     fetchSolutions();
     fetchCaseStudies();
+    fetchPartners();
   }, []);
 
   const getCategoryIcon = (category: string) => {
@@ -184,6 +198,57 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         </div>
       </section>
 
+      {/* Partners Logo Slider */}
+      <section className="py-12 bg-white border-y border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll">
+              {partners.length > 0 ? (
+                <>
+                  {partners.map((partner, i) => (
+                    <div key={i} className="flex-shrink-0 mx-8 grayscale hover:grayscale-0 transition-all duration-300">
+                      <img src={partner.logo} alt={partner.name} className="h-20 w-auto object-contain opacity-60 hover:opacity-100" />
+                    </div>
+                  ))}
+                  {partners.map((partner, i) => (
+                    <div key={`dup-${i}`} className="flex-shrink-0 mx-8 grayscale hover:grayscale-0 transition-all duration-300">
+                      <img src={partner.logo} alt={partner.name} className="h-20 w-auto object-contain opacity-60 hover:opacity-100" />
+                    </div>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {[
+                    { name: "Company 1", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+1" },
+                    { name: "Company 2", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+2" },
+                    { name: "Company 3", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+3" },
+                    { name: "Company 4", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+4" },
+                    { name: "Company 5", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+5" },
+                    { name: "Company 6", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+6" }
+                  ].map((partner, i) => (
+                    <div key={i} className="flex-shrink-0 mx-8 grayscale hover:grayscale-0 transition-all duration-300">
+                      <img src={partner.logo} alt={partner.name} className="h-20 w-auto object-contain opacity-60 hover:opacity-100" />
+                    </div>
+                  ))}
+                  {[
+                    { name: "Company 1", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+1" },
+                    { name: "Company 2", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+2" },
+                    { name: "Company 3", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+3" },
+                    { name: "Company 4", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+4" },
+                    { name: "Company 5", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+5" },
+                    { name: "Company 6", logo: "https://via.placeholder.com/150x60/dc2626/ffffff?text=Partner+6" }
+                  ].map((partner, i) => (
+                    <div key={`dup-${i}`} className="flex-shrink-0 mx-8 grayscale hover:grayscale-0 transition-all duration-300">
+                      <img src={partner.logo} alt={partner.name} className="h-20 w-auto object-contain opacity-60 hover:opacity-100" />
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Business Growth Section */}
       <section className="py-12 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
@@ -230,44 +295,25 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
           <h2 className="text-2xl sm:text-4xl font-bold text-center text-gray-900 mb-2 sm:mb-4">Our Core Values</h2>
           <p className="text-center text-gray-600 mb-8 sm:mb-12 text-sm sm:text-base">Guiding principles that drive our success</p>
           
-          {/* Mobile: Horizontal scroll */}
-          <div className="block sm:hidden">
-            <div className="flex gap-4 overflow-x-auto pb-4 px-2">
-              {[
-                { Icon: Target, title: "Innovation", desc: "Pioneering new solutions" },
-                { Icon: Users, title: "Teamwork", desc: "Collaborative excellence" },
-                { Icon: Handshake, title: "Trust", desc: "Building lasting relationships" },
-                { Icon: Award, title: "Standards", desc: "Uncompromising quality" },
-                { Icon: TrendingUp, title: "Results", desc: "Measurable outcomes" },
-                { Icon: Star, title: "Excellence", desc: "Exceeding expectations" }
-              ].map((value, i) => (
-                <div key={i} className="flex-shrink-0 w-40 text-center p-4 rounded-lg border border-gray-200 hover:shadow-lg transition">
-                  <div className="flex justify-center mb-3">
-                    <value.Icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2 text-sm">{value.title}</h3>
-                  <p className="text-xs text-gray-600">{value.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Desktop: Grid */}
-          <div className="hidden sm:grid md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { Icon: Target, title: "Innovation", desc: "Pioneering new solutions" },
-              { Icon: Users, title: "Teamwork", desc: "Collaborative excellence" },
-              { Icon: Handshake, title: "Trust", desc: "Building lasting relationships" },
-              { Icon: Award, title: "Standards", desc: "Uncompromising quality" },
-              { Icon: TrendingUp, title: "Results", desc: "Measurable outcomes" },
-              { Icon: Star, title: "Excellence", desc: "Exceeding expectations" }
+              { Icon: Target, title: "Innovation", desc: "We leverage cutting-edge technology and creative strategies to transform businesses and drive sustainable growth in emerging markets" },
+              { Icon: Users, title: "Teamwork", desc: "Our multidisciplinary experts collaborate seamlessly across continents to deliver integrated solutions that address complex business challenges" },
+              { Icon: Handshake, title: "Trust", desc: "We build long-term partnerships with clients through transparency, integrity, and consistent delivery of measurable results" },
+              { Icon: Award, title: "Standards", desc: "We maintain the highest professional standards in consulting, ensuring every solution meets international best practices and compliance requirements" },
+              { Icon: TrendingUp, title: "Results", desc: "We focus on tangible outcomes that improve operational efficiency, reduce costs, and accelerate revenue growth for our clients" },
+              { Icon: Star, title: "Excellence", desc: "We continuously refine our methodologies and expand our expertise to provide world-class consulting services that exceed client expectations" }
             ].map((value, i) => (
-              <div key={i} className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition">
+              <div 
+                key={i} 
+                className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-all duration-500 hover:-translate-y-2 animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
                 <div className="flex justify-center mb-3">
-                  <value.Icon className="w-10 h-10 text-primary" />
+                  <value.Icon className="w-10 h-10 text-primary transition-transform duration-300 hover:scale-110" />
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2">{value.title}</h3>
-                <p className="text-sm text-gray-600">{value.desc}</p>
+                <h3 className="font-bold text-gray-900 mb-2 text-lg">{value.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{value.desc}</p>
               </div>
             ))}
           </div>

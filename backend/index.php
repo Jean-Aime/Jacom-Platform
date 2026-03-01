@@ -112,6 +112,26 @@ try {
                 echo json_encode(['error' => 'Method not allowed']);
             }
             break;
+
+        case 'products':
+            require_once __DIR__ . '/controllers/ProductsController.php';
+            $controller = new ProductsController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getByIdOrSlug($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
             
         case 'leads':
             require_once __DIR__ . '/controllers/LeadsController.php';
@@ -417,6 +437,46 @@ try {
             
             if ($method === 'POST') {
                 $controller->create();
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'partners':
+            require_once __DIR__ . '/controllers/PartnersController.php';
+            $controller = new PartnersController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getById($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->delete($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
+        case 'orders':
+            require_once __DIR__ . '/controllers/OrdersController.php';
+            $controller = new OrdersController();
+            
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getById($id);
+            } elseif ($method === 'POST') {
+                $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->updateStatus($id);
             } elseif ($method === 'DELETE' && $id) {
                 $controller->delete($id);
             } else {

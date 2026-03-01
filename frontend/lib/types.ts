@@ -181,3 +181,20 @@ export interface NavigationItem {
   description?: string;
   image?: string;
 }
+
+export interface Product {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  category: string;
+  price: number;
+  image?: string;
+  featured: boolean;
+  inStock: boolean;
+  stock?: number | null;
+  status: string;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}

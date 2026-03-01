@@ -4,6 +4,7 @@ import "./animations.css";
 import { Inter } from "next/font/google";
 import CookieConsent from "@/components/CookieConsent/CookieConsent";
 import NewsletterAlert from "@/components/Newsletter/NewsletterAlert";
+import { CartProvider } from "@/contexts/CartContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -36,14 +37,16 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={inter.className}>
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
-        <div className="page-transition">
-          {children}
-        </div>
-        <CookieConsent />
-        <NewsletterAlert />
+        <CartProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+          <div className="page-transition">
+            {children}
+          </div>
+          <CookieConsent />
+          <NewsletterAlert />
+        </CartProvider>
       </body>
     </html>
   );

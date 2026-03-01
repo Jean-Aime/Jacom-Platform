@@ -41,6 +41,13 @@ run_migration.php
 test_subscribers.php
 _UNUSED_FILES/
 
+# Keep Prisma migrations versioned even though *.sql is ignored globally
+!frontend/prisma/migrations/
+!frontend/prisma/migrations/**/
+!frontend/prisma/migrations/**/*.sql
+!backend/migrations/
+!backend/migrations/**/*.sql
+
 # Vercel
 .vercel
 

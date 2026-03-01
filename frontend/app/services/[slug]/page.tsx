@@ -16,9 +16,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
     notFound();
   }
 
-  const capabilities = service.serviceCapabilities;
-  const processSteps = service.serviceProcessSteps;
-  const metrics = service.serviceMetrics;
+  const subServices = service.subServices || [];
+  const capabilities = service.serviceCapabilities || [];
+  const processSteps = service.serviceProcessSteps || [];
+  const metrics = service.serviceMetrics || [];
   
   const impactMetrics = metrics.length > 0 ? {
     title: "Performance Metrics",
@@ -41,7 +42,45 @@ export default async function ServicePage({ params }: ServicePageProps) {
         subtitle={service.description}
       />
 
+      {/* Overview Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <p className="text-lg text-gray-700 leading-relaxed">
+            {service.overview}
+          </p>
+        </div>
+      </section>
+
+      {/* Sub-Services */}
+      {subServices.length > 0 && (
+        <section className="py-16 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-gray-900">Our Services</h2>
+              <p className="text-gray-600 mt-3">Comprehensive solutions tailored to your needs</p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {subServices.map((sub: string, index: number) => (
+                <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary hover:shadow-lg transition-all">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-gray-900 mb-1">{sub}</h3>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Core Capabilities */}
+      {capabilities.length > 0 && (
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
@@ -65,8 +104,10 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </div>
         </div>
       </section>
+      )}
 
       {/* Implementation Process */}
+      {processSteps.length > 0 && (
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
@@ -89,6 +130,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
           </div>
         </div>
       </section>
+      )}
 
       {/* Business Impact */}
       {impactMetrics && impactMetrics.metrics && (

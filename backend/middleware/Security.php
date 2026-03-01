@@ -31,14 +31,20 @@ class Security {
     public static function validateCSRF() {
         if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'DELETE'])) {
             $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+            $referer = $_SERVER['HTTP_REFERER'] ?? '';
             
             // Allow requests from allowed origins
             if ($origin && in_array($origin, ALLOWED_ORIGINS)) {
                 return;
             }
             
-            // Allow requests without origin (same-origin)
-            if (!$origin) {
+            // Allow requests from same host (referer check)
+            if ($referer && strpos($referer, $_SERVER['HTTP_HOST']) !== false) {
+                return;
+            }
+            
+            // Allow requests without origin (same-origin or direct API calls)
+            if (!$origin && !$referer) {
                 return;
             }
             
@@ -76,7 +82,7 @@ class Security {
         
         if (!$token) {
             http_response_code(401);
-            echo json_encode(['error' => 'Unauthorized']);
+            echo json_encode(['error' => 'Unauthorized - No token provided']);
             exit();
         }
         
@@ -84,13 +90,19 @@ class Security {
         $db = Database::getInstance();
         $conn = $db->getConnection();
         
+        if (!$conn) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Database connection failed']);
+            exit();
+        }
+        
         $stmt = $conn->prepare("SELECT * FROM session WHERE token = ? AND expiresAt > NOW()");
         $stmt->execute([$token]);
         $session = $stmt->fetch();
         
         if (!$session) {
             http_response_code(401);
-            echo json_encode(['error' => 'Invalid session']);
+            echo json_encode(['error' => 'Invalid or expired session']);
             exit();
         }
         

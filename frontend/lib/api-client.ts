@@ -24,8 +24,11 @@ class ApiClient {
       const response = await fetch(url, config);
       if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Request failed' }));
-        // Only log non-auth errors to avoid prefetch noise
-        if (error.error !== 'Invalid session' && response.status !== 401) {
+        // Only log non-auth errors and non-prefetch errors
+        if (error.error !== 'Invalid session' && 
+            error.error !== 'Invalid or expired session' &&
+            !error.error?.includes('Unauthorized') &&
+            response.status !== 401) {
           console.error(`API Error [${options.method || 'GET'}] ${url}:`, error);
         }
         throw new Error(error.error || `HTTP ${response.status}`);
@@ -120,6 +123,21 @@ class ApiClient {
   createSolution(data: any) { return this.request('/solutions', { method: 'POST', body: JSON.stringify(data) }); }
   updateSolution(id: string, data: any) { return this.request(`/solutions/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
   deleteSolution(id: string) { return this.request(`/solutions/${id}`, { method: 'DELETE' }); }
+
+  // Products
+  getProducts(params?: Record<string, string | number | boolean | undefined>) {
+    const query = params
+      ? '?' + Object.entries(params)
+          .filter(([, value]) => value !== undefined && value !== null && value !== '')
+          .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`)
+          .join('&')
+      : '';
+    return this.request(`/products${query}`, { method: 'GET' });
+  }
+  getProductByIdOrSlug(idOrSlug: string) { return this.request(`/products/${idOrSlug}`, { method: 'GET' }); }
+  createProduct(data: any) { return this.request('/products', { method: 'POST', body: JSON.stringify(data) }); }
+  updateProduct(id: string, data: any) { return this.request(`/products/${id}`, { method: 'PUT', body: JSON.stringify(data) }); }
+  deleteProduct(id: string) { return this.request(`/products/${id}`, { method: 'DELETE' }); }
 
   // Community Categories
   getCommunityCategories() { return this.request('/community-categories', { method: 'GET' }); }

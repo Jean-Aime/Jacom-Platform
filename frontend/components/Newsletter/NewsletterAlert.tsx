@@ -12,9 +12,10 @@ export default function NewsletterAlert() {
   useEffect(() => {
     const cookieConsent = localStorage.getItem('cookie-consent');
     const newsletterSubscribed = localStorage.getItem('newsletter-subscribed');
+    const newsletterDismissed = localStorage.getItem('newsletter-dismissed');
     const isAdminPanel = window.location.pathname.startsWith('/admin');
     
-    if (cookieConsent && !newsletterSubscribed && !isAdminPanel) {
+    if (cookieConsent && !newsletterSubscribed && !newsletterDismissed && !isAdminPanel) {
       setTimeout(() => setShowAlert(true), 2000);
     }
   }, []);
@@ -54,13 +55,14 @@ export default function NewsletterAlert() {
 
   const handleMinimize = () => {
     setIsMinimized(true);
+    localStorage.setItem('newsletter-dismissed', 'true');
     setTimeout(() => setShowAlert(false), 300);
   };
 
   if (!showAlert) return null;
 
   return (
-    <div className={`fixed right-6 bottom-6 z-40 transition-all duration-500 ${
+    <div className={`fixed right-6 bottom-6 z-30 transition-all duration-500 ${
       isMinimized ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'
     }`}>
       <div className="bg-white rounded-xl shadow-2xl w-96 overflow-hidden border-2 border-gray-100">

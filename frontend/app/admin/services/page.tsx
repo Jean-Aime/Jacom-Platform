@@ -8,8 +8,8 @@ export default function ServicesPage() {
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [formData, setFormData] = useState({ 
-    name: '', slug: '', description: '', tagline: '', 
-    industryIds: [] as string[], status: 'published' 
+    name: '', slug: '', description: '', overview: '',
+    subServices: [] as string[], status: 'published' 
   });
 
   const generateSlug = (name: string) => {
@@ -65,7 +65,7 @@ export default function ServicesPage() {
     setEditId(svc.id);
     setFormData({ 
       name: svc.name, slug: svc.slug, description: svc.description, 
-      tagline: svc.tagline || '', industryIds: svc.industryIds || [], status: svc.status 
+      overview: svc.overview || '', subServices: svc.subServices || [], status: svc.status 
     });
     setShowModal(true);
   };
@@ -78,7 +78,7 @@ export default function ServicesPage() {
   const closeModal = () => {
     setShowModal(false);
     setEditId(null);
-    setFormData({ name: '', slug: '', description: '', tagline: '', industryIds: [], status: 'published' });
+    setFormData({ name: '', slug: '', description: '', overview: '', subServices: [], status: 'published' });
   };
 
   return (
@@ -132,40 +132,43 @@ export default function ServicesPage() {
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">Tagline</label>
-                <input type="text" value={formData.tagline} onChange={e => setFormData({...formData, tagline: e.target.value})} className="w-full border rounded-lg px-4 py-2.5 bg-white text-gray-900" placeholder="Short hero tagline" />
+                <label className="block text-sm font-semibold mb-2 text-gray-900">Overview</label>
+                <textarea value={formData.overview} onChange={e => setFormData({...formData, overview: e.target.value})} className="w-full border rounded-lg px-4 py-2.5 bg-white text-gray-900" rows={3} placeholder="Detailed service overview" />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">Description *</label>
-                <textarea required value={formData.description} onChange={e => setFormData({...formData, description: e.target.value})} className="w-full border rounded-lg px-4 py-2.5 bg-white text-gray-900" rows={3} />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold mb-2 text-gray-900">Link to Industries</label>
-                <div className="border rounded-lg p-4 bg-gray-50">
-                  <div className="grid grid-cols-2 gap-3">
-                    {industries.map((ind: any) => (
-                      <label key={ind.id} className="flex items-center gap-2 cursor-pointer hover:bg-white p-2 rounded transition">
-                        <input
-                          type="checkbox"
-                          checked={formData.industryIds.includes(ind.id)}
-                          onChange={e => {
-                            if (e.target.checked) {
-                              setFormData({...formData, industryIds: [...formData.industryIds, ind.id]});
-                            } else {
-                              setFormData({...formData, industryIds: formData.industryIds.filter(id => id !== ind.id)});
-                            }
-                          }}
-                          className="w-4 h-4 flex-shrink-0 rounded border-gray-300 text-primary focus:ring-primary"
-                        />
-                        <span className="text-sm text-gray-900">{ind.name}</span>
-                      </label>
-                    ))}
-                  </div>
+                <label className="block text-sm font-semibold mb-2 text-gray-900">Sub-Services</label>
+                <div className="space-y-2">
+                  {formData.subServices.map((sub, idx) => (
+                    <div key={idx} className="flex gap-2">
+                      <input
+                        type="text"
+                        value={sub}
+                        onChange={e => {
+                          const updated = [...formData.subServices];
+                          updated[idx] = e.target.value;
+                          setFormData({...formData, subServices: updated});
+                        }}
+                        className="flex-1 border rounded-lg px-4 py-2 bg-white text-gray-900"
+                        placeholder="Sub-service name"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, subServices: formData.subServices.filter((_, i) => i !== idx)})}
+                        className="px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => setFormData({...formData, subServices: [...formData.subServices, '']})}
+                    className="w-full border-2 border-dashed border-gray-300 rounded-lg px-4 py-3 text-gray-600 hover:border-primary hover:text-primary transition flex items-center justify-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                    Add Sub-Service
+                  </button>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">Select all industries this service applies to</p>
-              </div>
-              <div className="bg-red-50 p-4 rounded-lg">
-                <p className="text-sm text-gray-700"><strong>Note:</strong> Capabilities, Process Steps, Metrics, and Case Study are managed in service detail editor (coming soon).</p>
               </div>
               <div className="flex gap-3 pt-4">
                 <button type="submit" className="flex-1 bg-primary hover:bg-red-700 text-white py-3 rounded-lg font-semibold">Save</button>

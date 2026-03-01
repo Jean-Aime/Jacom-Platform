@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Partners API</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Partners API Test</h1>
+    
+    <button onclick="runMigration()">1. Run Migration</button>
+    <button onclick="testGetPartners()">2. Test GET Partners</button>
+    <button onclick="testCreatePartner()">3. Test CREATE Partner</button>
+    
+    <div id="result"></div>
+
+    <script>
+        const API_BASE = 'http://localhost/Jacom-Platform/backend';
+        
+        async function runMigration() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Running migration...</p>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/migrate_partners.php`);
+                const text = await res.text();
+                result.innerHTML = `<pre class="success">${text}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testGetPartners() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Fetching partners...</p>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/partners`);
+                const data = await res.json();
+                result.innerHTML = `<pre class="success">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+            }
+        }
+        
+        async function testCreatePartner() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Creating test partner...</p>';
+            
+            try {
+                const res = await fetch(`${API_BASE}/partners`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        name: 'Test Partner',
+                        logo: 'https://via.placeholder.com/150x60/dc2626/ffffff?text=Test',
+                        website: 'https://test.com',
+                        displayOrder: 99,
+                        status: 'active'
+                    })
+                });
+                const data = await res.json();
+                result.innerHTML = `<pre class="success">${JSON.stringify(data, null, 2)}</pre>`;
+            } catch (error) {
+                result.innerHTML = `<pre class="error">Error: ${error.message}</pre>`;
+            }
+        }
+    </script>
+</body>
+</html>

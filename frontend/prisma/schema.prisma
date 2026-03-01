@@ -375,3 +375,25 @@ model Solution {
   
   @@map("solution")
 }
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?  @db.Text
+  category    String
+  price       Float
+  image       String?
+  featured    Boolean  @default(false)
+  inStock     Boolean  @default(true)
+  stock       Int?
+  status      String   @default("published")
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([featured])
+  @@map("product")
+}

@@ -32,16 +32,16 @@ if (!$isAuthenticated) {
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
-    $type = $_POST['type'] ?? $_GET['type'] ?? 'general';
+    $folder = $_POST['folder'] ?? $_POST['type'] ?? $_GET['type'] ?? 'general';
     
-    // Sanitize type to prevent path traversal
-    $allowedTypes = ['general', 'events', 'case-studies', 'services', 'industries', 'insights', 'community-category'];
-    if (!in_array($type, $allowedTypes)) {
-        echo json_encode(['success' => false, 'error' => 'Invalid upload type']);
+    // Sanitize folder to prevent path traversal
+    $allowedFolders = ['general', 'events', 'case-studies', 'services', 'industries', 'insights', 'community-category', 'partners'];
+    if (!in_array($folder, $allowedFolders)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid upload folder']);
         exit;
     }
     
-    $uploadDir = __DIR__ . '/uploads/' . $type . '/';
+    $uploadDir = __DIR__ . '/uploads/' . $folder . '/';
     
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0755, true);
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $fileName = uniqid() . '_' . basename($file['name']);
     $targetPath = $uploadDir . $fileName;
     
-    $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-    if (!in_array($file['type'], $allowedTypes)) {
+    $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/jpg'];
+    if (!in_array($file['type'], $allowedMimeTypes)) {
         echo json_encode(['success' => false, 'error' => 'Invalid file type']);
         exit;
     }
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
     
     if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-        $url = 'uploads/' . $type . '/' . $fileName;
+        $url = 'http://localhost/Jacom-Platform/backend/uploads/' . $folder . '/' . $fileName;
         echo json_encode(['success' => true, 'url' => $url]);
     } else {
         echo json_encode(['success' => false, 'error' => 'Upload failed']);
