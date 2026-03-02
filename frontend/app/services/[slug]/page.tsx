@@ -60,7 +60,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
               <p className="text-gray-600 mt-3">Comprehensive solutions tailored to your needs</p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {subServices.map((sub: string, index: number) => (
+              {subServices.map((sub: any, index: number) => (
                 <div key={index} className="bg-white border-2 border-gray-200 rounded-xl p-6 hover:border-primary hover:shadow-lg transition-all">
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -69,7 +69,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="font-bold text-gray-900 mb-1">{sub}</h3>
+                      <h3 className="font-bold text-gray-900 mb-1">{typeof sub === 'string' ? sub : sub.name}</h3>
                     </div>
                   </div>
                 </div>
