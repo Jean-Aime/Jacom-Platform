@@ -50,19 +50,13 @@ export default function MegaMenuHeader() {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled ? "bg-white shadow-lg" : "bg-transparent"
       }`}>
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
           <a href="/" className="flex items-center gap-3 group">
-            <div className="relative">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-red-800 rounded-lg flex items-center justify-center text-white text-sm font-bold group-hover:scale-110 transition-all shadow-lg">
-                J
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-400 rounded-full animate-pulse"></div>
-            </div>
-            <span className={`text-base font-bold tracking-wider transition-colors ${
-              scrolled ? "text-gray-900" : "text-white"
-            }`}>
-              JAS.COME
-            </span>
+            <img 
+              src="/jascomelogo.png" 
+              alt="JAS.COME Logo" 
+              className="h-20 sm:h-24 w-auto transition-transform group-hover:scale-105"
+            />
           </a>
           
           <nav className="hidden lg:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">

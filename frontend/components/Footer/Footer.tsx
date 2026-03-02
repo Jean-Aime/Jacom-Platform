@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto px-6 py-12">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h3 className="text-2xl font-bold mb-2">Stay Updated with JAS.COME</h3>
+              <h3 className="text-2xl font-bold mb-2">Stay Updated</h3>
               <p className="text-gray-400">Subscribe to our newsletter for the latest insights, case studies, and exclusive resources</p>
             </div>
             <NewsletterForm />
@@ -92,12 +92,11 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary to-red-800 rounded-lg flex items-center justify-center text-white text-sm font-bold">
-                  J
-                </div>
-                <span className="text-lg font-bold">JAS.COME</span>
-              </div>
+              <img 
+                src="/jascomelogo.png" 
+                alt="JAS.COME Logo" 
+                className="h-20 sm:h-24 w-auto mb-4"
+              />
               <p className="text-xs text-gray-500">© 2026 JAS.COME Co., Ltd. All rights reserved.</p>
               <p className="text-xs text-gray-600">Registered in Japan | Capital: 3 million yen</p>
             </div>

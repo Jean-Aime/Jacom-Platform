@@ -252,11 +252,11 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
       {/* Business Growth Section */}
       <section className="py-12 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
-          <div className="relative h-[300px] sm:h-[400px] flex items-center justify-center">
+          <div className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden shadow-lg">
             <img 
-              src="/images/Business-analytics-rafiki.png" 
-              alt="Business Analytics" 
-              className="w-full h-full object-contain animate-bounce-slow"
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+              alt="African business team collaborating on innovation" 
+              className="w-full h-full object-cover"
             />
           </div>
           <div>
