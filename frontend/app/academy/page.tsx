@@ -91,10 +91,10 @@ export default function AcademyPage() {
     const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
     Promise.all([
       fetch(`${BACKEND}/academy-settings`).then(r => r.json()),
-      fetch(`${BACKEND}/courses`).then(r => r.json())
+      fetch(`${BACKEND}/academy/courses`).then(r => r.json())
     ]).then(([settingsData, coursesData]) => {
       setSettings(settingsData);
-      setCourses(coursesData);
+      setCourses(Array.isArray(coursesData) ? coursesData : []);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
@@ -210,27 +210,40 @@ export default function AcademyPage() {
           </div>
         </section>
 
-        {/* Discount Badge & Location Toggle */}
-        <section className="py-12 bg-gradient-to-br from-gray-50 to-white">
+        {/* Jas.com Coding Academy Section */}
+        <section className="py-16 bg-gradient-to-br from-gray-50 to-white">
           <div className="max-w-7xl mx-auto px-6">
-            {/* Top Bar with Discount and Toggle */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-red-600 text-white rounded-full font-bold text-lg shadow-lg">
-                <span>Up to 66% OFF</span>
+            {/* Header */}
+            <div className="text-center mb-10">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-2">Jas.com</h1>
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-700 mb-6">Coding Academy</h2>
+              
+              {/* Orange divider line */}
+              <div className="flex items-center justify-center gap-3 mb-6">
+                <div className="w-20 h-0.5 bg-gray-300"></div>
+                <div className="w-8 h-1 bg-primary"></div>
+                <div className="w-20 h-0.5 bg-gray-300"></div>
               </div>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setSelectedLocation('Outside Rwanda')}
-                  className={`px-6 py-2.5 rounded-full font-semibold transition-all ${selectedLocation === 'Outside Rwanda' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
-                >
-                  Outside Rwanda
-                </button>
-                <button
-                  onClick={() => setSelectedLocation('Inside Rwanda')}
-                  className={`px-6 py-2.5 rounded-full font-semibold transition-all ${selectedLocation === 'Inside Rwanda' ? 'bg-gray-800 text-white' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'}`}
-                >
-                  Inside Rwanda
-                </button>
+              
+              {/* Location Toggle and Discount Badge */}
+              <div className="flex items-center justify-center gap-4">
+                <div className="flex gap-0 shadow-lg rounded-full overflow-hidden">
+                  <button
+                    onClick={() => setSelectedLocation('Outside Rwanda')}
+                    className={`px-8 py-3 font-semibold text-sm transition-all ${selectedLocation === 'Outside Rwanda' ? 'bg-gray-700 text-white' : 'bg-white text-gray-700 border-r border-gray-300'}`}
+                  >
+                    Outside Rwanda
+                  </button>
+                  <button
+                    onClick={() => setSelectedLocation('Inside Rwanda')}
+                    className={`px-8 py-3 font-semibold text-sm transition-all ${selectedLocation === 'Inside Rwanda' ? 'bg-gray-700 text-white' : 'bg-white text-gray-700'}`}
+                  >
+                    Inside Rwanda
+                  </button>
+                </div>
+                <div className="inline-flex items-center px-5 py-2.5 bg-primary text-white rounded-lg font-bold text-sm shadow-lg">
+                  Up to 66% OFF
+                </div>
               </div>
             </div>
 
@@ -238,219 +251,461 @@ export default function AcademyPage() {
             <div className="grid lg:grid-cols-2 gap-12 items-start">
               
               {/* LEFT COLUMN - Pricing Plans */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200">
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">Pricing Plans</h2>
-                  <p className="text-gray-600">Choose the option that fits your location and learning style.</p>
+              <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+                <div className="text-center p-6 pb-4">
+                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Pricing Plans</h2>
+                  <p className="text-gray-600 text-sm">Choose the option that fits your location and learning style.</p>
                 </div>
 
-                {featuredCourse?.pricing && featuredCourse.pricing.length > 0 && (
-                  <div className="space-y-6">
-                    {featuredCourse.pricing.filter(plan => plan.location === selectedLocation).map((plan, idx) => {
-                      const features = typeof plan.features === 'string' ? JSON.parse(plan.features) : plan.features;
-                      const isInClass = plan.planType === 'in_class';
-                      
-                      return (
-                        <div key={idx} className="border-b border-gray-200 last:border-0 pb-6 last:pb-0">
-                          <div className={`${isInClass ? 'bg-gradient-to-r from-blue-500 to-blue-600' : 'bg-gradient-to-r from-primary to-red-600'} text-white rounded-t-xl px-6 py-3 font-bold text-center`}>
-                            {isInClass ? 'In-class students' : 'Material Access Only'}
-                          </div>
-                          
-                          <div className="bg-gray-50 rounded-b-xl p-6">
-                            <div className="text-center mb-6">
-                              <div className="flex items-baseline justify-center gap-2 mb-1">
-                                <span className="text-2xl text-gray-400 line-through">${plan.originalPrice}</span>
-                                <span className="text-4xl font-bold text-primary">${plan.discountedPrice}</span>
-                              </div>
-                              <p className="text-sm text-gray-600">One - Time Payment</p>
-                            </div>
-
-                            <ul className="space-y-2 mb-6">
-                              {features.map((feature: string, i: number) => (
-                                <li key={i} className="flex items-start gap-2 text-sm">
-                                  <svg className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
-                                  <span className="text-gray-700">{feature}</span>
-                                </li>
-                              ))}
-                            </ul>
-
-                            <button 
-                              onClick={() => setShowRegistration(true)}
-                              className="w-full py-3 bg-white hover:bg-gray-100 text-gray-900 border-2 border-gray-300 rounded-lg font-semibold transition-all"
-                            >
-                              {isInClass ? 'Enroll Now' : 'Get The Bundle'}
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+                {/* In-class students */}
+                <div className="mx-6 mb-4">
+                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-t-lg px-4 py-2 font-bold text-center text-sm">
+                    In-class students
                   </div>
-                )}
+                  <div className="bg-gray-50 rounded-b-lg p-4">
+                    <div className="text-center mb-4">
+                      <div className="flex items-baseline justify-center gap-2 mb-1">
+                        <span className="text-lg text-gray-400 line-through">$2400</span>
+                        <span className="text-3xl font-bold text-primary">$1600</span>
+                      </div>
+                      <p className="text-xs text-gray-600">One - Time Payment</p>
+                    </div>
 
-                {/* Disclaimer */}
-                <div className="mt-6 text-center">
-                  <div className="inline-block px-6 py-2 bg-primary text-white rounded-lg font-semibold text-sm mb-3">
+                    <ul className="space-y-1 mb-4">
+                      <li className="flex items-start gap-2 text-xs">
+                        <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                        <span className="text-gray-700">Full Program access</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs">
+                        <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                        <span className="text-gray-700">All phases included</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs">
+                        <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                        <span className="text-gray-700">Instructor-led classes</span>
+                      </li>
+                      <li className="flex items-start gap-2 text-xs">
+                        <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                        <span className="text-gray-700">Instructor-led group sessions</span>
+                      </li>
+                    </ul>
+
+                    <button 
+                      onClick={() => setShowRegistration(true)}
+                      className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all"
+                    >
+                      Enroll Now
+                    </button>
+                  </div>
+                </div>
+
+                {/* Save More Banner */}
+                <div className="mx-6 mb-4">
+                  <div className="bg-primary text-white rounded-md px-4 py-2 font-semibold text-center text-xs">
                     — Save More • First Batch 2026 —
                   </div>
-                  <p className="text-xs text-gray-500">* Discounted introductory prices are valid only for first batch students of 2026!</p>
                 </div>
 
-                {/* Bottom CTA Buttons */}
-                <div className="flex gap-3 mt-6">
-                  <button onClick={() => setShowRegistration(true)} className="flex-1 py-3 bg-white hover:bg-gray-100 text-gray-900 border-2 border-primary rounded-lg font-semibold transition-all">
-                    Join Class
+                {/* Material Access Only */}
+                <div className="mx-6 mb-4">
+                  <div className="text-center mb-3">
+                    <h3 className="text-base font-bold text-gray-900">Material Access Only</h3>
+                  </div>
+                  <div className="text-center mb-3">
+                    <div className="flex items-baseline justify-center gap-2 mb-1">
+                      <span className="text-lg text-gray-400 line-through">$1200</span>
+                      <span className="text-3xl font-bold text-primary">$450</span>
+                    </div>
+                    <p className="text-xs text-gray-600">One - Time Payment</p>
+                  </div>
+
+                  <ul className="space-y-1 mb-3">
+                    <li className="flex items-start gap-2 text-xs">
+                      <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                      <span className="text-gray-700">All 4 phases bundle</span>
+                    </li>
+                    <li className="flex items-start gap-2 text-xs">
+                      <svg className="w-3 h-3 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                      <span className="text-gray-700">Self paced learning</span>
+                    </li>
+                  </ul>
+
+                  <p className="text-xs text-gray-500 mb-3 text-center">* Discounted introductory prices are valid only for first batch students of 2026!</p>
+
+                  <button 
+                    onClick={() => setShowRegistration(true)}
+                    className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all mb-3"
+                  >
+                    Get The Bundle
                   </button>
-                  <button className="flex-1 py-3 bg-primary hover:bg-red-700 text-white rounded-lg font-semibold transition-all">
-                    Learn How to Code & Build an Application
-                  </button>
+                </div>
+
+                {/* Bottom CTA Buttons - Red Bar */}
+                <div className="bg-primary rounded-b-2xl">
+                  <div className="flex">
+                    <button onClick={() => setShowRegistration(true)} className="flex-1 py-3 text-white font-semibold text-xs border-r border-red-700">
+                      Join Class
+                    </button>
+                    <button className="flex-1 py-3 text-white font-semibold text-xs">
+                      Learn How to Code & Build an Application
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* RIGHT COLUMN - Course Info & Phases */}
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {/* Next Class Info */}
-                <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-200">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                  <h3 className="text-xl font-bold text-primary mb-1">
                     Next class will start on
                   </h3>
-                  <p className="text-3xl font-bold text-primary mb-4">
-                    {startDate ? startDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'March 14th, 2026'}
+                  <p className="text-2xl font-bold text-gray-900 mb-3">
+                    March 14th, 2026
                   </p>
-                  <p className="text-gray-600 text-sm mb-6">
+                  <p className="text-gray-600 text-xs mb-4">
                     Learning application development is fundamental in today's digital age, as it forms the cornerstone of the technology-driven world we live in.
                   </p>
                   
-                  <div className="bg-gradient-to-r from-gray-50 to-red-50 rounded-lg p-6 border border-gray-200">
-                    <div className="flex items-center gap-3 mb-3">
-                      <svg className="w-8 h-8 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
-                      <div className="text-2xl font-bold text-primary">{settings?.contactPhone || '202-386-2702'}</div>
+                  <div className="bg-gradient-to-r from-gray-50 to-red-50 rounded-lg p-4 border border-gray-200">
+                    <div className="flex items-center gap-2 mb-2">
+                      <svg className="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/></svg>
+                      <div className="text-xl font-bold text-primary">202-386-2702</div>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-600">
                       If you are looking to register, or have questions you want to ask, please feel free to give us a call. We will address your questions and guide you on the next steps.
                     </p>
                   </div>
                 </div>
 
                 {/* Course Phases */}
-                {featuredCourse?.phases && featuredCourse.phases.length > 0 && (
-                  <div className="space-y-4">
-                    {featuredCourse.phases.map((phase) => (
-                      <div key={phase.phaseNumber} className="bg-white rounded-xl p-6 shadow-md border border-gray-200">
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                <div className="space-y-3">
+                  {/* Phase 1 */}
+                    <div className="bg-red-100 rounded-lg p-4 shadow-md border border-gray-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm">
+                          Phase 1: Building static websites using HTML, CSS & Bootstrap
+                        </h4>
+                        <p className="text-xs text-gray-600 mb-2">Learn about the underlying structure of the web.</p>
+                        <div className="space-y-0.5 text-xs">
+                          <div>
+                            <span className="text-gray-600">Material access only price: </span>
+                            <span className="text-gray-400 line-through">$300</span>
+                            <span className="text-primary font-bold ml-1">$118</span>
                           </div>
-                          <div className="flex-1">
-                            <h4 className="font-bold text-gray-900 mb-1">
-                              Phase {phase.phaseNumber}: {phase.title}
-                            </h4>
-                            <p className="text-xs text-gray-600 mb-3">{phase.description}</p>
-                            <div className="space-y-1 text-xs">
-                              <div>
-                                <span className="text-gray-600">Material access only price: </span>
-                                <span className="text-gray-400 line-through">${phase.materialPrice}</span>
-                                <span className="text-primary font-bold ml-1">${phase.materialDiscountedPrice}</span>
-                              </div>
-                              <div>
-                                <span className="text-gray-600">Class access price: </span>
-                                <span className="text-primary font-bold">${phase.classPrice}</span>
-                              </div>
-                            </div>
+                          <div>
+                            <span className="text-gray-600">Class access price: </span>
+                            <span className="text-primary font-bold">$600</span>
                           </div>
                         </div>
                       </div>
-                    ))}
+                    </div>
                   </div>
-                )}
+
+                  {/* Phase 2 */}
+                  <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm">
+                          Phase 2: Learn coding with JavaScript
+                        </h4>
+                        <p className="text-xs text-gray-600 mb-2">Learn programming fundamentals using JavaScript.</p>
+                        <div className="space-y-0.5 text-xs">
+                          <div>
+                            <span className="text-gray-600">Material access only price: </span>
+                            <span className="text-gray-400 line-through">$300</span>
+                            <span className="text-primary font-bold ml-1">$149</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Class access price: </span>
+                            <span className="text-primary font-bold">$600</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Phase 3 */}
+                  <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm">
+                          Phase 3: React.js, Node.js, MySQL & Express.js
+                        </h4>
+                        <p className="text-xs text-gray-600 mb-2">Learn the backend side of application development.</p>
+                        <div className="space-y-0.5 text-xs">
+                          <div>
+                            <span className="text-gray-600">Material access only price: </span>
+                            <span className="text-gray-400 line-through">$300</span>
+                            <span className="text-primary font-bold ml-1">$149</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Class access price: </span>
+                            <span className="text-primary font-bold">$600</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Phase 4 */}
+                  <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-bold text-gray-900 mb-1 text-sm">
+                          Phase 4: Building AI-Powered Products | AI Integration
+                        </h4>
+                        <p className="text-xs text-gray-600 mb-2">Learn how to convert your application into an intelligent one by connecting it with AI models.</p>
+                        <div className="space-y-0.5 text-xs">
+                          <div>
+                            <span className="text-gray-600">Material access only price: </span>
+                            <span className="text-gray-400 line-through">$300</span>
+                            <span className="text-primary font-bold ml-1">$199</span>
+                          </div>
+                          <div>
+                            <span className="text-gray-600">Class access price: </span>
+                            <span className="text-primary font-bold">$600</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
 
-
-
         {/* Class Schedule */}
-        {featuredCourse?.schedule && featuredCourse.schedule.length > 0 && (
-          <section className="py-20 bg-white">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Class Schedule</h2>
-                <p className="text-gray-600 text-lg">Flexible timings across multiple time zones</p>
+        <section className="py-20 bg-white">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-gray-900 mb-4">Class Schedule</h2>
+              <p className="text-gray-600 text-lg max-w-4xl mx-auto">
+                This schedule shows live classes and group sessions in multiple time zones. Each session time is displayed in EST (Eastern Standard Time), PST (Pacific Standard Time), EAT (East Africa Time), and Ethiopian local time so you can easily follow along no matter where you are.
+              </p>
+            </div>
+
+            {/* Live Classes */}
+            <div className="mb-12">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-4 h-4 bg-red-500 rounded-full"></div>
+                <h3 className="text-xl font-bold text-gray-900">Live Classes</h3>
               </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featuredCourse.schedule.map((schedule, idx) => (
-                  <div key={idx} className="bg-white rounded-xl p-6 shadow-md border border-gray-200 hover:shadow-xl transition-all">
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                        {schedule.sessionType === 'live_class' ? (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                        ) : (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        )}
+              
+              <div className="mb-8">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">Saturday & Sunday</h4>
+                <div className="grid md:grid-cols-4 gap-4">
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
+                        <span className="font-semibold text-gray-700 text-sm">EST</span>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-sm">{schedule.sessionType === 'live_class' ? 'Live Classes' : `Group ${schedule.groupNumber}`}</h3>
-                        <p className="text-xs text-gray-600">{schedule.daysOfWeek.replace(',', ' & ')}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[{label: 'EST', time: schedule.timeEST}, {label: 'PST', time: schedule.timePST}, {label: 'EAT', time: schedule.timeEAT}, {label: 'ETH', time: schedule.timeETH}].map((tz, i) => (
-                        <div key={i} className="flex justify-between items-center py-1.5">
-                          <span className="font-semibold text-gray-700 text-xs">{tz.label}</span>
-                          <span className="text-gray-600 text-xs">{tz.time}</span>
-                        </div>
-                      ))}
+                      <span className="text-gray-600 text-sm">10:00 AM - 12:00 PM</span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Class Schedule */}
-        {featuredCourse?.schedule && featuredCourse.schedule.length > 0 && (
-          <section className="py-20 bg-white">
-            <div className="max-w-7xl mx-auto px-6">
-              <div className="text-center mb-12">
-                <h2 className="text-4xl font-bold text-gray-900 mb-4">Class Schedule</h2>
-                <p className="text-gray-600 text-lg">Flexible timings across multiple time zones</p>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {featuredCourse.schedule.map((schedule, idx) => (
-                  <div key={idx} className="bg-white rounded-xl p-6 shadow-md border border-gray-200 hover:shadow-xl transition-all">
-                    <div className="flex items-center gap-3 mb-4 pb-4 border-b border-gray-200">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
-                        {schedule.sessionType === 'live_class' ? (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-                        ) : (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                        )}
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
+                        <span className="font-semibold text-gray-700 text-sm">PST</span>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-gray-900 text-sm">{schedule.sessionType === 'live_class' ? 'Live Classes' : `Group ${schedule.groupNumber}`}</h3>
-                        <p className="text-xs text-gray-600">{schedule.daysOfWeek.replace(',', ' & ')}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {[{label: 'EST', time: schedule.timeEST}, {label: 'PST', time: schedule.timePST}, {label: 'EAT', time: schedule.timeEAT}, {label: 'ETH', time: schedule.timeETH}].map((tz, i) => (
-                        <div key={i} className="flex justify-between items-center py-1.5">
-                          <span className="font-semibold text-gray-700 text-xs">{tz.label}</span>
-                          <span className="text-gray-600 text-xs">{tz.time}</span>
-                        </div>
-                      ))}
+                      <span className="text-gray-600 text-sm">7:00 AM - 9:00 AM</span>
                     </div>
                   </div>
-                ))}
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
+                        <span className="font-semibold text-gray-700 text-sm">EAT</span>
+                      </div>
+                      <span className="text-gray-600 text-sm">6:00 PM - 8:00 PM</span>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 border-2 border-gray-400 rounded-full"></div>
+                        <span className="font-semibold text-gray-700 text-sm">ETH+T</span>
+                      </div>
+                      <span className="text-gray-600 text-sm">12:00 - 2:00</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-          </section>
-        )}
+
+            {/* Group Sessions */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {/* Group 1 */}
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">Group 1</h3>
+                  <p className="text-sm text-gray-600">Tue & Thu</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">10:00 AM - 12:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">PST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">7:00 AM - 9:00 AM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EAT</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">6:00 PM - 8:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">ETH+T</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">12:00 - 2:00</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 2 */}
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">Group 2</h3>
+                  <p className="text-sm text-gray-600">Tue & Thu</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">1:00 PM - 3:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">PST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">10:00 AM - 12:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EAT</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">9:00 PM - 11:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">ETH+T</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">3:00 - 5:00</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 3 */}
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">Group 3</h3>
+                  <p className="text-sm text-gray-600">Tue & Thu</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">7:00 PM - 9:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">PST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">4:00 PM - 6:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EAT</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">3:00 AM - 5:00 AM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">ETH+T</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">9:00 - 11:00</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Group 4 */}
+              <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-200">
+                <div className="text-center mb-6">
+                  <h3 className="text-lg font-bold text-gray-900 mb-1">Group 4</h3>
+                  <p className="text-sm text-gray-600">Tue & Thu</p>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">9:00 PM - 11:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">PST</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">6:00 PM - 8:00 PM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">EAT</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">5:00 AM - 7:00 AM</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-3 h-3 border-2 border-blue-400 rounded-full"></div>
+                      <span className="font-semibold text-gray-700 text-sm">ETH+T</span>
+                    </div>
+                    <span className="text-gray-600 text-sm">11:00 - 1:00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* All Courses */}
         <section className="py-20 bg-gray-50">

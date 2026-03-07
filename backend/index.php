@@ -63,6 +63,8 @@ try {
             
             if ($action === 'login' && $method === 'POST') {
                 $controller->login();
+            } elseif ($action === 'signup' && $method === 'POST') {
+                $controller->signup();
             } elseif ($action === 'logout' && $method === 'POST') {
                 $controller->logout();
             } elseif ($action === 'check' && $method === 'GET') {
@@ -375,14 +377,57 @@ try {
             }
             break;
             
+        case 'academy':
+            require_once __DIR__ . '/controllers/AcademyController.php';
+            $controller = new AcademyController();
+            $action = $segments[1] ?? '';
+            $subId = $segments[2] ?? null;
+            
+            if ($action === 'courses') {
+                if ($method === 'GET' && !$subId) {
+                    $controller->getCourses();
+                } elseif ($method === 'GET' && $subId) {
+                    $controller->getCourse($subId);
+                } elseif ($method === 'POST') {
+                    $controller->createCourse();
+                } elseif ($method === 'PUT' && $subId) {
+                    $controller->updateCourse($subId);
+                } elseif ($method === 'DELETE' && $subId) {
+                    $controller->deleteCourse($subId);
+                } else {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                }
+            } elseif ($action === 'enrollments') {
+                if ($method === 'GET') {
+                    $controller->getEnrollments();
+                } elseif ($method === 'PUT' && $subId) {
+                    $controller->updateEnrollmentStatus($subId);
+                } else {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                }
+            } elseif ($action === 'analytics') {
+                if ($method === 'GET') {
+                    $controller->getAnalytics();
+                } else {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                }
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' => 'Academy endpoint not found']);
+            }
+            break;
+            
         case 'academy-settings':
-            require_once __DIR__ . '/controllers/AcademySettingsController.php';
-            $controller = new AcademySettingsController();
+            require_once __DIR__ . '/controllers/AcademyController.php';
+            $controller = new AcademyController();
             
             if ($method === 'GET') {
-                $controller->get();
+                $controller->getSettings();
             } elseif ($method === 'PUT') {
-                $controller->update();
+                $controller->updateSettings();
             } else {
                 http_response_code(405);
                 echo json_encode(['error' => 'Method not allowed']);

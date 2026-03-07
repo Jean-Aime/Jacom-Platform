@@ -93,7 +93,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               onClick={async () => {
                 const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
                 await fetch(`${BACKEND}/auth/logout`, { method: 'POST', credentials: 'include' });
-                router.push('/admin/login');
+                localStorage.removeItem('session-token');
+                router.push('/login');
               }}
               className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all font-medium text-sm"
             >

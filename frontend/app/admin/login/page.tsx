@@ -16,6 +16,7 @@ export default function LoginPage() {
 
     try {
       const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+      
       const response = await fetch(`${BACKEND}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -33,7 +34,14 @@ export default function LoginPage() {
         localStorage.setItem('session-token', data.token);
       }
       
-      router.push("/admin");
+      // Check if user is admin, otherwise redirect to main login
+      if (data.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/login");
+        setError("Admin access required");
+        return;
+      }
       router.refresh();
     } catch (err: any) {
       setError(err.message || "Invalid credentials");
