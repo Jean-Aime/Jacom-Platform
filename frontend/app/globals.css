@@ -591,3 +591,32 @@ a {
     color-scheme: dark;
   }
 }
+
+/* ========================================
+   GLOBAL SECTION SPACING — Tighter Vertical Rhythm
+   Reduces excessive whitespace between sections
+   across all public-facing pages.
+   ======================================== */
+@layer utilities {
+  .py-20 {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+  .py-24 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  .py-16 {
+    padding-top: 2.75rem;
+    padding-bottom: 2.75rem;
+  }
+  .pb-64 {
+    padding-bottom: 10rem;
+  }
+  .mb-16 {
+    margin-bottom: 2.5rem;
+  }
+  .mb-12 {
+    margin-bottom: 2rem;
+  }
+}

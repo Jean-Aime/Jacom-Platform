@@ -731,7 +731,7 @@ export default function StudentDashboard() {
                   </div>
 
                   <Link 
-                    href={`/academy/${course.slug}`}
+                    href={`/training/${course.slug}`}
                     className="block w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-red-700 transition-all text-center"
                   >
                     View Details

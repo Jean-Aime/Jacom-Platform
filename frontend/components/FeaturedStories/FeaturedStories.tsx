@@ -89,7 +89,7 @@ export default function FeaturedStories({ content }: { content: any }) {
       stat1Text: "professionals trained globally",
       stat2Value: "15+",
       stat2Text: "specialized training programs",
-      logo: "JACOME ACADEMY"
+      logo: "JACOME TRAINING"
     }
   ];
 

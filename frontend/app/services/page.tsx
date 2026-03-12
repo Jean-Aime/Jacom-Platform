@@ -31,8 +31,8 @@ export default function ServicesPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-            alt="Professional Services" 
+            src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+            alt="Black African professionals delivering specialized consulting services" 
             className="w-full h-full object-cover"
           />
         </div>
@@ -174,8 +174,8 @@ export default function ServicesPage() {
             <div className="relative">
               <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-                  alt="Team collaboration" 
+                  src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+                  alt="Black African team collaboration on strategic initiatives" 
                   className="w-full h-[400px] object-cover"
                 />
                 <div className="absolute bottom-6 left-6 bg-primary text-white px-6 py-4 rounded-lg shadow-lg">

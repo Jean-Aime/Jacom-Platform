@@ -72,13 +72,13 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Academy & Legal */}
+          {/* Training & Legal */}
           <div>
-            <h4 className="font-bold mb-4 text-white">Academy & Legal</h4>
+            <h4 className="font-bold mb-4 text-white">Training & Legal</h4>
             <div className="space-y-2 text-sm text-gray-400">
-              <a href="/academy" className="block hover:text-white transition">Training Programs</a>
-              <a href="/academy#web-dev" className="block hover:text-white transition">Web Development</a>
-              <a href="/academy#japanese" className="block hover:text-white transition">Japanese Language</a>
+              <a href="/training" className="block hover:text-white transition">Training Programs</a>
+              <a href="/training#web-dev" className="block hover:text-white transition">Web Development</a>
+              <a href="/training#japanese" className="block hover:text-white transition">Japanese Language</a>
               <a href="/offices" className="block hover:text-white transition">Global Offices</a>
               <div className="pt-2 border-t border-gray-800 mt-2">
                 <a href="/privacy" className="block hover:text-white transition">Privacy Policy</a>

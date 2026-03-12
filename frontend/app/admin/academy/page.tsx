@@ -52,7 +52,7 @@ export default function AdminAcademyDashboard() {
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Academy Management</h1>
+            <h1 className="text-2xl font-bold text-gray-900">Training Management</h1>
             <div className="flex items-center gap-4">
               <Link href="/admin" className="text-gray-600 hover:text-primary text-sm">
                 ← Back to Admin
@@ -132,7 +132,7 @@ export default function AdminAcademyDashboard() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Manage Courses</h3>
-              <p className="text-sm text-gray-600">Create, edit, and manage academy courses</p>
+              <p className="text-sm text-gray-600">Create, edit, and manage training courses</p>
             </div>
           </Link>
 
@@ -156,8 +156,8 @@ export default function AdminAcademyDashboard() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Academy Settings</h3>
-              <p className="text-sm text-gray-600">Configure academy homepage and settings</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Training Settings</h3>
+              <p className="text-sm text-gray-600">Configure training homepage and settings</p>
             </div>
           </Link>
 
@@ -169,7 +169,7 @@ export default function AdminAcademyDashboard() {
                 </svg>
               </div>
               <h3 className="font-semibold text-gray-900 mb-2">Analytics</h3>
-              <p className="text-sm text-gray-600">View detailed academy performance metrics</p>
+              <p className="text-sm text-gray-600">View detailed training performance metrics</p>
             </div>
           </Link>
         </div>

@@ -378,7 +378,7 @@ try {
             break;
             
         case 'academy':
-            require_once __DIR__ . '/controllers/AcademyController.php';
+            require_once __DIR__ . '/controllers/TrainingController.php';
             $controller = new AcademyController();
             $action = $segments[1] ?? '';
             $subId = $segments[2] ?? null;
@@ -421,7 +421,7 @@ try {
             break;
             
         case 'academy-settings':
-            require_once __DIR__ . '/controllers/AcademyController.php';
+            require_once __DIR__ . '/controllers/TrainingController.php';
             $controller = new AcademyController();
             
             if ($method === 'GET') {

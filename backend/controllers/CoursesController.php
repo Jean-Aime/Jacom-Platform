@@ -12,12 +12,12 @@ class CoursesController {
     }
     
     public function getAll() {
-        $stmt = $this->conn->query("SELECT * FROM Course WHERE status != 'completed' ORDER BY featured DESC, startDate ASC");
+        $stmt = $this->conn->query("SELECT * FROM courses WHERE status != 'completed' ORDER BY featured DESC, startDate ASC");
         echo json_encode($stmt->fetchAll());
     }
     
     public function getBySlug($slug) {
-        $stmt = $this->conn->prepare("SELECT * FROM Course WHERE slug = ?");
+        $stmt = $this->conn->prepare("SELECT * FROM courses WHERE slug = ?");
         $stmt->execute([$slug]);
         $course = $stmt->fetch();
         
@@ -35,7 +35,7 @@ class CoursesController {
     }
     
     public function getFeatured() {
-        $stmt = $this->conn->query("SELECT * FROM Course WHERE featured = 1 LIMIT 1");
+        $stmt = $this->conn->query("SELECT * FROM courses WHERE featured = 1 LIMIT 1");
         $course = $stmt->fetch();
         
         if ($course) {
@@ -48,19 +48,19 @@ class CoursesController {
     }
     
     private function getPhases($courseId) {
-        $stmt = $this->conn->prepare("SELECT * FROM CoursePhase WHERE courseId = ? ORDER BY `order` ASC");
+        $stmt = $this->conn->prepare("SELECT * FROM course_phases WHERE courseId = ? ORDER BY `order` ASC");
         $stmt->execute([$courseId]);
         return $stmt->fetchAll() ?: [];
     }
     
     private function getPricing($courseId) {
-        $stmt = $this->conn->prepare("SELECT * FROM CoursePricing WHERE courseId = ? AND active = 1");
+        $stmt = $this->conn->prepare("SELECT * FROM course_pricing WHERE courseId = ? AND active = 1");
         $stmt->execute([$courseId]);
         return $stmt->fetchAll() ?: [];
     }
     
     private function getSchedule($courseId) {
-        $stmt = $this->conn->prepare("SELECT * FROM ClassSchedule WHERE courseId = ? AND active = 1 ORDER BY sessionType, groupNumber");
+        $stmt = $this->conn->prepare("SELECT * FROM class_schedules WHERE courseId = ? AND active = 1 ORDER BY sessionType, groupNumber");
         $stmt->execute([$courseId]);
         return $stmt->fetchAll() ?: [];
     }
@@ -71,7 +71,7 @@ class CoursesController {
         $data = Security::sanitize($data);
         
         $id = 'course_' . uniqid();
-        $stmt = $this->conn->prepare("INSERT INTO Course (id, name, slug, category, description, icon, totalPrice, fullPaymentPrice, installmentCount, installmentAmount, startDate, duration, deliveryMode, status, featured, maxStudents) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->conn->prepare("INSERT INTO courses (id, name, slug, category, description, icon, totalPrice, fullPaymentPrice, installmentCount, installmentAmount, startDate, duration, deliveryMode, status, featured, maxStudents) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         $stmt->execute([
             $id, $data['name'], $data['slug'], $data['category'] ?? null, $data['description'] ?? null,
@@ -90,7 +90,7 @@ class CoursesController {
         $data = json_decode(file_get_contents("php://input"), true);
         $data = Security::sanitize($data);
         
-        $stmt = $this->conn->prepare("UPDATE Course SET name = ?, slug = ?, category = ?, description = ?, icon = ?, totalPrice = ?, fullPaymentPrice = ?, installmentCount = ?, installmentAmount = ?, startDate = ?, duration = ?, deliveryMode = ?, status = ?, featured = ?, maxStudents = ?, updatedAt = NOW() WHERE id = ?");
+        $stmt = $this->conn->prepare("UPDATE courses SET name = ?, slug = ?, category = ?, description = ?, icon = ?, totalPrice = ?, fullPaymentPrice = ?, installmentCount = ?, installmentAmount = ?, startDate = ?, duration = ?, deliveryMode = ?, status = ?, featured = ?, maxStudents = ?, updatedAt = NOW() WHERE id = ?");
         
         $stmt->execute([
             $data['name'], $data['slug'], $data['category'] ?? null, $data['description'] ?? null,
@@ -105,7 +105,7 @@ class CoursesController {
     
     public function delete($id) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("DELETE FROM Course WHERE id = ?");
+        $stmt = $this->conn->prepare("DELETE FROM courses WHERE id = ?");
         $stmt->execute([$id]);
         echo json_encode(['success' => true]);
     }

@@ -7,8 +7,8 @@ export default function ServiceImage() {
       <div className="max-w-6xl mx-auto">
         <div className="relative h-96 bg-gradient-to-br from-red-200 to-red-100 rounded-lg overflow-hidden shadow-2xl group hover-scale">
           <Image
-            src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=500&fit=crop"
-            alt="Innovation and technology"
+            src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Black African technology professional driving innovation"
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-500"
           />

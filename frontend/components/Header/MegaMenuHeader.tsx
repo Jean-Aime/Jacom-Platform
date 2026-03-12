@@ -159,14 +159,16 @@ export default function MegaMenuHeader() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white shadow-lg" : "bg-transparent"
+        scrolled ? "bg-white shadow-md py-2" : "bg-transparent py-3"
       }`}>
-        <div className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
-          <a href="/" className="flex items-center gap-3 group">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+          <a href="/" className="flex items-center gap-3 group shrink-0">
             <img 
               src="/jascomelogo.png" 
-              alt="JAS.COME Logo" 
-              className="h-20 sm:h-24 w-auto transition-transform group-hover:scale-105"
+              alt="JACOM Logo" 
+              className={`w-auto object-contain transition-all duration-300 ${
+                scrolled ? "h-12" : "h-16"
+              }`}
             />
           </a>
           
@@ -301,9 +303,9 @@ export default function MegaMenuHeader() {
               </div>
             </div>
             
-            <a href="/academy" className={`text-sm font-medium transition-all ${
+            <a href="/training" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
-            }`}>Academy</a>
+            }`}>Training</a>
 
             <a href="/store" className={`text-sm font-medium transition-all ${
               scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
@@ -431,7 +433,7 @@ export default function MegaMenuHeader() {
                   )}
                 </div>
 
-                <a href="/academy" className="block text-gray-700 hover:text-primary font-medium py-3">Academy</a>
+                <a href="/training" className="block text-gray-700 hover:text-primary font-medium py-3">Training</a>
                 <a href="/store" className="block text-gray-700 hover:text-primary font-medium py-3">Store</a>
                 <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-3">About Us</a>
                 <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-3">Contact</a>

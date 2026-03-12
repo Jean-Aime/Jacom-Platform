@@ -39,7 +39,7 @@ export default function LoginPage() {
       if (data.role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/academy/dashboard");
+        router.push("/training/dashboard");
       }
       router.refresh();
     } catch (err: any) {
@@ -53,7 +53,7 @@ export default function LoginPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50">
       <div className="grid lg:grid-cols-2 min-h-screen">
         
-        {/* Left Section - Academy Info */}
+        {/* Left Section - Training Info */}
         <div className="hidden lg:flex bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
@@ -61,7 +61,7 @@ export default function LoginPage() {
           
           <div className="relative z-10 flex flex-col justify-center px-12 text-white">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4">Welcome to Evangadi Academy</h1>
+              <h1 className="text-4xl font-bold mb-4">Welcome to Evangadi Training</h1>
               <p className="text-xl text-gray-300 mb-8">Transform your career with cutting-edge technology skills</p>
             </div>
             

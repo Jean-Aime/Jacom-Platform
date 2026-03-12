@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useScrollAnimation } from "@/lib/useScrollAnimation";
 
 export default function ImageBanner({ content }: { content: any }) {
-  const image = content?.banner_image || 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1920&h=600&fit=crop';
+  const image = content?.banner_image || 'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80';
   const title = content?.banner_title || 'JACOM Platform';
   const subtitle = content?.banner_subtitle || 'New IoT E-commerce Platform for Product and Services - Special Electromechanical System Integration Service';
   

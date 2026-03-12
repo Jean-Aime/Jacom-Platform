@@ -100,7 +100,7 @@ export default function SignupPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-red-50">
       <div className="grid lg:grid-cols-2 min-h-screen">
         
-        {/* Left Section - Academy Info */}
+        {/* Left Section - Training Info */}
         <div className="hidden lg:flex bg-gradient-to-br from-gray-900 via-gray-800 to-black relative overflow-hidden">
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
@@ -108,7 +108,7 @@ export default function SignupPage() {
           
           <div className="relative z-10 flex flex-col justify-center px-12 text-white">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4">Join Evangadi Academy</h1>
+              <h1 className="text-4xl font-bold mb-4">Join Evangadi Training</h1>
               <p className="text-xl text-gray-300 mb-8">Start your journey to becoming a skilled developer</p>
             </div>
             
@@ -164,7 +164,7 @@ export default function SignupPage() {
                 </div>
                 <div className="text-left">
                   <div className="font-bold text-2xl text-gray-900">JACOM</div>
-                  <div className="text-sm text-gray-500">Academy</div>
+                  <div className="text-sm text-gray-500">Training</div>
                 </div>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>

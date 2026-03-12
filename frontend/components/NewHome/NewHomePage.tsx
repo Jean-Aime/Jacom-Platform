@@ -54,9 +54,9 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   const [partners, setPartners] = useState<any[]>([]);
 
   const heroImages = [
-    "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+    "https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1507679799987-c73779587ccf?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
   ];
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative h-screen overflow-hidden">
+      <section className="relative h-screen overflow-hidden bg-gray-950">
         {heroImages.map((image, index) => (
           <div
             key={index}
@@ -161,8 +161,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         ))}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-transparent"></div>
 
-        
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 h-full flex items-center pt-20">
           <div className="max-w-2xl">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight animate-fade-in-up">
               Transform Your Business with <span className="text-red-400 animate-pulse">Innovative Consulting</span>
@@ -254,8 +253,8 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div className="relative h-[300px] sm:h-[400px] rounded-xl overflow-hidden shadow-lg">
             <img 
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-              alt="African business team collaborating on innovation" 
+              src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+              alt="Black African business professionals collaborating on innovative solutions" 
               className="w-full h-full object-cover"
             />
           </div>
@@ -297,12 +296,13 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { Icon: Target, title: "Innovation", desc: "We leverage cutting-edge technology and creative strategies to transform businesses and drive sustainable growth in emerging markets" },
-              { Icon: Users, title: "Teamwork", desc: "Our multidisciplinary experts collaborate seamlessly across continents to deliver integrated solutions that address complex business challenges" },
-              { Icon: Handshake, title: "Trust", desc: "We build long-term partnerships with clients through transparency, integrity, and consistent delivery of measurable results" },
-              { Icon: Award, title: "Standards", desc: "We maintain the highest professional standards in consulting, ensuring every solution meets international best practices and compliance requirements" },
-              { Icon: TrendingUp, title: "Results", desc: "We focus on tangible outcomes that improve operational efficiency, reduce costs, and accelerate revenue growth for our clients" },
-              { Icon: Star, title: "Excellence", desc: "We continuously refine our methodologies and expand our expertise to provide world-class consulting services that exceed client expectations" }
+              { Icon: Target, letter: "J", title: "Justice", subtitle: "Fair and ethical practices", desc: "We uphold the highest standards of fairness and ethics in all our business dealings, ensuring transparency, integrity, and equitable treatment for all stakeholders" },
+              { Icon: Users, letter: "A", title: "Accountability", subtitle: "Taking ownership", desc: "We take full responsibility for our actions and commitments, delivering on our promises and maintaining trust through consistent, reliable performance" },
+              { Icon: Handshake, letter: "S", title: "Sustainable", subtitle: "Long-term impact", desc: "We create sustainable solutions that drive lasting positive change, balancing economic growth with environmental and social responsibility" },
+              { Icon: Award, letter: "C", title: "Commitment", subtitle: "Dedicated to excellence", desc: "We are deeply committed to our clients' success, going above and beyond to deliver exceptional results that exceed expectations" },
+              { Icon: TrendingUp, letter: "O", title: "Originality", subtitle: "Innovative thinking", desc: "We embrace creative and innovative approaches to problem-solving, bringing fresh perspectives and cutting-edge solutions to every challenge" },
+              { Icon: Star, letter: "M", title: "Motivation", subtitle: "Driving success", desc: "We inspire and empower our teams and clients to achieve their full potential, fostering a culture of continuous improvement and excellence" },
+              { Icon: Star, letter: "E", title: "Excellence", subtitle: "Uncompromising quality", desc: "We maintain the highest standards of quality in everything we do, continuously refining our expertise to deliver world-class consulting services" }
             ].map((value, i) => (
               <div 
                 key={i} 
@@ -310,9 +310,15 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
                 style={{ animationDelay: `${i * 0.1}s` }}
               >
                 <div className="flex justify-center mb-3">
-                  <value.Icon className="w-10 h-10 text-primary transition-transform duration-300 hover:scale-110" />
+                  <div className="relative">
+                    <value.Icon className="w-10 h-10 text-primary transition-transform duration-300 hover:scale-110" />
+                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {value.letter}
+                    </div>
+                  </div>
                 </div>
-                <h3 className="font-bold text-gray-900 mb-2 text-lg">{value.title}</h3>
+                <h3 className="font-bold text-gray-900 mb-1 text-lg">{value.title}</h3>
+                <p className="text-xs text-primary font-semibold mb-2">{value.subtitle}</p>
                 <p className="text-sm text-gray-600 leading-relaxed">{value.desc}</p>
               </div>
             ))}
@@ -320,76 +326,54 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         </div>
       </section>
 
-      {/* Industry Solutions */}
+      {/* Vision Section */}
       <section className="py-12 sm:py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Industry-Leading Solutions</h2>
-            <div className="flex gap-2 overflow-x-auto">
-              {["SmartFactory", "Financial", "General"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 sm:px-6 py-2 rounded-full font-semibold transition text-sm sm:text-base whitespace-nowrap ${
-                    activeTab === tab ? "bg-primary text-white" : "bg-white text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Our Vision</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {currentSolutions.length > 0 ? currentSolutions.slice(0, 3).map((solution: Solution) => {
-              const IconComponent = getCategoryIcon(activeTab);
-              return (
-                <div key={solution.id} className="bg-white rounded-lg shadow hover:shadow-xl transition overflow-hidden">
-                  {/* Blog-style image header */}
-                  <div className="h-48 sm:h-52 bg-gray-100 overflow-hidden">
-                    {solution.image ? (
-                      <img 
-                        src={solution.image} 
-                        alt={solution.name}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-red-50 flex items-center justify-center">
-                        <IconComponent className="w-16 h-16 text-primary" />
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="p-6 sm:p-8">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">{solution.name}</h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 line-clamp-3">{solution.description}</p>
-                    <a href={`/solutions/${solution.slug}`} className="text-primary font-semibold hover:underline inline-flex items-center gap-1 text-sm sm:text-base">
-                      Explore →
-                    </a>
-                  </div>
+            {[
+              { 
+                Icon: Target, 
+                title: "Empowering Growth", 
+                desc: "We envision a future where businesses across Africa and beyond thrive through innovative consulting solutions that unlock their full potential and drive sustainable growth.",
+                image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+              },
+              { 
+                Icon: TrendingUp, 
+                title: "Digital Transformation", 
+                desc: "Leading the digital revolution by transforming traditional business models into agile, technology-driven enterprises that compete effectively in the global marketplace.",
+                image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=2072&q=80"
+              },
+              { 
+                Icon: Star, 
+                title: "Excellence & Innovation", 
+                desc: "Setting new standards of excellence in consulting by combining cutting-edge technology, strategic insights, and a commitment to delivering measurable results for our clients.",
+                image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+              }
+            ].map((vision, i) => (
+              <div key={i} className="bg-white rounded-lg shadow hover:shadow-xl transition overflow-hidden">
+                <div className="h-48 sm:h-52 bg-gray-100 overflow-hidden">
+                  <img 
+                    src={vision.image} 
+                    alt={vision.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-              );
-            }) : (
-              // Fallback content when no solutions are available
-              [
-                { Icon: Factory, title: "SmartFactory", desc: "Revolutionize manufacturing with IoT and AI-driven automation solutions" },
-                { Icon: Link2, title: "IoT Integration", desc: "Seamlessly connect devices and systems for real-time data insights" },
-                { Icon: Zap, title: "Renewable Energy", desc: "Sustainable energy solutions for a greener future" }
-              ].map((solution, i) => (
-                <div key={i} className="bg-white rounded-lg shadow hover:shadow-xl transition overflow-hidden">
-                  <div className="h-48 sm:h-52 bg-red-50 flex items-center justify-center">
-                    <solution.Icon className="w-16 h-16 text-primary" />
+                
+                <div className="p-6 sm:p-8">
+                  <div className="flex items-center gap-3 mb-3">
+                    <vision.Icon className="w-6 h-6 text-primary" />
+                    <h3 className="text-lg sm:text-xl font-bold text-gray-900">{vision.title}</h3>
                   </div>
-                  <div className="p-6 sm:p-8">
-                    <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">{solution.title}</h3>
-                    <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{solution.desc}</p>
-                    <a href="/solutions" className="text-primary font-semibold hover:underline inline-flex items-center gap-1 text-sm sm:text-base">
-                      Explore →
-                    </a>
-                  </div>
+                  <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4">{vision.desc}</p>
+                  <a href="/about" className="text-primary font-semibold hover:underline inline-flex items-center gap-1 text-sm sm:text-base">
+                    Learn More →
+                  </a>
                 </div>
-              ))
-            )}
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -400,7 +384,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         <div 
           className="absolute inset-0"
           style={{
-            backgroundImage: 'url(https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1589939705384-5185137a7f0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80)',
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -533,7 +517,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
       <section className="py-12 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-2 gap-8 sm:gap-12 items-center">
           <div>
-            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Bridging Continents</h2>
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">Our Offices Location</h2>
             <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
               With offices across the globe, we bring local expertise and global perspective to every engagement
             </p>
@@ -541,7 +525,8 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
               {[
                 { location: "Tokyo, Japan", desc: "Asia Pacific Headquarters" },
                 { location: "Dubai, UAE", desc: "Middle East Operations" },
-                { location: "Kathmandu, Nepal", desc: "South Asia Hub" }
+                { location: "Kathmandu, Nepal", desc: "South Asia Hub" },
+                { location: "Kigali City", desc: "East Africa Rwanda" }
               ].map((office, i) => (
                 <div key={i} className="flex items-start gap-3">
                   <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 mt-0.5" />
@@ -624,6 +609,24 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
                   </div>
                 </div>
               </div>
+              <div className="absolute" style={{left: '68%', top: '44%'}}>
+                <div className="relative group cursor-pointer">
+                  <div className="absolute -inset-3 bg-red-500 rounded-full animate-ping opacity-60"></div>
+                  <div className="relative bg-red-600 rounded-full p-3 shadow-xl border-4 border-white">
+                    <MapPin className="w-6 h-6 text-white" fill="currentColor" />
+                  </div>
+                  <div className="absolute -top-16 -left-14 bg-gray-900 text-white px-4 py-2 rounded-lg shadow-xl text-sm font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="text-center">
+                      <div className="text-white">Kigali City</div>
+                      <div className="text-xs text-gray-300">East Africa Rwanda</div>
+                    </div>
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+                  </div>
+                  <div className="absolute -bottom-8 -left-10 bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold">
+                    Kigali
+                  </div>
+                </div>
+              </div>
             </div>
             
             {/* Connection Lines */}
@@ -655,11 +658,11 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
         </div>
       </section>
 
-      {/* Academy Programs */}
+      {/* Training Programs */}
       <section className="py-12 sm:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Upcoming Academy Programs</h2>
+            <h2 className="text-2xl sm:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">Upcoming Training Programs</h2>
             <p className="text-gray-600 text-sm sm:text-base max-w-2xl mx-auto">Join our next training cohorts and advance your career with industry-leading programs</p>
           </div>
           
@@ -674,7 +677,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
                 format: "Hybrid (Online + In-person)",
                 price: "NPR 85,000",
                 img: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2071&q=80",
-                link: "/academy/full-stack",
+                link: "/training/full-stack",
                 badge: "Early Bird 20% Off",
                 spots: "12 spots left"
               },
@@ -686,8 +689,8 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
                 duration: "12 weeks",
                 format: "Weekend Classes",
                 price: "NPR 65,000",
-                img: "https://images.unsplash.com/photo-1551836022-deb4988cc6c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
-                link: "/academy/digital-marketing",
+                img: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+                link: "/training/digital-marketing",
                 badge: "New Program",
                 spots: "8 spots left"
               }
@@ -755,7 +758,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
             ))}
           </div>
           
-          {/* Academy Features */}
+          {/* Training Features */}
           <div className="mt-12 sm:mt-16 bg-gray-50 rounded-2xl p-6 sm:p-8">
             <div className="grid md:grid-cols-4 gap-6 sm:gap-8 text-center">
               <div>

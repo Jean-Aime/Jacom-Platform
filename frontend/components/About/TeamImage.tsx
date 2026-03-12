@@ -7,8 +7,8 @@ export default function TeamImage() {
       <div className="max-w-6xl mx-auto">
         <div className="relative h-96 bg-gradient-to-br from-orange-200 to-yellow-100 rounded-lg overflow-hidden shadow-2xl group hover-scale">
           <Image
-            src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=500&fit=crop"
-            alt="Bold ideas team"
+            src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+            alt="Black African professionals collaborating on bold ideas"
             fill
             className="object-cover group-hover:scale-110 transition-transform duration-500"
           />

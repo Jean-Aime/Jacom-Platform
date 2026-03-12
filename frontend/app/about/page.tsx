@@ -31,8 +31,8 @@ export default function AboutPage() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img 
-            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
-            alt="About JACOM" 
+            src="https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80" 
+            alt="Black African business professionals driving innovation at JACOM" 
             className="w-full h-full object-cover"
           />
         </div>
