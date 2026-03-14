@@ -623,7 +623,7 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
                   </div>
                   <div className="absolute -bottom-8 -left-10 bg-red-600 text-white px-2 py-1 rounded text-xs font-semibold">
-                    Kigali
+                    Kigali 
                   </div>
                 </div>
               </div>

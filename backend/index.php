@@ -1,6 +1,6 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 
 require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/config/database.php';
@@ -417,6 +417,56 @@ try {
             } else {
                 http_response_code(404);
                 echo json_encode(['error' => 'Academy endpoint not found']);
+            }
+            break;
+            
+        case 'curriculum':
+            require_once __DIR__ . '/controllers/CurriculumController.php';
+            $controller = new CurriculumController();
+            $action = $segments[1] ?? '';
+            $subId = $segments[2] ?? null;
+            
+            if ($action === 'weeks') {
+                if ($method === 'GET' && !$subId) {
+                    $controller->getAllWeeks();
+                } elseif ($method === 'GET' && $subId) {
+                    $controller->getWeek($subId);
+                } elseif ($method === 'POST') {
+                    $controller->createWeek();
+                } elseif ($method === 'PUT' && $subId) {
+                    $controller->updateWeek($subId);
+                } elseif ($method === 'DELETE' && $subId) {
+                    $controller->deleteWeek($subId);
+                }
+            } elseif ($action === 'topics') {
+                if ($method === 'GET' && !$subId) {
+                    $controller->getAllTopics();
+                } elseif ($method === 'GET' && $subId) {
+                    $controller->getTopic($subId);
+                } elseif ($method === 'POST') {
+                    $controller->createTopic();
+                } elseif ($method === 'PUT' && $subId) {
+                    $controller->updateTopic($subId);
+                } elseif ($method === 'DELETE' && $subId) {
+                    $controller->deleteTopic($subId);
+                }
+            } elseif ($action === 'resources') {
+                if ($method === 'GET' && !$subId) {
+                    $controller->getAllResources();
+                } elseif ($method === 'GET' && $subId) {
+                    $controller->getResource($subId);
+                } elseif ($method === 'POST') {
+                    $controller->createResource();
+                } elseif ($method === 'PUT' && $subId) {
+                    $controller->updateResource($subId);
+                } elseif ($method === 'DELETE' && $subId) {
+                    $controller->deleteResource($subId);
+                }
+            } elseif ($action === 'course' && $subId) {
+                $controller->getCurriculumByCourse($subId);
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' => 'Curriculum endpoint not found']);
             }
             break;
             

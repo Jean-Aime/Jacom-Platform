@@ -2,6 +2,12 @@
 import { useState, useEffect } from "react";
 import { Industry, Service } from "@/lib/types";
 
+interface User {
+  name: string;
+  email: string;
+  role: string;
+}
+
 // Icon mapping for services and solutions
 const getServiceIcon = (slug: string) => {
   const icons: Record<string, JSX.Element> = {
@@ -108,12 +114,39 @@ export default function MegaMenuHeader() {
   const [solutions, setSolutions] = useState<any[]>([]);
   const [communityCategories, setCommunityCategories] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
     
     const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+    
+    // Check authentication status
+    const checkAuth = async () => {
+      const token = localStorage.getItem('session-token');
+      if (token) {
+        try {
+          const response = await fetch(`${API_BASE}/auth/check`, {
+            headers: { 'X-Session-Token': token },
+            credentials: 'include'
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setUser(data);
+            setIsLoggedIn(true);
+          } else {
+            localStorage.removeItem('session-token');
+            setIsLoggedIn(false);
+          }
+        } catch (error) {
+          setIsLoggedIn(false);
+        }
+      }
+    };
+    
+    checkAuth();
     
     Promise.all([
       fetch(`${API_BASE}/industries`).then(r => r.json()).catch(() => []),
@@ -132,6 +165,22 @@ export default function MegaMenuHeader() {
   }, []);
 
 
+
+  const handleLogout = async () => {
+    const API_BASE = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+    localStorage.removeItem('session-token');
+    setUser(null);
+    setIsLoggedIn(false);
+    window.location.href = '/';
+  };
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
@@ -332,9 +381,22 @@ export default function MegaMenuHeader() {
               </svg>
             </button>
             
-            <a href="/login" className={`hidden md:block text-sm font-medium transition-all ${
-              scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
-            }`}>Login</a>
+            {isLoggedIn ? (
+              <a 
+                href={user?.role === 'admin' ? '/admin' : '/training/dashboard'} 
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`hidden md:block text-sm font-medium transition-all ${
+                  scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
+                }`}
+              >
+                {user?.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+              </a>
+            ) : (
+              <a href="/login" className={`hidden md:block text-sm font-medium transition-all ${
+                scrolled ? "text-gray-700 hover:text-primary" : "text-white hover:text-red-200"
+              }`}>Login</a>
+            )}
             
             <button
               onClick={() => setSearchOpen(true)}
@@ -438,7 +500,18 @@ export default function MegaMenuHeader() {
                 <a href="/about" className="block text-gray-700 hover:text-primary font-medium py-3">About Us</a>
                 <a href="/contact" className="block text-gray-700 hover:text-primary font-medium py-3">Contact</a>
                 <hr className="my-4" />
-                <a href="/login" className="block text-gray-700 hover:text-primary font-medium py-3">Login</a>
+                {isLoggedIn ? (
+                  <a 
+                    href={user?.role === 'admin' ? '/admin' : '/training/dashboard'} 
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-gray-700 hover:text-primary font-medium py-3"
+                  >
+                    {user?.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                  </a>
+                ) : (
+                  <a href="/login" className="block text-gray-700 hover:text-primary font-medium py-3">Login</a>
+                )}
                 <a href="/contact?type=consultation" className="block bg-primary hover:bg-red-700 text-white px-6 py-3 rounded font-semibold text-center mt-4">
                   Book Consultation
                 </a>
