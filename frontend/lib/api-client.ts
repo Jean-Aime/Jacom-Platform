@@ -7,15 +7,32 @@ class ApiClient {
     this.baseUrl = baseUrl;
   }
 
+  private getCookie(name: string): string | null {
+    if (typeof document === 'undefined') return null;
+    
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    
+    return null;
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
-    const token = typeof window !== 'undefined' ? localStorage.getItem('session-token') : null;
+    
+    // Get CSRF token from cookie for state-changing requests
+    const csrfToken = typeof window !== 'undefined' ? this.getCookie('csrf-token') : null;
+    
     const config: RequestInit = {
       ...options,
-      credentials: 'include',
+      credentials: 'include', // Send httpOnly cookies automatically
       headers: { 
         'Content-Type': 'application/json',
-        ...(token ? { 'X-Session-Token': token } : {}),
+        // Include CSRF token for POST/PUT/DELETE requests
+        ...(csrfToken && ['POST', 'PUT', 'DELETE'].includes(options.method || 'GET') ? { 'X-CSRF-Token': csrfToken } : {}),
         ...options.headers 
       },
     };

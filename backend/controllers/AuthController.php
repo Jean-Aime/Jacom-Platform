@@ -156,25 +156,32 @@ class AuthController {
         $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $stmt->execute([$sessionId, $token, $user['id'], $expiresAt, $ip, $userAgent]);
         
-        // Set secure cookie
+        // Set secure cookie - ALWAYS use secure flag in production
         setcookie('session-token', $token, [
             'expires' => time() + 86400,
             'path' => '/',
             'httponly' => true,
-            'secure' => isset($_SERVER['HTTPS']),
+            'secure' => true, // Always enforce HTTPS
             'samesite' => 'Strict'
         ]);
         
-        // Log successful login
-        error_log("Successful login: {$email} from IP: {$ip}");
+        // Generate CSRF token for this session
+        $csrfToken = Security::generateCSRFToken();
+        
+        // Log successful login (pseudonymize email for privacy)
+        $emailHash = hash('sha256', $email);
+        error_log("Successful login: user_" . substr($emailHash, 0, 16) . " from IP: {$ip}");
         
         echo json_encode([
             'success' => true, 
-            'token' => $token, 
+            'token' => $token,
+            'csrfToken' => $csrfToken,
             'role' => $user['role'],
             'user' => [
+                'id' => $user['id'],
                 'name' => $user['name'],
-                'email' => $user['email']
+                'email' => $user['email'],
+                'role' => $user['role']
             ]
         ]);
     }

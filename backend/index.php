@@ -1,8 +1,23 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once __DIR__ . '/config/config.php';
+
+// Secure error handling - never display errors in production
+error_reporting(E_ALL);
+ini_set('display_errors', DEBUG ? 1 : 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/logs/php-errors.log');
+
+// Create logs directory if it doesn't exist
+if (!file_exists(__DIR__ . '/logs')) {
+    mkdir(__DIR__ . '/logs', 0750, true);
+}
+
+// Set secure session configuration
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.cookie_samesite', 'Strict');
+ini_set('session.use_strict_mode', 1);
+ini_set('session.use_only_cookies', 1);
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/middleware/Security.php';
 
@@ -420,6 +435,22 @@ try {
             }
             break;
             
+        case 'upload':
+            require_once __DIR__ . '/controllers/FileUploadController.php';
+            $controller = new FileUploadController();
+            
+            if ($method === 'POST') {
+                $controller->uploadFile();
+            } elseif ($method === 'DELETE' && $id) {
+                $controller->deleteFile($id);
+            } elseif ($method === 'GET' && $id) {
+                $controller->downloadFile($id);
+            } else {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+            }
+            break;
+            
         case 'curriculum':
             require_once __DIR__ . '/controllers/CurriculumController.php';
             $controller = new CurriculumController();
@@ -502,8 +533,14 @@ try {
             require_once __DIR__ . '/controllers/CoursePhasesController.php';
             $controller = new CoursePhasesController();
             
-            if ($method === 'POST') {
+            if ($method === 'GET' && !$id) {
+                $controller->getAll();
+            } elseif ($method === 'GET' && $id) {
+                $controller->getByCourse($id);
+            } elseif ($method === 'POST') {
                 $controller->create();
+            } elseif ($method === 'PUT' && $id) {
+                $controller->update($id);
             } elseif ($method === 'DELETE' && $id) {
                 $controller->delete($id);
             } else {
@@ -586,12 +623,26 @@ try {
     }
     
 } catch (Exception $e) {
-    error_log($e->getMessage());
-    error_log($e->getTraceAsString());
+    // Log full error details securely
+    error_log('ERROR: ' . $e->getMessage());
+    error_log('TRACE: ' . $e->getTraceAsString());
+    error_log('REQUEST: ' . $_SERVER['REQUEST_METHOD'] . ' ' . $_SERVER['REQUEST_URI']);
+    error_log('IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+    
     http_response_code(500);
+    
+    // Never expose internal details in production
     if (DEBUG) {
-        echo json_encode(['error' => 'Internal server error', 'message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        echo json_encode([
+            'error' => 'Internal server error',
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]);
     } else {
-        echo json_encode(['error' => 'Internal server error']);
+        echo json_encode([
+            'error' => 'An unexpected error occurred. Please try again later.',
+            'reference' => bin2hex(random_bytes(8)) // Error tracking reference
+        ]);
     }
 }

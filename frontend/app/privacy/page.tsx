@@ -3,15 +3,18 @@ import Footer from "@/components/Footer/Footer";
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gray-50">
       <MegaMenuHeader />
       
-      <section className="py-20 pt-32">
+      <section className="pt-28 pb-20">
         <div className="max-w-4xl mx-auto px-6">
-          <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
-          <p className="text-gray-600 mb-8">Last updated: January 2025</p>
+          <div className="mb-12">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-gray-900">Privacy Policy</h1>
+            <p className="text-gray-600 text-lg">Last updated: March 15, 2026</p>
+          </div>
 
-          <div className="prose max-w-none space-y-6">
+          <div className="bg-white rounded-2xl p-8 md:p-12 shadow-lg border border-gray-100">
+            <div className="space-y-10">
             <section>
               <h2 className="text-2xl font-semibold mb-4">1. Information We Collect</h2>
               <p className="text-gray-600 leading-relaxed">
@@ -78,11 +81,16 @@ export default function PrivacyPage() {
               <p className="text-gray-600 leading-relaxed">
                 If you have questions about this Privacy Policy, please contact us at:
               </p>
-              <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                <p className="text-gray-600">Email: privacy@jascom.com</p>
-                <p className="text-gray-600">Address: 200 West Street, New York, NY 10013</p>
+              <div className="bg-gray-50 p-6 rounded-xl border border-gray-200 mt-4">
+                <div className="space-y-2">
+                  <p className="text-gray-900 font-semibold">JACOM International</p>
+                  <p className="text-gray-600">Email: jacomeorg@gmail.com</p>
+                  <p className="text-gray-600">Phone: +250 792 895 343</p>
+                  <p className="text-gray-600">Address: Kigali City, Rwanda</p>
+                </div>
               </div>
             </section>
+            </div>
           </div>
         </div>
       </section>

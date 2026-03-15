@@ -1,0 +1,8 @@
+# Prevent directory listing
+Options -Indexes
+
+# Allow file downloads
+<FilesMatch "\.(pdf|mp4|mpeg|mov|avi|webm|doc|docx|txt|jpg|jpeg|png|gif|webp)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

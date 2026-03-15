@@ -141,15 +141,15 @@ export default function AcademyPage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button 
-                  onClick={() => setShowRegistration(true)}
+                <a 
+                  href="/login"
                   className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-base transition shadow-lg flex items-center justify-center gap-2"
                 >
                   Enroll Now
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
-                </button>
+                </a>
                 <button className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-base transition">
                   Download Syllabus
                 </button>
@@ -290,12 +290,12 @@ export default function AcademyPage() {
                       </li>
                     </ul>
 
-                    <button 
-                      onClick={() => setShowRegistration(true)}
-                      className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all"
+                    <a 
+                      href="/login"
+                      className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all block text-center"
                     >
                       Enroll Now
-                    </button>
+                    </a>
                   </div>
                 </div>
 
@@ -332,20 +332,20 @@ export default function AcademyPage() {
 
                   <p className="text-xs text-gray-500 mb-3 text-center">* Discounted introductory prices are valid only for first batch students of 2026!</p>
 
-                  <button 
-                    onClick={() => setShowRegistration(true)}
-                    className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all mb-3"
+                  <a 
+                    href="/login"
+                    className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all mb-3 block text-center"
                   >
                     Get The Bundle
-                  </button>
+                  </a>
                 </div>
 
                 {/* Bottom CTA Buttons - Red Bar */}
                 <div className="bg-primary rounded-b-2xl">
                   <div className="flex">
-                    <button onClick={() => setShowRegistration(true)} className="flex-1 py-3 text-white font-semibold text-xs border-r border-red-700">
+                    <a href="/login" className="flex-1 py-3 text-white font-semibold text-xs border-r border-red-700 text-center">
                       Join Class
-                    </button>
+                    </a>
                     <button className="flex-1 py-3 text-white font-semibold text-xs">
                       Learn How to Code & Build an Application
                     </button>
@@ -737,12 +737,12 @@ export default function AcademyPage() {
                       </div>
                     </div>
 
-                    <button 
-                      onClick={() => { setSelectedCourse({ id: course.id, name: course.name }); setShowRegistration(true); }}
-                      className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-red-700 transition-all"
+                    <a 
+                      href="/login"
+                      className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-red-700 transition-all block text-center"
                     >
                       Enroll Now
-                    </button>
+                    </a>
                   </div>
                 </div>
               ))}
@@ -804,9 +804,9 @@ export default function AcademyPage() {
                       </li>
                     ))}
                   </ul>
-                  <button onClick={() => setShowRegistration(true)} className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all">
+                  <a href="/login" className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
                     Apply for Scholarship
-                  </button>
+                  </a>
                 </div>
                 <div className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-8 text-center">
                   <div className="text-6xl font-bold text-primary mb-4">{scholarshipDate ? scholarshipDate.getDate() : '--'}</div>
@@ -874,9 +874,9 @@ export default function AcademyPage() {
                     </li>
                   ))}
                 </ul>
-                <button onClick={() => setShowRegistration(true)} className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all">
+                <a href="/login" className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
                   Start Your Journey
-                </button>
+                </a>
               </div>
               <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
                 <div className="grid grid-cols-2 gap-6">

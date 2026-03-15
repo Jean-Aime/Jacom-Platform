@@ -316,22 +316,68 @@ export default function CourseDetailPage() {
                                           {/* Topic Resources */}
                                           {isTopicExpanded && (
                                             <div className="bg-white p-3 space-y-2">
-                                              {topic.resources && topic.resources.map((resource) => (
-                                                <div 
-                                                  key={resource.id}
-                                                  className="flex items-center justify-between p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-all cursor-pointer group"
-                                                >
-                                                  <div className="flex items-center gap-3">
-                                                    {getResourceIcon(resource.type)}
-                                                    <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                                                      {resource.title}
-                                                    </span>
+                                              {topic.resources && topic.resources.map((resource) => {
+                                                const hasFile = resource.filePath && resource.fileName;
+                                                const hasUrl = resource.url;
+                                                const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+                                                
+                                                return (
+                                                  <div 
+                                                    key={resource.id}
+                                                    className="p-3 bg-gray-50 hover:bg-gray-100 rounded-lg border border-gray-200 transition-all"
+                                                  >
+                                                    <div className="flex items-center justify-between">
+                                                      <div className="flex items-center gap-3 flex-1">
+                                                        {getResourceIcon(resource.type)}
+                                                        <div className="flex-1">
+                                                          <span className="text-sm text-gray-700 font-medium block">
+                                                            {resource.title}
+                                                          </span>
+                                                          {hasFile && (
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                              <span className="text-xs text-gray-500">
+                                                                📎 {resource.fileName}
+                                                              </span>
+                                                              {resource.fileSize && (
+                                                                <span className="text-xs text-gray-400">
+                                                                  ({(resource.fileSize / 1024 / 1024).toFixed(2)} MB)
+                                                                </span>
+                                                              )}
+                                                            </div>
+                                                          )}
+                                                        </div>
+                                                      </div>
+                                                      <div className="flex items-center gap-2">
+                                                        {hasFile && (
+                                                          <a
+                                                            href={`${BACKEND}/upload/${resource.id}`}
+                                                            download
+                                                            className="px-3 py-1.5 bg-primary hover:bg-red-700 text-white text-xs rounded-lg font-medium transition-colors flex items-center gap-1"
+                                                          >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                            </svg>
+                                                            Download
+                                                          </a>
+                                                        )}
+                                                        {hasUrl && (
+                                                          <a
+                                                            href={resource.url}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded-lg font-medium transition-colors flex items-center gap-1"
+                                                          >
+                                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                                            </svg>
+                                                            Open
+                                                          </a>
+                                                        )}
+                                                      </div>
+                                                    </div>
                                                   </div>
-                                                  <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                                  </svg>
-                                                </div>
-                                              ))}
+                                                );
+                                              })}
                                             </div>
                                           )}
                                         </div>

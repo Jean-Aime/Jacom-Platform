@@ -69,7 +69,12 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
   useEffect(() => {
     async function fetchSolutions() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/solutions`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/solutions`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         if (res.ok) {
           const data = await res.json();
           setSolutions(data);
@@ -81,7 +86,12 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
     
     async function fetchCaseStudies() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/case-studies`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/case-studies`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         if (res.ok) {
           const data = await res.json();
           setCaseStudies(data);
@@ -93,7 +103,12 @@ export default function NewHomePage({ insights }: { insights: any[] }) {
     
     async function fetchPartners() {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/partners`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend'}/partners`, {
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
         if (res.ok) {
           const data = await res.json();
           setPartners(data);

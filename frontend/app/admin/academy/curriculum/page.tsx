@@ -68,15 +68,31 @@ export default function CurriculumManagementPage() {
     }
   }, [selectedCourse]);
 
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem('session-token');
+    return {
+      'X-Session-Token': token || '',
+      'Content-Type': 'application/json'
+    };
+  };
+
   const fetchCourses = async () => {
     try {
-      const response = await fetch(`${BACKEND}/academy/courses`);
+      console.log('Fetching courses from:', `${BACKEND}/academy/courses`);
+      const response = await fetch(`${BACKEND}/academy/courses`, {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+      });
+      console.log('Courses response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Courses data:', data);
         setCourses(data);
         if (data.length > 0) {
           setSelectedCourse(data[0].id);
         }
+      } else {
+        console.error('Courses fetch failed:', response.status, await response.text());
       }
     } catch (error) {
       console.error('Failed to fetch courses:', error);
@@ -87,10 +103,19 @@ export default function CurriculumManagementPage() {
 
   const fetchPhases = async () => {
     try {
-      const response = await fetch(`${BACKEND}/academy/phases?courseId=${selectedCourse}`);
+      const url = `${BACKEND}/course-phases/${selectedCourse}`;
+      console.log('Fetching phases from:', url);
+      const response = await fetch(url, {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+      });
+      console.log('Phases response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Phases data:', data);
         setPhases(data);
+      } else {
+        console.error('Phases fetch failed:', response.status, await response.text());
       }
     } catch (error) {
       console.error('Failed to fetch phases:', error);
@@ -99,10 +124,19 @@ export default function CurriculumManagementPage() {
 
   const fetchWeeks = async () => {
     try {
-      const response = await fetch(`${BACKEND}/curriculum/weeks`);
+      const url = `${BACKEND}/curriculum/weeks`;
+      console.log('Fetching weeks from:', url);
+      const response = await fetch(url, {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+      });
+      console.log('Weeks response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Weeks data:', data);
         setWeeks(data);
+      } else {
+        console.error('Weeks fetch failed:', response.status, await response.text());
       }
     } catch (error) {
       console.error('Failed to fetch weeks:', error);
@@ -111,10 +145,19 @@ export default function CurriculumManagementPage() {
 
   const fetchTopics = async () => {
     try {
-      const response = await fetch(`${BACKEND}/curriculum/topics`);
+      const url = `${BACKEND}/curriculum/topics`;
+      console.log('Fetching topics from:', url);
+      const response = await fetch(url, {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+      });
+      console.log('Topics response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Topics data:', data);
         setTopics(data);
+      } else {
+        console.error('Topics fetch failed:', response.status, await response.text());
       }
     } catch (error) {
       console.error('Failed to fetch topics:', error);
@@ -123,10 +166,19 @@ export default function CurriculumManagementPage() {
 
   const fetchResources = async () => {
     try {
-      const response = await fetch(`${BACKEND}/curriculum/resources`);
+      const url = `${BACKEND}/curriculum/resources`;
+      console.log('Fetching resources from:', url);
+      const response = await fetch(url, {
+        headers: getAuthHeaders(),
+        credentials: 'include'
+      });
+      console.log('Resources response status:', response.status);
       if (response.ok) {
         const data = await response.json();
+        console.log('Resources data:', data);
         setResources(data);
+      } else {
+        console.error('Resources fetch failed:', response.status, await response.text());
       }
     } catch (error) {
       console.error('Failed to fetch resources:', error);

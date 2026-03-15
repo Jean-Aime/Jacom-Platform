@@ -97,16 +97,12 @@ export default function AboutPage() {
                 View Full Company Timeline →
               </a>
             </div>
-            <div className="relative rounded-xl overflow-hidden shadow-xl bg-white p-4">
-              <video 
-                autoPlay 
-                loop 
-                muted 
-                playsInline
+            <div className="relative rounded-xl overflow-hidden shadow-xl">
+              <img 
+                src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+                alt="JACOM team collaboration and innovation"
                 className="w-full h-full object-cover rounded-lg"
-              >
-                <source src="/business-merger.mp4" type="video/mp4" />
-              </video>
+              />
             </div>
           </div>
         </div>
@@ -325,40 +321,17 @@ export default function AboutPage() {
             ))}
           </div>
 
-          <div className="relative h-96 bg-slate-800 rounded-xl overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <button className="bg-primary hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                Live Headquarters on the Map
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trusted Partners */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <p className="text-sm text-primary font-semibold mb-3 uppercase tracking-wider">FULL-SPECTRUM ECOSYSTEM</p>
-            <h2 className="text-4xl font-bold text-gray-900">Trusted Partners</h2>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-            {["AWS", "Microsoft Azure", "Google Cloud", "IBM"].map((partner, i) => (
-              <div key={i} className="bg-gray-50 rounded-xl p-8 flex items-center justify-center hover:shadow-lg transition">
-                <div className="text-gray-400 font-bold text-xl">{partner}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="bg-red-50 rounded-xl p-8 text-center">
-            <p className="text-gray-600 mb-6 leading-relaxed">
-                Our partnership with JAS.COME has been transformative. Their deep technical expertise and strategic vision have helped us navigate complex digital transformation challenges with confidence.
-              </p>
+          <div className="relative h-96 rounded-xl overflow-hidden shadow-xl">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127537.09901699476!2d30.058659!3d-1.9440727!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x19dca4258ed8e797%3A0xe9b7e68a6a8b5bb!2sKigali%2C%20Rwanda!5e0!3m2!1sen!2s!4v1234567890"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Kigali, Rwanda - JACOM Headquarters"
+            ></iframe>
           </div>
         </div>
       </section>

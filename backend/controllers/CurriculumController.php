@@ -226,7 +226,7 @@ class CurriculumController {
     
     public function getResourcesByTopic($topicId) {
         Security::validateSession();
-        $stmt = $this->conn->prepare("SELECT * FROM course_resources WHERE topicId = ? ORDER BY orderIndex ASC");
+        $stmt = $this->conn->prepare("SELECT id, topicId, type, title, url, content, orderIndex, filePath, fileName, fileSize, mimeType FROM course_resources WHERE topicId = ? ORDER BY orderIndex ASC");
         $stmt->execute([$topicId]);
         echo json_encode($stmt->fetchAll());
     }
