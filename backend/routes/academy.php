@@ -36,6 +36,38 @@ if (strpos($_SERVER['REQUEST_URI'], '/academy') !== false) {
         case 'POST':
             if ($segments[0] === 'academy' && $segments[1] === 'courses') {
                 $controller->createCourse();
+            } elseif ($segments[0] === 'academy' && $segments[1] === 'enroll') {
+                // Authenticated user enrollment - session token provides sufficient validation
+                require_once __DIR__ . '/../middleware/Security.php';
+                $token = $_SERVER['HTTP_X_SESSION_TOKEN'] ?? '';
+                
+                // Validate session and get user info
+                require_once __DIR__ . '/../config/database.php';
+                $db = Database::getInstance();
+                $conn = $db->getConnection();
+                
+                if (!$token) {
+                    http_response_code(401);
+                    echo json_encode(['error' => 'Unauthorized - No session token']);
+                    exit;
+                }
+                
+                $stmt = $conn->prepare("
+                    SELECT s.userId, u.role, u.email 
+                    FROM session s 
+                    JOIN user u ON s.userId = u.id 
+                    WHERE s.token = ? AND s.expiresAt > NOW()
+                ");
+                $stmt->execute([$token]);
+                $session = $stmt->fetch();
+                
+                if (!$session) {
+                    http_response_code(401);
+                    echo json_encode(['error' => 'Invalid or expired session']);
+                    exit;
+                }
+                
+                $controller->enrollCourse($session['userId']);
             }
             break;
             

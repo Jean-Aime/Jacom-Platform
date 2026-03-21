@@ -39,6 +39,12 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = str_replace('/Jacom-Platform/backend', '', $path);
 $segments = array_values(array_filter(explode('/', $path)));
 
+// Include academy, student, admin, and assignment routes
+require_once __DIR__ . '/routes/academy.php';
+require_once __DIR__ . '/routes/student.php';
+require_once __DIR__ . '/routes/admin.php';
+require_once __DIR__ . '/routes/assignment.php';
+
 try {
     if (count($segments) === 0) {
         echo json_encode(['message' => 'API is running', 'version' => '1.0']);
@@ -409,6 +415,38 @@ try {
                     $controller->updateCourse($subId);
                 } elseif ($method === 'DELETE' && $subId) {
                     $controller->deleteCourse($subId);
+                } else {
+                    http_response_code(405);
+                    echo json_encode(['error' => 'Method not allowed']);
+                }
+            } elseif ($action === 'enroll') {
+                // Student enrollment endpoint
+                if ($method === 'POST') {
+                    // Validate session and get user info
+                    $token = $_SERVER['HTTP_X_SESSION_TOKEN'] ?? '';
+                    
+                    if (!$token) {
+                        http_response_code(401);
+                        echo json_encode(['error' => 'Unauthorized - No session token']);
+                        exit;
+                    }
+                    
+                    $stmt = $db->prepare("
+                        SELECT s.userId, u.role, u.email 
+                        FROM session s 
+                        JOIN user u ON s.userId = u.id 
+                        WHERE s.token = ? AND s.expiresAt > NOW()
+                    ");
+                    $stmt->execute([$token]);
+                    $session = $stmt->fetch();
+                    
+                    if (!$session) {
+                        http_response_code(401);
+                        echo json_encode(['error' => 'Invalid or expired session']);
+                        exit;
+                    }
+                    
+                    $controller->enrollCourse($session['userId']);
                 } else {
                     http_response_code(405);
                     echo json_encode(['error' => 'Method not allowed']);

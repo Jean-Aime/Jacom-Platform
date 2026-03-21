@@ -73,6 +73,21 @@ class Security {
             return; // Only validate state-changing requests
         }
         
+        // Skip CSRF for certain endpoints that use session token authentication
+        $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+        $exemptEndpoints = [
+            '/academy/enroll',
+            '/auth/login',
+            '/auth/signup',
+            '/auth/logout'
+        ];
+        
+        foreach ($exemptEndpoints as $endpoint) {
+            if (strpos($requestUri, $endpoint) !== false) {
+                return; // Skip CSRF validation for these endpoints
+            }
+        }
+        
         // Double-submit cookie pattern + token validation
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
         $referer = $_SERVER['HTTP_REFERER'] ?? '';

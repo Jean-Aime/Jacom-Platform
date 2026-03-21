@@ -158,16 +158,14 @@ export default function SignupPage() {
             
             {/* Logo & Header */}
             <div className="text-center mb-8">
-              <div className="flex items-center justify-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-red-800 rounded-lg flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  J
-                </div>
-                <div className="text-left">
-                  <div className="font-bold text-2xl text-gray-900">JACOM</div>
-                  <div className="text-sm text-gray-500">Training</div>
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Create Account</h2>
+              <Link href="/" className="inline-flex items-center justify-center gap-3 mb-6 group">
+                <img 
+                  src="/jascomelogo.png" 
+                  alt="JACOM Logo" 
+                  className="h-16 w-auto object-contain transition-transform group-hover:scale-105"
+                />
+              </Link>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h2>
               <p className="text-gray-600">Join thousands of students learning to code</p>
             </div>
 
@@ -249,12 +247,39 @@ export default function SignupPage() {
                 />
               </div>
 
+              <div className="flex items-center gap-2 mb-4">
+                <input 
+                  type="checkbox" 
+                  id="terms" 
+                  required
+                  className="rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <label htmlFor="terms" className="text-sm text-gray-600">
+                  I agree to the <a href="/terms" className="text-primary hover:underline">Terms of Service</a> and <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>
+                </label>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-red-700 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {loading ? "Creating Account..." : "Create Account"}
+                {loading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Creating Account...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Create Account</span>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </>
+                )}
               </button>
             </form>
 

@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface RegistrationFormProps {
   courseId?: string;
@@ -8,6 +9,7 @@ interface RegistrationFormProps {
 }
 
 export default function RegistrationForm({ courseId, courseName, onClose }: RegistrationFormProps) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -20,6 +22,41 @@ export default function RegistrationForm({ courseId, courseName, onClose }: Regi
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    checkAuthAndPrefill();
+  }, []);
+
+  const checkAuthAndPrefill = async () => {
+    try {
+      const token = localStorage.getItem('session-token');
+      if (!token) {
+        setIsAuthenticated(false);
+        return;
+      }
+
+      const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+      const response = await fetch(`${BACKEND}/auth/check`, {
+        headers: { 'X-Session-Token': token },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setIsAuthenticated(true);
+        // Prefill form with user data
+        setFormData(prev => ({
+          ...prev,
+          fullName: userData.name || prev.fullName,
+          email: userData.email || prev.email,
+          phone: userData.phone || prev.phone
+        }));
+      }
+    } catch (error) {
+      setIsAuthenticated(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,17 +65,41 @@ export default function RegistrationForm({ courseId, courseName, onClose }: Regi
 
     try {
       const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
-      const response = await fetch(`${BACKEND}/registrations`, {
+      const token = localStorage.getItem('session-token');
+      
+      // Use enrollment endpoint for authenticated users, registration for guests
+      const endpoint = isAuthenticated ? '/academy/enroll' : '/registrations';
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json'
+      };
+      
+      if (token) {
+        headers['X-Session-Token'] = token;
+      }
+
+      const response = await fetch(`${BACKEND}${endpoint}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        headers,
+        credentials: 'include',
+        body: JSON.stringify({
+          ...formData,
+          courseId: courseId || formData.courseId
+        })
       });
 
       if (response.ok) {
         setSuccess(true);
-        setTimeout(() => onClose(), 2000);
+        // Redirect authenticated users to dashboard after 2 seconds
+        setTimeout(() => {
+          if (isAuthenticated) {
+            router.push('/training/dashboard');
+          } else {
+            onClose();
+          }
+        }, 2000);
       } else {
-        setError("Registration failed. Please try again.");
+        const errorData = await response.json().catch(() => ({}));
+        setError(errorData.message || "Enrollment failed. Please try again.");
       }
     } catch (err) {
       setError("Network error. Please try again.");
@@ -56,8 +117,8 @@ export default function RegistrationForm({ courseId, courseName, onClose }: Regi
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">Registration Successful!</h3>
-          <p className="text-gray-600">We'll contact you shortly with next steps.</p>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">{isAuthenticated ? 'Enrollment Successful!' : 'Registration Successful!'}</h3>
+          <p className="text-gray-600">{isAuthenticated ? 'Redirecting to your dashboard...' : "We'll contact you shortly with next steps."}</p>
         </div>
       </div>
     );

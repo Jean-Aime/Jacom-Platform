@@ -9,7 +9,6 @@ export default function CookieConsent() {
     const isAdminPanel = window.location.pathname.startsWith('/admin');
     
     if (!consent && !isAdminPanel) {
-      // Small delay to ensure smooth animation
       setTimeout(() => setShowBanner(true), 1000);
     }
   }, []);
@@ -19,50 +18,73 @@ export default function CookieConsent() {
     setShowBanner(false);
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('consent', 'update', {
-        analytics_storage: 'granted'
+        analytics_storage: 'granted',
+        ad_storage: 'granted'
       });
     }
   };
 
-  const openSettings = () => {
-    // For now, just accept - can be expanded later
-    acceptCookies();
+  const rejectCookies = () => {
+    localStorage.setItem('cookie-consent', 'rejected');
+    setShowBanner(false);
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('consent', 'update', {
+        analytics_storage: 'denied',
+        ad_storage: 'denied'
+      });
+    }
   };
 
   if (!showBanner) return null;
 
   return (
-    <div className={`fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 transition-all duration-500 ${
-      showBanner ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'
-    }`}>
-      <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-6 p-8">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">About cookies on this site</h2>
-          <p className="text-gray-600 leading-relaxed mb-4 text-sm">
-            We use cookies to collect and analyse information on site performance and usage, to 
-            provide social media features and to enhance and customise content and 
-            advertisements.
-          </p>
-          <a href="/privacy" className="text-primary hover:text-primary/80 transition-colors text-sm">
-            View full privacy policy
-          </a>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row gap-3">
-          <button
-            onClick={acceptCookies}
-            className="flex-1 bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-lg font-medium transition-colors text-sm"
-          >
-            Allow all cookies
-          </button>
-          <button
-            onClick={openSettings}
-            className="flex-1 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 px-6 py-3 rounded-lg font-medium transition-colors text-sm"
-          >
-            Cookie settings
-          </button>
+    <>
+      {/* Simple Cookie Banner */}
+      <div 
+        className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ${
+          showBanner ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="bg-white border-t-2 border-gray-200 shadow-2xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              {/* Message */}
+              <div className="flex items-center gap-4 flex-1">
+                <div className="hidden sm:flex w-12 h-12 bg-gradient-to-br from-primary to-red-700 rounded-xl items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+                  </svg>
+                </div>
+                <div className="text-center sm:text-left">
+                  <p className="text-gray-900 font-medium text-sm sm:text-base">
+                    We use cookies to improve your experience. 
+                    <a href="/cookies" className="text-primary hover:underline ml-1">Learn more</a>
+                  </p>
+                </div>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                <button
+                  onClick={rejectCookies}
+                  className="px-6 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-lg font-semibold text-sm transition-all hover:shadow-md"
+                >
+                  Reject
+                </button>
+                <button
+                  onClick={acceptCookies}
+                  className="px-6 py-2.5 bg-primary hover:bg-red-700 text-white rounded-lg font-semibold text-sm transition-all hover:shadow-lg flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  Accept
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "@/components/Footer/Footer";
 import MegaMenuHeader from "@/components/Header/MegaMenuHeader";
-import RegistrationForm from "@/components/Academy/RegistrationForm";
 
 interface Course {
   id: string;
@@ -80,24 +80,201 @@ const getCourseIcon = (category: string) => {
 };
 
 export default function AcademyPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<AcademySettings | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLocation, setSelectedLocation] = useState<'Outside Rwanda' | 'Inside Rwanda'>('Outside Rwanda');
-  const [showRegistration, setShowRegistration] = useState(false);
-  const [selectedCourse, setSelectedCourse] = useState<{ id: string; name: string } | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
-    const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
-    Promise.all([
-      fetch(`${BACKEND}/academy-settings`).then(r => r.json()),
-      fetch(`${BACKEND}/academy/courses`).then(r => r.json())
-    ]).then(([settingsData, coursesData]) => {
-      setSettings(settingsData);
-      setCourses(Array.isArray(coursesData) ? coursesData : []);
-      setLoading(false);
-    }).catch(() => setLoading(false));
+    checkAuthentication();
+    fetchPageData();
   }, []);
+
+  const checkAuthentication = async () => {
+    try {
+      const token = localStorage.getItem('session-token');
+      if (!token) {
+        setIsAuthenticated(false);
+        setCheckingAuth(false);
+        return;
+      }
+
+      const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+      const response = await fetch(`${BACKEND}/auth/check`, {
+        headers: { 'X-Session-Token': token },
+        credentials: 'include'
+      });
+
+      setIsAuthenticated(response.ok);
+    } catch (error) {
+      setIsAuthenticated(false);
+    } finally {
+      setCheckingAuth(false);
+    }
+  };
+
+  const fetchPageData = async () => {
+    const BACKEND = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost/Jacom-Platform/backend';
+    
+    try {
+      const [settingsRes, coursesRes] = await Promise.all([
+        fetch(`${BACKEND}/academy-settings`),
+        fetch(`${BACKEND}/academy/courses`)
+      ]);
+      
+      const settingsData = await settingsRes.json();
+      const coursesData = await coursesRes.json();
+      
+      setSettings(settingsData);
+      
+      // If no courses from backend, use mock data
+      if (!Array.isArray(coursesData) || coursesData.length === 0) {
+        console.log('No courses from backend, using mock data');
+        setCourses(getMockCourses());
+      } else {
+        setCourses(coursesData);
+      }
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+      // Use mock data on error
+      setCourses(getMockCourses());
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getMockCourses = (): Course[] => [
+    {
+      id: 'course_001',
+      name: 'Full Stack Web Development',
+      slug: 'full-stack-web-development',
+      category: 'Web Development',
+      description: 'Master modern web development with React, Next.js, Node.js, and PostgreSQL. Build production-ready applications from scratch.',
+      icon: 'Code',
+      totalPrice: 1200.00,
+      fullPaymentPrice: 1080.00,
+      installmentCount: 3,
+      installmentAmount: 400.00,
+      startDate: '2024-04-01',
+      duration: '12 weeks',
+      deliveryMode: 'hybrid',
+      status: 'published',
+      featured: true,
+      maxStudents: 50,
+      currentEnrolled: 15
+    },
+    {
+      id: 'course_002',
+      name: 'React & Next.js Mastery',
+      slug: 'react-nextjs-mastery',
+      category: 'Frontend Development',
+      description: 'Deep dive into React 18 and Next.js 14. Learn advanced patterns, server components, and modern frontend architecture.',
+      icon: 'React',
+      totalPrice: 800.00,
+      fullPaymentPrice: 720.00,
+      installmentCount: 2,
+      installmentAmount: 400.00,
+      startDate: '2024-04-15',
+      duration: '8 weeks',
+      deliveryMode: 'online',
+      status: 'published',
+      featured: true,
+      maxStudents: 40,
+      currentEnrolled: 23
+    },
+    {
+      id: 'course_003',
+      name: 'Mobile App Development',
+      slug: 'mobile-app-development',
+      category: 'Mobile Development',
+      description: 'Build cross-platform mobile apps with React Native. Deploy to iOS and Android from a single codebase.',
+      icon: 'Smartphone',
+      totalPrice: 950.00,
+      fullPaymentPrice: 855.00,
+      installmentCount: 3,
+      installmentAmount: 317.00,
+      startDate: '2024-05-01',
+      duration: '10 weeks',
+      deliveryMode: 'online',
+      status: 'published',
+      featured: false,
+      maxStudents: 35,
+      currentEnrolled: 8
+    },
+    {
+      id: 'course_004',
+      name: 'Python for Data Science',
+      slug: 'python-data-science',
+      category: 'Data Science',
+      description: 'Learn Python, NumPy, Pandas, and machine learning fundamentals. Analyze data and build predictive models.',
+      icon: 'Database',
+      totalPrice: 1100.00,
+      fullPaymentPrice: 990.00,
+      installmentCount: 3,
+      installmentAmount: 367.00,
+      startDate: '2024-05-15',
+      duration: '12 weeks',
+      deliveryMode: 'hybrid',
+      status: 'published',
+      featured: true,
+      maxStudents: 45,
+      currentEnrolled: 12
+    },
+    {
+      id: 'course_005',
+      name: 'Cloud Computing with AWS',
+      slug: 'cloud-computing-aws',
+      category: 'Cloud Computing',
+      description: 'Master AWS services, cloud architecture, and DevOps practices. Prepare for AWS certification.',
+      icon: 'Cloud',
+      totalPrice: 1000.00,
+      fullPaymentPrice: 900.00,
+      installmentCount: 3,
+      installmentAmount: 333.00,
+      startDate: '2024-06-01',
+      duration: '10 weeks',
+      deliveryMode: 'online',
+      status: 'published',
+      featured: false,
+      maxStudents: 30,
+      currentEnrolled: 18
+    },
+    {
+      id: 'course_006',
+      name: 'UI/UX Design Fundamentals',
+      slug: 'ui-ux-design',
+      category: 'Design',
+      description: 'Learn user interface and user experience design principles. Create beautiful, user-friendly applications.',
+      icon: 'Design',
+      totalPrice: 750.00,
+      fullPaymentPrice: 675.00,
+      installmentCount: 2,
+      installmentAmount: 375.00,
+      startDate: '2024-06-15',
+      duration: '8 weeks',
+      deliveryMode: 'online',
+      status: 'published',
+      featured: false,
+      maxStudents: 40,
+      currentEnrolled: 25
+    }
+  ];
+
+  const handleEnrollClick = (course?: Course) => {
+    // Find the course object if only ID is provided
+    const courseToEnroll = course || courses.find(c => c.id === settings?.featuredCourse?.id);
+    
+    if (!courseToEnroll) {
+      console.error('Course not found');
+      return;
+    }
+
+    // Navigate to enrollment page with course ID
+    router.push(`/training/enroll?courseId=${courseToEnroll.id}`);
+  };
 
   if (loading) {
     return (
@@ -141,15 +318,15 @@ export default function AcademyPage() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
-                  href="/login"
+                <button 
+                  onClick={() => handleEnrollClick()}
                   className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold text-base transition shadow-lg flex items-center justify-center gap-2"
                 >
                   Enroll Now
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                   </svg>
-                </a>
+                </button>
                 <button className="border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg font-semibold text-base transition">
                   Download Syllabus
                 </button>
@@ -290,12 +467,12 @@ export default function AcademyPage() {
                       </li>
                     </ul>
 
-                    <a 
-                      href="/login"
+                    <button 
+                      onClick={() => handleEnrollClick()}
                       className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all block text-center"
                     >
                       Enroll Now
-                    </a>
+                    </button>
                   </div>
                 </div>
 
@@ -332,20 +509,20 @@ export default function AcademyPage() {
 
                   <p className="text-xs text-gray-500 mb-3 text-center">* Discounted introductory prices are valid only for first batch students of 2026!</p>
 
-                  <a 
-                    href="/login"
+                  <button 
+                    onClick={() => handleEnrollClick()}
                     className="w-full py-2 bg-white hover:bg-gray-100 text-gray-900 border border-gray-300 rounded-md font-medium text-sm transition-all mb-3 block text-center"
                   >
                     Get The Bundle
-                  </a>
+                  </button>
                 </div>
 
                 {/* Bottom CTA Buttons - Red Bar */}
                 <div className="bg-primary rounded-b-2xl">
                   <div className="flex">
-                    <a href="/login" className="flex-1 py-3 text-white font-semibold text-xs border-r border-red-700 text-center">
+                    <button onClick={() => handleEnrollClick()} className="flex-1 py-3 text-white font-semibold text-xs border-r border-red-700 text-center hover:bg-red-700 transition">
                       Join Class
-                    </a>
+                    </button>
                     <button className="flex-1 py-3 text-white font-semibold text-xs">
                       Learn How to Code & Build an Application
                     </button>
@@ -737,12 +914,12 @@ export default function AcademyPage() {
                       </div>
                     </div>
 
-                    <a 
-                      href="/login"
+                    <button 
+                      onClick={() => handleEnrollClick(course)}
                       className="w-full py-3 bg-primary text-white rounded-lg font-semibold hover:bg-red-700 transition-all block text-center"
                     >
                       Enroll Now
-                    </a>
+                    </button>
                   </div>
                 </div>
               ))}
@@ -804,9 +981,9 @@ export default function AcademyPage() {
                       </li>
                     ))}
                   </ul>
-                  <a href="/login" className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
+                  <button onClick={() => handleEnrollClick()} className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
                     Apply for Scholarship
-                  </a>
+                  </button>
                 </div>
                 <div className="bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-8 text-center">
                   <div className="text-6xl font-bold text-primary mb-4">{scholarshipDate ? scholarshipDate.getDate() : '--'}</div>
@@ -874,9 +1051,9 @@ export default function AcademyPage() {
                     </li>
                   ))}
                 </ul>
-                <a href="/login" className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
+                <button onClick={() => handleEnrollClick()} className="bg-primary hover:bg-red-700 text-white px-8 py-4 rounded-lg font-semibold transition-all inline-block">
                   Start Your Journey
-                </a>
+                </button>
               </div>
               <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-200">
                 <div className="grid grid-cols-2 gap-6">
@@ -976,16 +1153,6 @@ export default function AcademyPage() {
         <Footer />
       </div>
 
-      {showRegistration && (
-        <RegistrationForm
-          courseId={selectedCourse?.id}
-          courseName={selectedCourse?.name}
-          onClose={() => {
-            setShowRegistration(false);
-            setSelectedCourse(null);
-          }}
-        />
-      )}
     </>
   );
 }
